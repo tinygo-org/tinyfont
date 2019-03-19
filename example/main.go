@@ -10,7 +10,6 @@ import (
 )
 
 var display hub75.Device
-var font tinyfont.Font = tinyfont.FreeSerif9pt7b
 
 func main() {
 	machine.SPI0.Configure(machine.SPIConfig{
@@ -39,22 +38,8 @@ func main() {
 	display.ClearDisplay()
 	display.SetBrightness(100)
 
-	bytesAr := []byte("Hello")
-	x := int16(4)
-	for i := range bytesAr {
-		glyph := font.Glyphs[bytesAr[i]-font.First]
-		tinyfont.DrawChar(display, font, x, 12, bytesAr[i], colors[i%7])
-		x += int16(glyph.XAdvance)
-
-	}
-	bytesAr = []byte("Gophers!")
-	x = int16(-1)
-	for i := range bytesAr {
-		glyph := font.Glyphs[bytesAr[i]-font.First]
-		tinyfont.DrawChar(display, font, x, 28, bytesAr[i], colors[(80-1-i)%7])
-		x += int16(glyph.XAdvance)
-
-	}
+	tinyfont.WriteLine(display, tinyfont.TomThumb, 18, 12, []byte("Hello"), colors[0])
+	tinyfont.WriteLineColors(display, tinyfont.Org01, 12, 28, []byte("Gophers!"), colors)
 	for {
 		display.Display()
 	}
