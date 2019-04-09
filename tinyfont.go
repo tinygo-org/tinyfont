@@ -7,12 +7,12 @@ import (
 )
 
 type Glyph struct {
-	bitmapIndex uint16
-	width       uint8
-	height      uint8
+	BitmapIndex uint16
+	Width       uint8
+	Height      uint8
 	XAdvance    uint8
-	xOffset     int8
-	yOffset     int8
+	XOffset     int8
+	YOffset     int8
 }
 
 type Font struct {
@@ -29,14 +29,14 @@ func DrawChar(d hub75.Device, font Font, x int16, y int16, char byte, color colo
 		return
 	}
 	glyph := font.Glyphs[char-font.First]
-	bitmapOffset := glyph.bitmapIndex
+	bitmapOffset := glyph.BitmapIndex
 	bitmap := font.Bitmaps[bitmapOffset]
 	bit := uint8(0)
-	for j := int16(0); j < int16(glyph.height); j++ {
-		for i := int16(0); i < int16(glyph.width); i++ {
+	for j := int16(0); j < int16(glyph.Height); j++ {
+		for i := int16(0); i < int16(glyph.Width); i++ {
 
 			if (bitmap & 0x80) != 0x00 {
-				d.SetPixel(x+int16(glyph.xOffset)+i, y+int16(glyph.yOffset)+j, color)
+				d.SetPixel(x+int16(glyph.XOffset)+i, y+int16(glyph.YOffset)+j, color)
 			}
 			bitmap <<= 1
 

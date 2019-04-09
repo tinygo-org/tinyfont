@@ -255,7 +255,7 @@ var TomThumbBitmaps = []byte{
 	0xE0, 0xA0, 0xA0, 0xA0, 0xE0, /* 0xFFFD uniFFFD */
 }
 
-/* {offset, width, height, advance cursor, x offset, y offset} */
+/* {offset, Width, Height, advance cursor, x offset, y offset} */
 var TomThumbGlyphs = []Glyph{
 	{0, 8, 1, 2, 0, -5},   /* 0x20 space */
 	{1, 8, 5, 2, 0, -5},   /* 0x21 exclam */

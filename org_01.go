@@ -1,5 +1,5 @@
 // Org_v01 by Orgdot (www.orgdot.com/aliasfonts).  A tiny,
-// stylized font with all characters within a 6 pixel height.
+// stylized font with all characters within a 6 pixel Height.
 
 package tinyfont
 
