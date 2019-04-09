@@ -75,3 +75,19 @@ func WriteLineColors(display hub75.Device, font Font, x int16, y int16, text []b
 		c = (c + 1) % numColors
 	}
 }
+
+func LineWidth(font Font, text []byte) (innerWidth uint32, outboxWidth uint32) {
+	for i := range text {
+		glyph := font.Glyphs[text[i]-font.First]
+		outboxWidth += uint32(glyph.XAdvance)
+	}
+	innerWidth = outboxWidth
+	// first glyph
+	glyph := font.Glyphs[text[0]-font.First]
+	innerWidth -= uint32(glyph.XOffset)
+
+	// last glyph
+	glyph = font.Glyphs[text[0]-font.First]
+	innerWidth += -uint32(glyph.XAdvance) + uint32(glyph.XOffset) + uint32(glyph.Width)
+	return
+}
