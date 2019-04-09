@@ -24,7 +24,7 @@ type Font struct {
 }
 
 // DrawChar sets a single char in the buffer of the display
-func DrawChar(d hub75.Device, font Font, x int16, y int16, char byte, color color.RGBA) {
+func DrawChar(d *hub75.Device, font *Font, x int16, y int16, char byte, color color.RGBA) {
 	if char < font.First || char > font.Last {
 		return
 	}
@@ -51,17 +51,26 @@ func DrawChar(d hub75.Device, font Font, x int16, y int16, char byte, color colo
 }
 
 // WriteLine writes a string in the selected font in the buffer
-func WriteLine(display hub75.Device, font Font, x int16, y int16, text []byte, color color.RGBA) {
-	for i := range text {
+func WriteLine(display *hub75.Device, font *Font, x int16, y int16, text []byte, color color.RGBA) {
+	w, _ := display.Size()
+	l := len(text)
+	for i := 0; i < l; i++ {
 		glyph := font.Glyphs[text[i]-font.First]
-		DrawChar(display, font, x, y, text[i], color)
+		if x+int16(glyph.XAdvance) >= 0 {
+			DrawChar(display, font, x, y, text[i], color)
+		}
 		x += int16(glyph.XAdvance)
+
+		// speed up
+		if x > w {
+			break
+		}
 	}
 }
 
 // WriteLineColors writes a string in the selected font in the buffer. Each char is in a different color
 // if not enough colors are defined, colors are cycled.
-func WriteLineColors(display hub75.Device, font Font, x int16, y int16, text []byte, colors []color.RGBA) {
+func WriteLineColors(display *hub75.Device, font *Font, x int16, y int16, text []byte, colors []color.RGBA) {
 	numColors := uint16(len(colors))
 	if numColors == 0 {
 		return
@@ -76,7 +85,7 @@ func WriteLineColors(display hub75.Device, font Font, x int16, y int16, text []b
 	}
 }
 
-func LineWidth(font Font, text []byte) (innerWidth uint32, outboxWidth uint32) {
+func LineWidth(font *Font, text []byte) (innerWidth uint32, outboxWidth uint32) {
 	for i := range text {
 		glyph := font.Glyphs[text[i]-font.First]
 		outboxWidth += uint32(glyph.XAdvance)
