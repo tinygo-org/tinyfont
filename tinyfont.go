@@ -3,7 +3,7 @@ package tinyfont
 import (
 	"image/color"
 
-	"github.com/tinygo-org/drivers/hub75"
+	"github.com/tinygo-org/drivers"
 )
 
 type Glyph struct {
@@ -24,7 +24,7 @@ type Font struct {
 }
 
 // DrawChar sets a single char in the buffer of the display
-func DrawChar(d *hub75.Device, font *Font, x int16, y int16, char byte, color color.RGBA) {
+func DrawChar(d drivers.Displayer, font *Font, x int16, y int16, char byte, color color.RGBA) {
 	if char < font.First || char > font.Last {
 		return
 	}
@@ -51,7 +51,7 @@ func DrawChar(d *hub75.Device, font *Font, x int16, y int16, char byte, color co
 }
 
 // WriteLine writes a string in the selected font in the buffer
-func WriteLine(display *hub75.Device, font *Font, x int16, y int16, text []byte, color color.RGBA) {
+func WriteLine(display drivers.Displayer, font *Font, x int16, y int16, text []byte, color color.RGBA) {
 	w, _ := display.Size()
 	l := len(text)
 	for i := 0; i < l; i++ {
@@ -70,18 +70,30 @@ func WriteLine(display *hub75.Device, font *Font, x int16, y int16, text []byte,
 
 // WriteLineColors writes a string in the selected font in the buffer. Each char is in a different color
 // if not enough colors are defined, colors are cycled.
-func WriteLineColors(display *hub75.Device, font *Font, x int16, y int16, text []byte, colors []color.RGBA) {
+func WriteLineColors(display drivers.Displayer, font *Font, x int16, y int16, text []byte, colors []color.RGBA) {
 	numColors := uint16(len(colors))
 	if numColors == 0 {
 		return
 	}
 
 	c := uint16(0)
-	for i := range text {
+	w, _ := display.Size()
+	l := len(text)
+	for i := 0; i < l; i++ {
 		glyph := font.Glyphs[text[i]-font.First]
-		DrawChar(display, font, x, y, text[i], colors[c])
+		if x+int16(glyph.XAdvance) >= 0 {
+			DrawChar(display, font, x, y, text[i], colors[c])
+		}
+		c++
+		if c >= numColors {
+			c = 0
+		}
 		x += int16(glyph.XAdvance)
-		c = (c + 1) % numColors
+
+		// speed up
+		if x > w {
+			break
+		}
 	}
 }
 
