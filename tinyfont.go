@@ -24,7 +24,13 @@ type Font struct {
 }
 
 // DrawChar sets a single char in the buffer of the display
-func DrawChar(d drivers.Displayer, font *Font, x int16, y int16, char byte, color color.RGBA) {
+func DrawChar(displayer drivers.Displayer, font *Font, x int16, y int16, char byte, color color.RGBA) {
+	DrawCharRotated(displayer, font, x, y, char, color, 0)
+}
+
+// DrawCharRotated sets a single char in the buffer of the display
+func DrawCharRotated(displayer drivers.Displayer, font *Font, x int16, y int16, char byte, color color.RGBA, rotation uint8) {
+	rotation = rotation % 4
 	if char < font.First || char > font.Last {
 		return
 	}
@@ -36,7 +42,15 @@ func DrawChar(d drivers.Displayer, font *Font, x int16, y int16, char byte, colo
 		for i := int16(0); i < int16(glyph.Width); i++ {
 
 			if (bitmap & 0x80) != 0x00 {
-				d.SetPixel(x+int16(glyph.XOffset)+i, y+int16(glyph.YOffset)+j, color)
+				if rotation == 0 {
+					displayer.SetPixel(x+int16(glyph.XOffset)+i, y+int16(glyph.YOffset)+j, color)
+				} else if rotation == 1 {
+					displayer.SetPixel(x-int16(glyph.YOffset)-j, y+int16(glyph.XOffset)+i, color)
+				} else if rotation == 2 {
+					displayer.SetPixel(x-int16(glyph.XOffset)-i, y-int16(glyph.YOffset)-j, color)
+				} else {
+					displayer.SetPixel(x+int16(glyph.YOffset)+j, y-int16(glyph.XOffset)-i, color)
+				}
 			}
 			bitmap <<= 1
 
@@ -52,17 +66,34 @@ func DrawChar(d drivers.Displayer, font *Font, x int16, y int16, char byte, colo
 
 // WriteLine writes a string in the selected font in the buffer
 func WriteLine(display drivers.Displayer, font *Font, x int16, y int16, text []byte, color color.RGBA) {
-	w, _ := display.Size()
+	WriteLineRotated(display, font, x, y, text, color, 0)
+}
+
+// WriteLineRotated writes a string in the selected font in the buffer
+func WriteLineRotated(display drivers.Displayer, font *Font, x int16, y int16, text []byte, color color.RGBA, rotation uint8) {
+	rotation = rotation % 4
+	w, h := display.Size()
 	l := len(text)
 	for i := 0; i < l; i++ {
 		glyph := font.Glyphs[text[i]-font.First]
-		if x+int16(glyph.XAdvance) >= 0 {
-			DrawChar(display, font, x, y, text[i], color)
+		//if x+int16(glyph.XAdvance) >= 0 {
+		DrawCharRotated(display, font, x, y, text[i], color, rotation)
+		//}
+		if rotation == 0 {
+			x += int16(glyph.XAdvance)
+		} else if rotation == 1 {
+			y += int16(glyph.XAdvance)
+		} else if rotation == 2 {
+			x -= int16(glyph.XAdvance)
+		} else {
+			y -= int16(glyph.XAdvance)
 		}
-		x += int16(glyph.XAdvance)
 
-		// speed up
-		if x > w {
+		// speed up?
+		if (rotation == 0 && x > w) ||
+			(rotation == 1 && x > h) ||
+			(rotation == 2 && x < 0) ||
+			(rotation == 3 && y < 0) {
 			break
 		}
 	}
@@ -70,28 +101,46 @@ func WriteLine(display drivers.Displayer, font *Font, x int16, y int16, text []b
 
 // WriteLineColors writes a string in the selected font in the buffer. Each char is in a different color
 // if not enough colors are defined, colors are cycled.
-func WriteLineColors(display drivers.Displayer, font *Font, x int16, y int16, text []byte, colors []color.RGBA) {
+func WriteLineColors(display drivers.Displayer, font *Font, x int16, y int16, text []byte, colors []color.RGBA, rotation uint8) {
+	WriteLineColorsRotated(display, font, x, y, text, colors, 0)
+}
+
+// WriteLineColorsRotated writes a string in the selected font in the buffer. Each char is in a different color
+// if not enough colors are defined, colors are cycled.
+func WriteLineColorsRotated(display drivers.Displayer, font *Font, x int16, y int16, text []byte, colors []color.RGBA, rotation uint8) {
 	numColors := uint16(len(colors))
 	if numColors == 0 {
 		return
 	}
+	rotation = rotation % 4
 
 	c := uint16(0)
-	w, _ := display.Size()
+	w, h := display.Size()
 	l := len(text)
 	for i := 0; i < l; i++ {
 		glyph := font.Glyphs[text[i]-font.First]
-		if x+int16(glyph.XAdvance) >= 0 {
-			DrawChar(display, font, x, y, text[i], colors[c])
-		}
+		//if x+int16(glyph.XAdvance) >= 0 {
+			DrawCharRotated(display, font, x, y, text[i], colors[c], rotation)
+		//}
 		c++
 		if c >= numColors {
 			c = 0
 		}
-		x += int16(glyph.XAdvance)
+		if rotation == 0 {
+			x += int16(glyph.XAdvance)
+		} else if rotation == 1 {
+			y += int16(glyph.XAdvance)
+		} else if rotation == 2 {
+			x -= int16(glyph.XAdvance)
+		} else {
+			y -= int16(glyph.XAdvance)
+		}
 
-		// speed up
-		if x > w {
+		// speed up?
+		if (rotation == 0 && x > w) ||
+			(rotation == 1 && x > h) ||
+			(rotation == 2 && x < 0) ||
+			(rotation == 3 && y < 0) {
 			break
 		}
 	}
