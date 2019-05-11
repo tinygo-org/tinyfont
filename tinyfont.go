@@ -24,12 +24,12 @@ type Font struct {
 }
 
 // DrawChar sets a single char in the buffer of the display
-func DrawChar(displayer drivers.Displayer, font *Font, x int16, y int16, char byte, color color.RGBA) {
-	DrawCharRotated(displayer, font, x, y, char, color, 0)
+func DrawChar(display drivers.Displayer, font *Font, x int16, y int16, char byte, color color.RGBA) {
+	DrawCharRotated(display, font, x, y, char, color, 0)
 }
 
 // DrawCharRotated sets a single char in the buffer of the display
-func DrawCharRotated(displayer drivers.Displayer, font *Font, x int16, y int16, char byte, color color.RGBA, rotation uint8) {
+func DrawCharRotated(display drivers.Displayer, font *Font, x int16, y int16, char byte, color color.RGBA, rotation uint8) {
 	rotation = rotation % 4
 	if char < font.First || char > font.Last {
 		return
@@ -43,13 +43,13 @@ func DrawCharRotated(displayer drivers.Displayer, font *Font, x int16, y int16, 
 
 			if (bitmap & 0x80) != 0x00 {
 				if rotation == 0 {
-					displayer.SetPixel(x+int16(glyph.XOffset)+i, y+int16(glyph.YOffset)+j, color)
+					display.SetPixel(x+int16(glyph.XOffset)+i, y+int16(glyph.YOffset)+j, color)
 				} else if rotation == 1 {
-					displayer.SetPixel(x-int16(glyph.YOffset)-j, y+int16(glyph.XOffset)+i, color)
+					display.SetPixel(x-int16(glyph.YOffset)-j, y+int16(glyph.XOffset)+i, color)
 				} else if rotation == 2 {
-					displayer.SetPixel(x-int16(glyph.XOffset)-i, y-int16(glyph.YOffset)-j, color)
+					display.SetPixel(x-int16(glyph.XOffset)-i, y-int16(glyph.YOffset)-j, color)
 				} else {
-					displayer.SetPixel(x+int16(glyph.YOffset)+j, y-int16(glyph.XOffset)-i, color)
+					display.SetPixel(x+int16(glyph.YOffset)+j, y-int16(glyph.XOffset)-i, color)
 				}
 			}
 			bitmap <<= 1
