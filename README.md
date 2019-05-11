@@ -5,7 +5,7 @@ TinyFont is a font/text package for [TinyGo](https://tinygo.org/) displays. It's
 ![example](https://raw.githubusercontent.com/conejoninja/tinyfont/master/example.png)
 
 
-This package is experimental and may change in the future. It has not been optimized for speed or memory usage (yet).  I'm not responsible if whatever you are building explodes.
+This package is experimental and may change in the future. It has not been optimized for speed or memory usage (yet).
 
 
 ## License
