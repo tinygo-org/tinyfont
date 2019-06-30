@@ -101,7 +101,7 @@ func WriteLineRotated(display drivers.Displayer, font *Font, x int16, y int16, t
 
 // WriteLineColors writes a string in the selected font in the buffer. Each char is in a different color
 // if not enough colors are defined, colors are cycled.
-func WriteLineColors(display drivers.Displayer, font *Font, x int16, y int16, text []byte, colors []color.RGBA, rotation uint8) {
+func WriteLineColors(display drivers.Displayer, font *Font, x int16, y int16, text []byte, colors []color.RGBA) {
 	WriteLineColorsRotated(display, font, x, y, text, colors, 0)
 }
 
