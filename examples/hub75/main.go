@@ -6,7 +6,7 @@ import (
 	"image/color"
 
 	"github.com/conejoninja/tinyfont"
-	"github.com/tinygo-org/drivers/hub75"
+	"tinygo.org/x/drivers/hub75"
 )
 
 var display hub75.Device
