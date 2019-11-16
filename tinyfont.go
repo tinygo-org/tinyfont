@@ -3,7 +3,7 @@ package tinyfont
 import (
 	"image/color"
 
-	"github.com/tinygo-org/drivers"
+	"tinygo.org/x/drivers"
 )
 
 type Glyph struct {
