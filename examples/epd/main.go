@@ -31,13 +31,13 @@ func main() {
 	display.ClearBuffer()
 	display.ClearDisplay()
 
-	tinyfont.WriteLineRotated(&display, &freemono.Bold9pt7b, 15, 20, []byte("Hello"), black, 0)
-	showRect(0,22,52,20, black)
-	showRect(52,22,52,20, yellow)
-	tinyfont.WriteLineRotated(&display, &freemono.Bold9pt7b, 85, 26, []byte("World!"), white, 2)
+	tinyfont.WriteLineRotated(&display, &freemono.Bold9pt7b, 15, 20, []byte("Hello"), black, tinyfont.NO_ROTATION)
+	showRect(0, 22, 52, 20, black)
+	showRect(52, 22, 52, 20, yellow)
+	tinyfont.WriteLineRotated(&display, &freemono.Bold9pt7b, 85, 26, []byte("World!"), white, tinyfont.ROTATION_180)
 
-	tinyfont.WriteLineRotated(&display, &freemono.Bold9pt7b, 55, 60, []byte("@tinyGolang"), yellow, 1)
-	tinyfont.WriteLineColorsRotated(&display, &freemono.Bold9pt7b, 45, 180, []byte("tinyfont"), []color.RGBA{yellow, black}, 3)
+	tinyfont.WriteLineRotated(&display, &freemono.Bold9pt7b, 55, 60, []byte("@tinyGolang"), yellow, tinyfont.ROTATION_90)
+	tinyfont.WriteLineColorsRotated(&display, &freemono.Bold9pt7b, 45, 180, []byte("tinyfont"), []color.RGBA{yellow, black}, tinyfont.ROTATION_270)
 
 	display.Display()
 	display.WaitUntilIdle()
