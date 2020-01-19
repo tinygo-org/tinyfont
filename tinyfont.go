@@ -6,6 +6,14 @@ import (
 	"tinygo.org/x/drivers"
 )
 
+const (
+	NO_ROTATION  Rotation = 0
+	ROTATION_90  Rotation = 1 // 90 degrees clock-wise rotation
+	ROTATION_180 Rotation = 2
+	ROTATION_270 Rotation = 3
+)
+type Rotation uint8
+
 type Glyph struct {
 	BitmapIndex uint16
 	Width       uint8
@@ -29,8 +37,7 @@ func DrawChar(display drivers.Displayer, font *Font, x int16, y int16, char byte
 }
 
 // DrawCharRotated sets a single char in the buffer of the display
-func DrawCharRotated(display drivers.Displayer, font *Font, x int16, y int16, char byte, color color.RGBA, rotation uint8) {
-	rotation = rotation % 4
+func DrawCharRotated(display drivers.Displayer, font *Font, x int16, y int16, char byte, color color.RGBA, rotation Rotation) {
 	if char < font.First || char > font.Last {
 		return
 	}
@@ -70,7 +77,7 @@ func WriteLine(display drivers.Displayer, font *Font, x int16, y int16, text []b
 }
 
 // WriteLineRotated writes a string in the selected font in the buffer
-func WriteLineRotated(display drivers.Displayer, font *Font, x int16, y int16, text []byte, color color.RGBA, rotation uint8) {
+func WriteLineRotated(display drivers.Displayer, font *Font, x int16, y int16, text []byte, color color.RGBA, rotation Rotation) {
 	rotation = rotation % 4
 	w, h := display.Size()
 	l := len(text)
@@ -107,7 +114,7 @@ func WriteLineColors(display drivers.Displayer, font *Font, x int16, y int16, te
 
 // WriteLineColorsRotated writes a string in the selected font in the buffer. Each char is in a different color
 // if not enough colors are defined, colors are cycled.
-func WriteLineColorsRotated(display drivers.Displayer, font *Font, x int16, y int16, text []byte, colors []color.RGBA, rotation uint8) {
+func WriteLineColorsRotated(display drivers.Displayer, font *Font, x int16, y int16, text []byte, colors []color.RGBA, rotation Rotation) {
 	numColors := uint16(len(colors))
 	if numColors == 0 {
 		return
@@ -120,7 +127,7 @@ func WriteLineColorsRotated(display drivers.Displayer, font *Font, x int16, y in
 	for i := 0; i < l; i++ {
 		glyph := font.Glyphs[text[i]-font.First]
 		//if x+int16(glyph.XAdvance) >= 0 {
-			DrawCharRotated(display, font, x, y, text[i], colors[c], rotation)
+		DrawCharRotated(display, font, x, y, text[i], colors[c], rotation)
 		//}
 		c++
 		if c >= numColors {

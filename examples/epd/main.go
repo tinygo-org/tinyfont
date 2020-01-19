@@ -14,6 +14,9 @@ var display epd2in13x.Device
 
 func main() {
 	machine.SPI0.Configure(machine.SPIConfig{
+		SCK:       machine.SPI0_SCK_PIN,
+		MOSI:      machine.SPI0_MOSI_PIN,
+		MISO:      machine.SPI0_MISO_PIN,
 		Frequency: 8000000,
 		Mode:      0,
 	})
