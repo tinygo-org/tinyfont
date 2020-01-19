@@ -15,14 +15,6 @@ import (
 )
 
 func main() {
-	colors := []color.RGBA{
-		color.RGBA{0, 0, 0, 255},
-		color.RGBA{255, 255, 255, 255},
-		color.RGBA{0, 200, 0, 255},
-		color.RGBA{250, 0, 0, 255},
-		color.RGBA{160, 160, 160, 255},
-	}
-
 	machine.SPI1.Configure(machine.SPIConfig{
 		SCK:       machine.SPI1_SCK_PIN,
 		MOSI:      machine.SPI1_MOSI_PIN,
@@ -35,7 +27,7 @@ func main() {
 		Rotation: st7735.ROTATION_90,
 	})
 
-	display.FillScreen(colors[1])
+	display.FillScreen(color.RGBA{255, 255, 255, 255})
 	mycolors := make([]color.RGBA, 20)
 	for k := 0; k < 20; k++ {
 		mycolors[k] = getRainbowRGB(uint8(k * 14))
