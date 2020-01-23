@@ -18,8 +18,6 @@ The fonts compiled here were just converted or made compatible, and the original
 
 Software License Agreement (BSD License)
 
-Copyright (c) 2019 Daniel Esteban - conejo@conejo.me - All rights reserved.
-
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
 
