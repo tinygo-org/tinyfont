@@ -1,6 +1,6 @@
 package proggy
 
-import "github.com/conejoninja/tinyfont"
+import "tinygo.org/x/tinyfont"
 
 // Generated from the TTF version of "Proggy Tiny Slashed Zero" found at:
 // http://upperbounds.net/download/download_bridge.php?get=ProggyTinySZ.ttf.zip

@@ -5,8 +5,8 @@ import (
 
 	"image/color"
 
-	"github.com/conejoninja/tinyfont"
-	"github.com/conejoninja/tinyfont/freemono"
+	"tinygo.org/x/tinyfont"
+	"tinygo.org/x/tinyfont/freemono"
 	"tinygo.org/x/drivers/waveshare-epd/epd2in13x"
 )
 

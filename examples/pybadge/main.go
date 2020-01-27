@@ -1,16 +1,16 @@
 package main
 
 import (
-	"github.com/conejoninja/tinyfont/gophers"
+	"tinygo.org/x/tinyfont/gophers"
 	"image/color"
 	"machine"
 
-	"github.com/conejoninja/tinyfont/freeserif"
+	"tinygo.org/x/tinyfont/freeserif"
 
-	"github.com/conejoninja/tinyfont/freemono"
-	"github.com/conejoninja/tinyfont/freesans"
+	"tinygo.org/x/tinyfont/freemono"
+	"tinygo.org/x/tinyfont/freesans"
 
-	"github.com/conejoninja/tinyfont"
+	"tinygo.org/x/tinyfont"
 	"tinygo.org/x/drivers/st7735"
 )
 

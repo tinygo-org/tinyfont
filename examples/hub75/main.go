@@ -5,7 +5,7 @@ import (
 
 	"image/color"
 
-	"github.com/conejoninja/tinyfont"
+	"tinygo.org/x/tinyfont"
 	"tinygo.org/x/drivers/hub75"
 )
 
