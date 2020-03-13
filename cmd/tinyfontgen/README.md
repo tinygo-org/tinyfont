@@ -12,10 +12,12 @@ For fonts with a code point of 256 or more, only those specified by the argument
 ## Usage
 
     // https://mplus-fonts.osdn.jp/mplus-bitmap-fonts/download/index.html
-    tinyufontgen --font mplus_j10b-iso.bdf --font mplus_j10r.bdf --output font.go 日本語
+    tinyfontgen --font mplus_j10b-iso.bdf --output font.go
+    tinyfontgen --font mplus_j10b-iso.bdf --font mplus_j10r.bdf --output font2.go 日本語
 
     // http://x-tt.osdn.jp/ayu.html
-    tinyufontgen --font 10x20grkm.bdf --font k20gm.bdf --output font.go 日本語
+    tinyfontgen --font 10x20grkm.bdf --output font.go
+    tinyfontgen --font 10x20grkm.bdf --font k20gm.bdf --output font2.go 日本語
 
 ## Installation
 
