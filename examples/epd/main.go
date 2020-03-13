@@ -5,9 +5,9 @@ import (
 
 	"image/color"
 
+	"tinygo.org/x/drivers/waveshare-epd/epd2in13x"
 	"tinygo.org/x/tinyfont"
 	"tinygo.org/x/tinyfont/freemono"
-	"tinygo.org/x/drivers/waveshare-epd/epd2in13x"
 )
 
 var display epd2in13x.Device

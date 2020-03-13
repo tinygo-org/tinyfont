@@ -1,17 +1,16 @@
 package main
 
 import (
-	"tinygo.org/x/tinyfont/gophers"
 	"image/color"
 	"machine"
 
-	"tinygo.org/x/tinyfont/freeserif"
-
 	"tinygo.org/x/tinyfont/freemono"
 	"tinygo.org/x/tinyfont/freesans"
+	"tinygo.org/x/tinyfont/freeserif"
+	"tinygo.org/x/tinyfont/gophers"
 
-	"tinygo.org/x/tinyfont"
 	"tinygo.org/x/drivers/st7735"
+	"tinygo.org/x/tinyfont"
 )
 
 func main() {
@@ -38,7 +37,6 @@ func main() {
 	tinyfont.WriteLineColorsRotated(&display, &tinyfont.Org01, 10, 40, []byte("TinyGo"), mycolors[18:], tinyfont.ROTATION_90)
 
 	tinyfont.WriteLineColors(&display, &gophers.Regular58pt, 18, 90, []byte("ABC"), mycolors[9:])
-
 
 }
 

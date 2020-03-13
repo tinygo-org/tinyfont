@@ -5,8 +5,8 @@ import (
 
 	"image/color"
 
-	"tinygo.org/x/tinyfont"
 	"tinygo.org/x/drivers/hub75"
+	"tinygo.org/x/tinyfont"
 )
 
 var display hub75.Device
