@@ -1,4 +1,4 @@
-package tinyfont
+package tinyfont // import "tinygo.org/x/tinyfont"
 
 import (
 	"image/color"
@@ -12,6 +12,7 @@ const (
 	ROTATION_180 Rotation = 2
 	ROTATION_270 Rotation = 3
 )
+
 type Rotation uint8
 
 type Glyph struct {
