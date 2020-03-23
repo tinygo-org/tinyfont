@@ -8,8 +8,8 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/hajimehoshi/go-jisx0208"
 	"github.com/sago35/go-bdf"
-	"github.com/sago35/go-jisx0208"
 	"tinygo.org/x/tinyfont"
 )
 
