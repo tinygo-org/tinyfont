@@ -21,7 +21,7 @@ For fonts with a code point of 256 or more, only those specified by the argument
 
 ## Installation
 
-    go get tinygo.org/x/tinyfont/cmd/tinyufontgen
+    go get tinygo.org/x/tinyfont/cmd/tinyfontgen
 
 ## License
 
