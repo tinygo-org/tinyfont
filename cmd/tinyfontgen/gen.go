@@ -34,7 +34,7 @@ func (f *fontgen) generate(w io.Writer, runes []rune) error {
 
 	ufont := tinyfont.Font{}
 	for _, font := range fonts {
-		ufont.YAdvance = uint8(font.Size)
+		ufont.YAdvance = uint8(float64(font.Size) * float64(font.DPI[1]) / 75)
 
 		code := func(r rune) (int, error) { return int(r), nil }
 		switch strings.ToLower(font.CharsetRegistry) {
