@@ -244,7 +244,16 @@ func GetGlyph(font *Font, r rune) (Glyph, error) {
 	}
 
 	if s == len(font.Glyphs) || font.Glyphs[s].Rune != r {
-		return Glyph{}, fmt.Errorf("glyph not found")
+		g := Glyph{
+			Rune:     r,
+			Width:    0,
+			Height:   0,
+			XAdvance: font.Glyphs[0].XAdvance,
+			XOffset:  font.Glyphs[0].XOffset,
+			YOffset:  font.Glyphs[0].YOffset,
+			Bitmaps:  []byte{0},
+		}
+		return g, fmt.Errorf("glyph not found")
 	}
 
 	return font.Glyphs[s], nil
