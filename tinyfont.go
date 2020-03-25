@@ -17,6 +17,7 @@ const (
 type Rotation uint8
 
 type Glyph struct {
+	Rune     rune
 	Width    uint8
 	Height   uint8
 	XAdvance uint8
@@ -25,15 +26,9 @@ type Glyph struct {
 	Bitmaps  []byte
 }
 
-type RuneToIndex struct {
-	Rune  rune
-	Index uint16
-}
-
 type Font struct {
-	Glyphs      []Glyph
-	RuneToIndex []RuneToIndex
-	YAdvance    uint8
+	Glyphs   []Glyph
+	YAdvance uint8
 }
 
 // DrawChar sets a single char in the buffer of the display
@@ -236,19 +231,19 @@ func LineWidth(font *Font, str string) (innerWidth uint32, outboxWidth uint32) {
 
 func GetGlyph(font *Font, r rune) (Glyph, error) {
 	s := 0
-	e := len(font.RuneToIndex) - 1
+	e := len(font.Glyphs) - 1
 
 	for s <= e {
 		m := (s + e) / 2
 
-		if font.RuneToIndex[m].Rune < r {
+		if font.Glyphs[m].Rune < r {
 			s = m + 1
 		} else {
 			e = m - 1
 		}
 	}
 
-	if s == len(font.RuneToIndex) || font.RuneToIndex[s].Rune != r {
+	if s == len(font.Glyphs) || font.Glyphs[s].Rune != r {
 		return Glyph{}, fmt.Errorf("glyph not found")
 	}
 
