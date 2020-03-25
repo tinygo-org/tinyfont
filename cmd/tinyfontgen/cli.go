@@ -38,6 +38,8 @@ func (c *cli) Run(args []string) error {
 	fonts := app.Flag("font", "font path (*.bdf)").Required().ExistingFiles()
 	str := app.Arg(`string`, `strings for font`).String()
 	output := app.Flag("output", "output path").String()
+	all := app.Flag("all", "include all glyphs in the font").Bool()
+	verbose := app.Flag("verbose", "run verbosely").Bool()
 
 	k, err := app.Parse(args[1:])
 	if err != nil {
@@ -57,7 +59,13 @@ func (c *cli) Run(args []string) error {
 			return nil
 		}
 		defer w.Close()
-		err = f.generate(w, []rune(*str))
+
+		opts := []option{
+			withAll(*all),
+			withVerbose(*verbose),
+		}
+
+		err = f.generate(w, []rune(*str), opts...)
 		if err != nil {
 			return err
 		}
