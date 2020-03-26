@@ -207,7 +207,7 @@ func bdf2glyph(f bdf.Character, r rune) (tinyfont.Glyph, error) {
 		Height:   uint8(img.Rect.Max.Y),
 		XAdvance: uint8(f.Advance[0]),
 		XOffset:  int8(f.LowerPoint[0]),
-		YOffset:  int8(f.LowerPoint[1]),
+		YOffset:  -1 * int8(f.Alpha.Rect.Max.Y+f.LowerPoint[1]),
 		Bitmaps:  bmp,
 	}
 
