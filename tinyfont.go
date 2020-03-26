@@ -42,6 +42,10 @@ func DrawCharRotated(display drivers.Displayer, font *Font, x int16, y int16, ch
 	if err != nil {
 		// TODO
 	}
+	drawGlyphRotated(display, font, x, y, glyph, color, rotation)
+}
+
+func drawGlyphRotated(display drivers.Displayer, font *Font, x int16, y int16, glyph Glyph, color color.RGBA, rotation Rotation) {
 	bitmapOffset := 0
 	bitmap := glyph.Bitmaps[bitmapOffset]
 	bit := uint8(0)
@@ -111,7 +115,7 @@ func WriteLineRotated(display drivers.Displayer, font *Font, x int16, y int16, s
 			// TODO
 		}
 		//if x+int16(glyph.XAdvance) >= 0 {
-		DrawCharRotated(display, font, x, y, text[i], color, rotation)
+		drawGlyphRotated(display, font, x, y, glyph, color, rotation)
 		//}
 		if rotation == 0 {
 			x += int16(glyph.XAdvance)
@@ -177,7 +181,7 @@ func WriteLineColorsRotated(display drivers.Displayer, font *Font, x int16, y in
 			// TODO
 		}
 		//if x+int16(glyph.XAdvance) >= 0 {
-		DrawCharRotated(display, font, x, y, text[i], colors[c], rotation)
+		drawGlyphRotated(display, font, x, y, glyph, colors[c], rotation)
 		//}
 		c++
 		if c >= numColors {
