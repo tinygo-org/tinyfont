@@ -23,13 +23,15 @@ type fontgen struct {
 type option func(*options)
 
 type options struct {
-	all     bool
-	verbose bool
+	all      bool
+	verbose  bool
+	yadvance int
 }
 
 var defaultOption = options{
-	all:     false,
-	verbose: false,
+	all:      false,
+	verbose:  false,
+	yadvance: 0,
 }
 
 func withAll(b bool) option {
@@ -41,6 +43,12 @@ func withAll(b bool) option {
 func withVerbose(b bool) option {
 	return func(o *options) {
 		o.verbose = b
+	}
+}
+
+func withYAdvance(a int) option {
+	return func(o *options) {
+		o.yadvance = a
 	}
 }
 
@@ -66,6 +74,9 @@ func (f *fontgen) generate(w io.Writer, runes []rune, opt ...option) error {
 	exists := map[rune]bool{}
 	for _, font := range fonts {
 		ufont.YAdvance = uint8(float64(font.Size) * float64(font.DPI[1]) / 75)
+		if opts.yadvance > 0 {
+			ufont.YAdvance = uint8(opts.yadvance)
+		}
 
 		code2rune := func(c int) (rune, error) { return rune(c), nil }
 		switch strings.ToLower(font.CharsetRegistry) {

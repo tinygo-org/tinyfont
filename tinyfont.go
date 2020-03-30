@@ -96,15 +96,15 @@ func WriteLineRotated(display drivers.Displayer, font *Font, x int16, y int16, s
 			/* CR or LF */
 			if rotation == 0 {
 				x = ox
-				y += int16(font.YAdvance) + 1
+				y += int16(font.YAdvance)
 			} else if rotation == 1 {
-				x -= int16(font.YAdvance) + 1
+				x -= int16(font.YAdvance)
 				y = oy
 			} else if rotation == 2 {
 				x = ox
-				y -= int16(font.YAdvance) + 1
+				y -= int16(font.YAdvance)
 			} else {
-				x += int16(font.YAdvance) + 1
+				x += int16(font.YAdvance)
 				y = oy
 			}
 			continue

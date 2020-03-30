@@ -40,6 +40,7 @@ func (c *cli) Run(args []string) error {
 	output := app.Flag("output", "output path").String()
 	all := app.Flag("all", "include all glyphs in the font").Bool()
 	verbose := app.Flag("verbose", "run verbosely").Bool()
+	yadvance := app.Flag("yadvance", "new line distance").Int()
 
 	k, err := app.Parse(args[1:])
 	if err != nil {
@@ -63,6 +64,7 @@ func (c *cli) Run(args []string) error {
 		opts := []option{
 			withAll(*all),
 			withVerbose(*verbose),
+			withYAdvance(*yadvance),
 		}
 
 		err = f.generate(w, []rune(*str), opts...)
