@@ -41,8 +41,8 @@ func main() {
 	display.ClearDisplay()
 	display.SetBrightness(100)
 
-	tinyfont.WriteLine(&display, &tinyfont.TomThumb, 18, 12, []byte("Hello"), colors[0])
-	tinyfont.WriteLineColors(&display, &tinyfont.Org01, 12, 28, []byte("Gophers!"), colors)
+	tinyfont.WriteLine(&display, &tinyfont.TomThumb, 18, 12, "Hello", colors[0])
+	tinyfont.WriteLineColors(&display, &tinyfont.Org01, 12, 28, "Gophers!", colors)
 	for {
 		display.Display()
 	}
