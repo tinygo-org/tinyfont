@@ -47,7 +47,10 @@ func DrawCharRotated(display drivers.Displayer, font *Font, x int16, y int16, ch
 
 func drawGlyphRotated(display drivers.Displayer, font *Font, x int16, y int16, glyph Glyph, color color.RGBA, rotation Rotation) {
 	bitmapOffset := 0
-	bitmap := glyph.Bitmaps[bitmapOffset]
+	bitmap := byte(0)
+	if len(glyph.Bitmaps) > 0 {
+		bitmap = glyph.Bitmaps[bitmapOffset]
+	}
 	bit := uint8(0)
 	for j := int16(0); j < int16(glyph.Height); j++ {
 		for i := int16(0); i < int16(glyph.Width); i++ {
