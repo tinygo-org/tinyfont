@@ -1,7 +1,6 @@
 package tinyfont
 
 import (
-	"fmt"
 	"image/color"
 
 	"tinygo.org/x/drivers"
@@ -38,10 +37,7 @@ func DrawChar(display drivers.Displayer, font *Font, x int16, y int16, char rune
 
 // DrawCharRotated sets a single char in the buffer of the display
 func DrawCharRotated(display drivers.Displayer, font *Font, x int16, y int16, char rune, color color.RGBA, rotation Rotation) {
-	glyph, err := GetGlyph(font, char)
-	if err != nil {
-		// TODO
-	}
+	glyph := GetGlyph(font, char)
 	drawGlyphRotated(display, font, x, y, glyph, color, rotation)
 }
 
@@ -113,10 +109,7 @@ func WriteLineRotated(display drivers.Displayer, font *Font, x int16, y int16, s
 			continue
 		}
 
-		glyph, err := GetGlyph(font, text[i])
-		if err != nil {
-			// TODO
-		}
+		glyph := GetGlyph(font, text[i])
 		//if x+int16(glyph.XAdvance) >= 0 {
 		drawGlyphRotated(display, font, x, y, glyph, color, rotation)
 		//}
@@ -179,10 +172,7 @@ func WriteLineColorsRotated(display drivers.Displayer, font *Font, x int16, y in
 			}
 			continue
 		}
-		glyph, err := GetGlyph(font, text[i])
-		if err != nil {
-			// TODO
-		}
+		glyph := GetGlyph(font, text[i])
 		//if x+int16(glyph.XAdvance) >= 0 {
 		drawGlyphRotated(display, font, x, y, glyph, colors[c], rotation)
 		//}
@@ -213,30 +203,21 @@ func WriteLineColorsRotated(display drivers.Displayer, font *Font, x int16, y in
 func LineWidth(font *Font, str string) (innerWidth uint32, outboxWidth uint32) {
 	text := []rune(str)
 	for i := range text {
-		glyph, err := GetGlyph(font, text[i])
-		if err != nil {
-			// TODO
-		}
+		glyph := GetGlyph(font, text[i])
 		outboxWidth += uint32(glyph.XAdvance)
 	}
 	innerWidth = outboxWidth
 	// first glyph
-	glyph, err := GetGlyph(font, text[0])
-	if err != nil {
-		// TODO
-	}
+	glyph := GetGlyph(font, text[0])
 	innerWidth -= uint32(glyph.XOffset)
 
 	// last glyph
-	glyph, err = GetGlyph(font, text[len(text)-1])
-	if err != nil {
-		// TODO
-	}
+	glyph = GetGlyph(font, text[len(text)-1])
 	innerWidth += -uint32(glyph.XAdvance) + uint32(glyph.XOffset) + uint32(glyph.Width)
 	return
 }
 
-func GetGlyph(font *Font, r rune) (Glyph, error) {
+func GetGlyph(font *Font, r rune) Glyph {
 	s := 0
 	e := len(font.Glyphs) - 1
 
@@ -260,8 +241,8 @@ func GetGlyph(font *Font, r rune) (Glyph, error) {
 			YOffset:  font.Glyphs[0].YOffset,
 			Bitmaps:  []byte{0},
 		}
-		return g, fmt.Errorf("glyph not found")
+		return g
 	}
 
-	return font.Glyphs[s], nil
+	return font.Glyphs[s]
 }
