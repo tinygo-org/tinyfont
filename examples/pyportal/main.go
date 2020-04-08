@@ -13,9 +13,6 @@ import (
 )
 
 func main() {
-	machine.TFT_BACKLIGHT.Configure(machine.PinConfig{machine.PinOutput})
-	machine.TFT_BACKLIGHT.High()
-
 	display := ili9341.NewParallel(
 		machine.LCD_DATA0,
 		machine.TFT_WR,
@@ -26,6 +23,9 @@ func main() {
 	)
 	display.Configure(ili9341.Config{})
 	display.FillScreen(color.RGBA{255, 255, 255, 255})
+
+	machine.TFT_BACKLIGHT.Configure(machine.PinConfig{machine.PinOutput})
+	machine.TFT_BACKLIGHT.High()
 
 	mycolors := make([]color.RGBA, 20)
 	for k := 0; k < 20; k++ {
