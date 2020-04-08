@@ -52,11 +52,11 @@ func drawGlyphRotated(display drivers.Displayer, font *Font, x int16, y int16, g
 		for i := int16(0); i < int16(glyph.Width); i++ {
 
 			if (bitmap & 0x80) != 0x00 {
-				if rotation == 0 {
+				if rotation == NO_ROTATION {
 					display.SetPixel(x+int16(glyph.XOffset)+i, y+int16(glyph.YOffset)+j, color)
-				} else if rotation == 1 {
+				} else if rotation == ROTATION_90 {
 					display.SetPixel(x-int16(glyph.YOffset)-j, y+int16(glyph.XOffset)+i, color)
-				} else if rotation == 2 {
+				} else if rotation == ROTATION_180 {
 					display.SetPixel(x-int16(glyph.XOffset)-i, y-int16(glyph.YOffset)-j, color)
 				} else {
 					display.SetPixel(x+int16(glyph.YOffset)+j, y-int16(glyph.XOffset)-i, color)
@@ -93,13 +93,13 @@ func WriteLineRotated(display drivers.Displayer, font *Font, x int16, y int16, s
 	for i := 0; i < l; i++ {
 		if text[i] == 0x0A || text[i] == 0x0D {
 			/* CR or LF */
-			if rotation == 0 {
+			if rotation == NO_ROTATION {
 				x = ox
 				y += int16(font.YAdvance)
-			} else if rotation == 1 {
+			} else if rotation == ROTATION_90 {
 				x -= int16(font.YAdvance)
 				y = oy
-			} else if rotation == 2 {
+			} else if rotation == ROTATION_180 {
 				x = ox
 				y -= int16(font.YAdvance)
 			} else {
@@ -113,21 +113,21 @@ func WriteLineRotated(display drivers.Displayer, font *Font, x int16, y int16, s
 		//if x+int16(glyph.XAdvance) >= 0 {
 		drawGlyphRotated(display, font, x, y, glyph, color, rotation)
 		//}
-		if rotation == 0 {
+		if rotation == NO_ROTATION {
 			x += int16(glyph.XAdvance)
-		} else if rotation == 1 {
+		} else if rotation == ROTATION_90 {
 			y += int16(glyph.XAdvance)
-		} else if rotation == 2 {
+		} else if rotation == ROTATION_180 {
 			x -= int16(glyph.XAdvance)
 		} else {
 			y -= int16(glyph.XAdvance)
 		}
 
 		// speed up?
-		if (rotation == 0 && x > w) ||
-			(rotation == 1 && x > h) ||
-			(rotation == 2 && x < 0) ||
-			(rotation == 3 && y < 0) {
+		if (rotation == NO_ROTATION && x > w) ||
+			(rotation == ROTATION_90 && x > h) ||
+			(rotation == ROTATION_180 && x < 0) ||
+			(rotation == ROTATION_270 && y < 0) {
 			break
 		}
 	}
@@ -157,13 +157,13 @@ func WriteLineColorsRotated(display drivers.Displayer, font *Font, x int16, y in
 	for i := 0; i < l; i++ {
 		if text[i] == 0x0A || text[i] == 0x0D {
 			/* CR or LF */
-			if rotation == 0 {
+			if rotation == NO_ROTATION {
 				x = ox
 				y += int16(font.YAdvance) + 1
-			} else if rotation == 1 {
+			} else if rotation == ROTATION_90 {
 				x -= int16(font.YAdvance) + 1
 				y = oy
-			} else if rotation == 2 {
+			} else if rotation == ROTATION_180 {
 				x = ox
 				y -= int16(font.YAdvance) + 1
 			} else {
@@ -180,21 +180,21 @@ func WriteLineColorsRotated(display drivers.Displayer, font *Font, x int16, y in
 		if c >= numColors {
 			c = 0
 		}
-		if rotation == 0 {
+		if rotation == NO_ROTATION {
 			x += int16(glyph.XAdvance)
-		} else if rotation == 1 {
+		} else if rotation == ROTATION_90 {
 			y += int16(glyph.XAdvance)
-		} else if rotation == 2 {
+		} else if rotation == ROTATION_180 {
 			x -= int16(glyph.XAdvance)
 		} else {
 			y -= int16(glyph.XAdvance)
 		}
 
 		// speed up?
-		if (rotation == 0 && x > w) ||
-			(rotation == 1 && x > h) ||
-			(rotation == 2 && x < 0) ||
-			(rotation == 3 && y < 0) {
+		if (rotation == NO_ROTATION && x > w) ||
+			(rotation == ROTATION_90 && x > h) ||
+			(rotation == ROTATION_180 && x < 0) ||
+			(rotation == ROTATION_270 && y < 0) {
 			break
 		}
 	}
