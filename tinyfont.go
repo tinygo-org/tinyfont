@@ -30,17 +30,18 @@ type Font struct {
 	YAdvance uint8
 }
 
-// DrawChar sets a single char in the buffer of the display
+// DrawChar sets a single rune in the buffer of the display.
 func DrawChar(display drivers.Displayer, font *Font, x int16, y int16, char rune, color color.RGBA) {
 	DrawCharRotated(display, font, x, y, char, color, 0)
 }
 
-// DrawCharRotated sets a single char in the buffer of the display
+// DrawCharRotated sets a single rune in the buffer of the display.
 func DrawCharRotated(display drivers.Displayer, font *Font, x int16, y int16, char rune, color color.RGBA, rotation Rotation) {
 	glyph := GetGlyph(font, char)
 	drawGlyphRotated(display, font, x, y, glyph, color, rotation)
 }
 
+// drawGlyphRotated sets a single glyph in the buffer of the display.
 func drawGlyphRotated(display drivers.Displayer, font *Font, x int16, y int16, glyph Glyph, color color.RGBA, rotation Rotation) {
 	bitmapOffset := 0
 	bitmap := byte(0)
@@ -76,12 +77,12 @@ func drawGlyphRotated(display drivers.Displayer, font *Font, x int16, y int16, g
 	}
 }
 
-// WriteLine writes a string in the selected font in the buffer
+// WriteLine writes a string in the selected font in the buffer.
 func WriteLine(display drivers.Displayer, font *Font, x int16, y int16, str string, color color.RGBA) {
 	WriteLineRotated(display, font, x, y, str, color, 0)
 }
 
-// WriteLineRotated writes a string in the selected font in the buffer
+// WriteLineRotated writes a string in the selected font in the buffer.
 func WriteLineRotated(display drivers.Displayer, font *Font, x int16, y int16, str string, color color.RGBA, rotation Rotation) {
 	text := []rune(str)
 
@@ -200,6 +201,7 @@ func WriteLineColorsRotated(display drivers.Displayer, font *Font, x int16, y in
 	}
 }
 
+// LineWidth returns the inner and outbox widths corresponding to font and str.
 func LineWidth(font *Font, str string) (innerWidth uint32, outboxWidth uint32) {
 	text := []rune(str)
 	for i := range text {
@@ -217,6 +219,7 @@ func LineWidth(font *Font, str string) (innerWidth uint32, outboxWidth uint32) {
 	return
 }
 
+// GetGlyph returns the glyph corresponding to the specified rune in the font.
 func GetGlyph(font *Font, r rune) Glyph {
 	s := 0
 	e := len(font.Glyphs) - 1
