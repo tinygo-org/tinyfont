@@ -114,9 +114,7 @@ func WriteLineRotated(display drivers.Displayer, font *Font, x int16, y int16, s
 		}
 
 		glyph := GetGlyph(font, text[i])
-		//if x+int16(glyph.XAdvance) >= 0 {
 		drawGlyphRotated(display, font, x, y, glyph, color, rotation)
-		//}
 		if rotation == NO_ROTATION {
 			x += int16(glyph.XAdvance)
 		} else if rotation == ROTATION_90 {
@@ -177,9 +175,7 @@ func WriteLineColorsRotated(display drivers.Displayer, font *Font, x int16, y in
 			continue
 		}
 		glyph := GetGlyph(font, text[i])
-		//if x+int16(glyph.XAdvance) >= 0 {
 		drawGlyphRotated(display, font, x, y, glyph, colors[c], rotation)
-		//}
 		c++
 		if c >= numColors {
 			c = 0
