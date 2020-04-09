@@ -11,6 +11,9 @@ const (
 	ROTATION_90  Rotation = 1 // 90 degrees clock-wise rotation
 	ROTATION_180 Rotation = 2
 	ROTATION_270 Rotation = 3
+
+	LineFeed       = 0x0A
+	CarriageReturn = 0x0D
 )
 
 type Rotation uint8
@@ -92,7 +95,7 @@ func WriteLineRotated(display drivers.Displayer, font *Font, x int16, y int16, s
 	ox := x
 	oy := y
 	for i := 0; i < l; i++ {
-		if text[i] == 0x0A || text[i] == 0x0D {
+		if text[i] == LineFeed || text[i] == CarriageReturn {
 			/* CR or LF */
 			if rotation == NO_ROTATION {
 				x = ox
@@ -156,7 +159,7 @@ func WriteLineColorsRotated(display drivers.Displayer, font *Font, x int16, y in
 	ox := x
 	oy := y
 	for i := 0; i < l; i++ {
-		if text[i] == 0x0A || text[i] == 0x0D {
+		if text[i] == LineFeed || text[i] == CarriageReturn {
 			/* CR or LF */
 			if rotation == NO_ROTATION {
 				x = ox
