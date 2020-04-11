@@ -5,6 +5,9 @@ import (
 	"io"
 	"io/ioutil"
 	"os"
+	"os/exec"
+	"path/filepath"
+	"regexp"
 	"sort"
 	"strings"
 	"unsafe"
@@ -53,6 +56,7 @@ func withYAdvance(a int) option {
 }
 
 const bom = 0xFEFF // byte order mark, only permitted as very first character
+var re = regexp.MustCompile(`\b(Rune:)(\d+)`)
 
 func (f *fontgen) generate(w io.Writer, runes []rune, opt ...option) error {
 	opts := defaultOption
@@ -127,33 +131,54 @@ func (f *fontgen) generate(w io.Writer, runes []rune, opt ...option) error {
 	}
 	ufont.Glyphs = sortGlyphs(ufont.Glyphs)
 
-	fmt.Fprintln(w, `//`, strings.Join(os.Args, ` `))
-	fmt.Fprintln(w)
-	fmt.Fprintln(w, `package `+f.pkgname)
-	fmt.Fprintln(w)
-	fmt.Fprintln(w, `import (`)
-	fmt.Fprintln(w, `	"tinygo.org/x/tinyfont"`)
-	fmt.Fprintln(w, `)`)
-	fmt.Fprintln(w)
+	tmp, err := ioutil.TempFile(``, `tinyfontgen`)
+	if err != nil {
+		return err
+	}
+	defer os.Remove(tmp.Name())
+
+	fmt.Fprintln(tmp, `//`, filepath.Base(os.Args[0]), strings.Join(os.Args[1:], ` `))
+	fmt.Fprintln(tmp)
+	fmt.Fprintln(tmp, `package `+f.pkgname)
+	fmt.Fprintln(tmp)
+	fmt.Fprintln(tmp, `import (`)
+	fmt.Fprintln(tmp, `	"tinygo.org/x/tinyfont"`)
+	fmt.Fprintln(tmp, `)`)
+	fmt.Fprintln(tmp)
 
 	fontname := strings.ToUpper(f.fontname[0:1]) + f.fontname[1:]
-	fmt.Fprintf(w, "var %s = %T{\n", fontname, ufont)
-	fmt.Fprintf(w, "	Glyphs:%T{\n", ufont.Glyphs)
+	fmt.Fprintf(tmp, "var %s = %T{\n", fontname, ufont)
+	fmt.Fprintf(tmp, "	Glyphs:%T{\n", ufont.Glyphs)
 	for i, g := range ufont.Glyphs {
 		c := fmt.Sprintf("%c", ufont.Glyphs[i].Rune)
 		if ufont.Glyphs[i].Rune == 0 {
 			c = ""
 		}
-		fmt.Fprintf(w, "		/* %s */ %#v,\n", c, g)
+		gstr := fmt.Sprintf("%#v", g)
+		gstr = re.ReplaceAllStringFunc(gstr, func(s string) string {
+			r := 0
+			fmt.Sscanf(s, `Rune:%d`, &r)
+			return fmt.Sprintf(`Rune:%#x`, r)
+		})
+		//gstr = re.ReplaceAllStringFunc(gstr, strings.ToUpper)
+		fmt.Fprintf(tmp, "		/* %s */ %s,\n", c, gstr)
 	}
-	fmt.Fprintf(w, "	},\n")
-	fmt.Fprintln(w)
+	fmt.Fprintf(tmp, "	},\n")
+	fmt.Fprintln(tmp)
 
-	fmt.Fprintf(w, "	YAdvance:%#v,\n", ufont.YAdvance)
-	fmt.Fprintf(w, "}\n")
+	fmt.Fprintf(tmp, "	YAdvance:%#v,\n", ufont.YAdvance)
+	fmt.Fprintf(tmp, "}\n")
 
 	if opts.verbose {
 		fmt.Printf("Approx. %d bytes\n", calcSize(ufont))
+	}
+
+	// gofmt
+	cmd := exec.Command(`gofmt`, tmp.Name())
+	cmd.Stdout = w
+	err = cmd.Run()
+	if err != nil {
+		return err
 	}
 
 	return nil
