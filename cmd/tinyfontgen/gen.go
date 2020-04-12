@@ -52,6 +52,8 @@ func withYAdvance(a int) option {
 	}
 }
 
+const bom = 0xFEFF // byte order mark, only permitted as very first character
+
 func (f *fontgen) generate(w io.Writer, runes []rune, opt ...option) error {
 	opts := defaultOption
 	for _, o := range opt {
@@ -92,7 +94,9 @@ func (f *fontgen) generate(w io.Writer, runes []rune, opt ...option) error {
 				continue
 			}
 
-			if opts.all {
+			if fr == bom {
+				continue
+			} else if opts.all {
 				if exists[fr] {
 					continue
 				}
