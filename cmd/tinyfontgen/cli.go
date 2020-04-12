@@ -36,7 +36,7 @@ func (c *cli) Run(args []string) error {
 
 	pkgname := app.Flag("package", "package name").Default("main").String()
 	fontname := app.Flag("fontname", "font name").Default("TinyFont").String()
-	fonts := app.Flag("font", "font path (*.bdf)").Required().ExistingFiles()
+	fonts := app.Arg("font", "font path (*.bdf)").Required().ExistingFiles()
 	str := app.Flag(`string`, `strings for font`).String()
 	strfiles := app.Flag(`string-file`, `strings for font`).ExistingFiles()
 	output := app.Flag("output", "output path").String()
