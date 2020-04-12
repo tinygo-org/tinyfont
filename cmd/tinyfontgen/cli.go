@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"io"
+	"io/ioutil"
 	"os"
 
 	"gopkg.in/alecthomas/kingpin.v2"
@@ -36,7 +37,8 @@ func (c *cli) Run(args []string) error {
 	pkgname := app.Flag("package", "package name").Default("main").String()
 	fontname := app.Flag("fontname", "font name").Default("TinyFont").String()
 	fonts := app.Flag("font", "font path (*.bdf)").Required().ExistingFiles()
-	str := app.Arg(`string`, `strings for font`).String()
+	str := app.Flag(`string`, `strings for font`).String()
+	strfiles := app.Flag(`string-file`, `strings for font`).ExistingFiles()
 	output := app.Flag("output", "output path").String()
 	all := app.Flag("all", "include all glyphs in the font").Bool()
 	verbose := app.Flag("verbose", "run verbosely").Bool()
@@ -67,7 +69,16 @@ func (c *cli) Run(args []string) error {
 			withYAdvance(*yadvance),
 		}
 
-		err = f.generate(w, []rune(*str), opts...)
+		runes := []rune(*str)
+		for _, f := range *strfiles {
+			b, err := ioutil.ReadFile(f)
+			if err != nil {
+				return err
+			}
+			runes = append(runes, []rune(string(b))...)
+		}
+
+		err = f.generate(w, runes, opts...)
 		if err != nil {
 			return err
 		}
