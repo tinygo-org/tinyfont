@@ -35,7 +35,7 @@ type Font struct {
 
 // DrawChar sets a single rune in the buffer of the display.
 func DrawChar(display drivers.Displayer, font *Font, x int16, y int16, char rune, color color.RGBA) {
-	DrawCharRotated(display, font, x, y, char, color, 0)
+	DrawCharRotated(display, font, x, y, char, color, NO_ROTATION)
 }
 
 // DrawCharRotated sets a single rune in the buffer of the display.
@@ -81,58 +81,13 @@ func drawGlyphRotated(display drivers.Displayer, x int16, y int16, glyph Glyph, 
 }
 
 // WriteLine writes a string in the selected font in the buffer.
-func WriteLine(display drivers.Displayer, font *Font, x int16, y int16, str string, color color.RGBA) {
-	WriteLineRotated(display, font, x, y, str, color, 0)
+func WriteLine(display drivers.Displayer, font *Font, x int16, y int16, str string, c color.RGBA) {
+	WriteLineColorsRotated(display, font, x, y, str, []color.RGBA{c}, NO_ROTATION)
 }
 
 // WriteLineRotated writes a string in the selected font in the buffer.
-func WriteLineRotated(display drivers.Displayer, font *Font, x int16, y int16, str string, color color.RGBA, rotation Rotation) {
-	text := []rune(str)
-
-	rotation = rotation % 4
-	w, h := display.Size()
-	l := len(text)
-	ox := x
-	oy := y
-	for i := 0; i < l; i++ {
-		if text[i] == LineFeed || text[i] == CarriageReturn {
-			/* CR or LF */
-			if rotation == NO_ROTATION {
-				x = ox
-				y += int16(font.YAdvance)
-			} else if rotation == ROTATION_90 {
-				x -= int16(font.YAdvance)
-				y = oy
-			} else if rotation == ROTATION_180 {
-				x = ox
-				y -= int16(font.YAdvance)
-			} else {
-				x += int16(font.YAdvance)
-				y = oy
-			}
-			continue
-		}
-
-		glyph := GetGlyph(font, text[i])
-		drawGlyphRotated(display, x, y, glyph, color, rotation)
-		if rotation == NO_ROTATION {
-			x += int16(glyph.XAdvance)
-		} else if rotation == ROTATION_90 {
-			y += int16(glyph.XAdvance)
-		} else if rotation == ROTATION_180 {
-			x -= int16(glyph.XAdvance)
-		} else {
-			y -= int16(glyph.XAdvance)
-		}
-
-		// speed up?
-		if (rotation == NO_ROTATION && x > w) ||
-			(rotation == ROTATION_90 && x > h) ||
-			(rotation == ROTATION_180 && x < 0) ||
-			(rotation == ROTATION_270 && y < 0) {
-			break
-		}
-	}
+func WriteLineRotated(display drivers.Displayer, font *Font, x int16, y int16, str string, c color.RGBA, rotation Rotation) {
+	WriteLineColorsRotated(display, font, x, y, str, []color.RGBA{c}, rotation)
 }
 
 // WriteLineColors writes a string in the selected font in the buffer. Each char is in a different color
@@ -161,15 +116,15 @@ func WriteLineColorsRotated(display drivers.Displayer, font *Font, x int16, y in
 			/* CR or LF */
 			if rotation == NO_ROTATION {
 				x = ox
-				y += int16(font.YAdvance) + 1
+				y += int16(font.YAdvance)
 			} else if rotation == ROTATION_90 {
-				x -= int16(font.YAdvance) + 1
+				x -= int16(font.YAdvance)
 				y = oy
 			} else if rotation == ROTATION_180 {
 				x = ox
-				y -= int16(font.YAdvance) + 1
+				y -= int16(font.YAdvance)
 			} else {
-				x += int16(font.YAdvance) + 1
+				x += int16(font.YAdvance)
 				y = oy
 			}
 			continue
