@@ -36,11 +36,8 @@ func main() {
 	tinyfont.WriteLineColorsRotated(&display, &freeserif.Bold9pt7b, 150, 90, "TinyGo", mycolors[12:], tinyfont.ROTATION_270)
 	tinyfont.WriteLineColorsRotated(&display, &tinyfont.Org01, 10, 40, "TinyGo", mycolors[18:], tinyfont.ROTATION_90)
 
-<<<<<<< HEAD
-=======
 	tinyfont.WriteLineColors(&display, &gophers.Regular58pt, 18, 90, "ABC", mycolors[9:])
 
->>>>>>> 5b1e478... Add unicode font support (#2)
 }
 
 func getRainbowRGB(i uint8) color.RGBA {
