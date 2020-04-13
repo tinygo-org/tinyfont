@@ -41,11 +41,11 @@ func DrawChar(display drivers.Displayer, font *Font, x int16, y int16, char rune
 // DrawCharRotated sets a single rune in the buffer of the display.
 func DrawCharRotated(display drivers.Displayer, font *Font, x int16, y int16, char rune, color color.RGBA, rotation Rotation) {
 	glyph := GetGlyph(font, char)
-	drawGlyphRotated(display, font, x, y, glyph, color, rotation)
+	drawGlyphRotated(display, x, y, glyph, color, rotation)
 }
 
 // drawGlyphRotated sets a single glyph in the buffer of the display.
-func drawGlyphRotated(display drivers.Displayer, font *Font, x int16, y int16, glyph Glyph, color color.RGBA, rotation Rotation) {
+func drawGlyphRotated(display drivers.Displayer, x int16, y int16, glyph Glyph, color color.RGBA, rotation Rotation) {
 	bitmapOffset := 0
 	bitmap := byte(0)
 	if len(glyph.Bitmaps) > 0 {
@@ -114,7 +114,7 @@ func WriteLineRotated(display drivers.Displayer, font *Font, x int16, y int16, s
 		}
 
 		glyph := GetGlyph(font, text[i])
-		drawGlyphRotated(display, font, x, y, glyph, color, rotation)
+		drawGlyphRotated(display, x, y, glyph, color, rotation)
 		if rotation == NO_ROTATION {
 			x += int16(glyph.XAdvance)
 		} else if rotation == ROTATION_90 {
@@ -175,7 +175,7 @@ func WriteLineColorsRotated(display drivers.Displayer, font *Font, x int16, y in
 			continue
 		}
 		glyph := GetGlyph(font, text[i])
-		drawGlyphRotated(display, font, x, y, glyph, colors[c], rotation)
+		drawGlyphRotated(display, x, y, glyph, colors[c], rotation)
 		c++
 		if c >= numColors {
 			c = 0
