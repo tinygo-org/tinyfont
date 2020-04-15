@@ -24,7 +24,8 @@ var (
 	fontname = fs.String("fontname", "TinyFont", "font name")
 	str      = fs.String("string", "", "strings for font")
 	output   = fs.String("output", "", "output path")
-	all      = fs.Bool("all", false, "include all glyphs in the font")
+	ascii    = fs.Bool("ascii", true, "include all glyphs in the font")
+	all      = fs.Bool("all", false, "include all ascii glyphs (codepoint <= 255) in the font")
 	verbose  = fs.Bool("verbose", false, "run verbosely")
 	yadvance = fs.Int("yadvance", 0, "new line distance")
 )
@@ -67,13 +68,20 @@ func (c *cli) Run(args []string) error {
 		fonts:    fonts,
 	}
 
-	w, err := os.Create(*output)
-	if err != nil {
-		return nil
+	var w io.Writer
+	w = os.Stdout
+	if len(*output) > 0 {
+		ow, err := os.Create(*output)
+		if err != nil {
+			return nil
+		}
+		defer ow.Close()
+
+		w = ow
 	}
-	defer w.Close()
 
 	opts := []option{
+		withAscii(*ascii),
 		withAll(*all),
 		withVerbose(*verbose),
 		withYAdvance(*yadvance),
@@ -88,7 +96,7 @@ func (c *cli) Run(args []string) error {
 		runes = append(runes, []rune(string(b))...)
 	}
 
-	err = f.generate(w, runes, opts...)
+	err := f.generate(w, runes, opts...)
 	if err != nil {
 		return err
 	}

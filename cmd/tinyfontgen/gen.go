@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -26,15 +27,23 @@ type fontgen struct {
 type option func(*options)
 
 type options struct {
+	ascii    bool
 	all      bool
 	verbose  bool
 	yadvance int
 }
 
 var defaultOption = options{
+	ascii:    true,
 	all:      false,
 	verbose:  false,
 	yadvance: 0,
+}
+
+func withAscii(b bool) option {
+	return func(o *options) {
+		o.ascii = b
+	}
 }
 
 func withAll(b bool) option {
@@ -64,7 +73,9 @@ func (f *fontgen) generate(w io.Writer, runes []rune, opt ...option) error {
 		o(&opts)
 	}
 
-	runes = append(runes, allAscii()...)
+	if opts.ascii {
+		runes = append(runes, allAscii()...)
+	}
 	runes = sortAndUniq(runes)
 
 	fonts := []*bdf.Font{}
@@ -174,11 +185,13 @@ func (f *fontgen) generate(w io.Writer, runes []rune, opt ...option) error {
 	}
 
 	// gofmt
+	buf := bytes.Buffer{}
 	cmd := exec.Command(`gofmt`, tmp.Name())
 	cmd.Stdout = w
+	cmd.Stderr = &buf
 	err = cmd.Run()
 	if err != nil {
-		return err
+		return fmt.Errorf("%s : %s", err.Error(), strings.TrimSpace(buf.String()))
 	}
 
 	return nil
