@@ -33,14 +33,19 @@ type Font struct {
 	YAdvance uint8
 }
 
+type Fonter interface {
+	GetGlyph(r rune) Glyph
+	GetYAdvance() uint8
+}
+
 // DrawChar sets a single rune in the buffer of the display.
-func DrawChar(display drivers.Displayer, font *Font, x int16, y int16, char rune, color color.RGBA) {
+func DrawChar(display drivers.Displayer, font Fonter, x int16, y int16, char rune, color color.RGBA) {
 	DrawCharRotated(display, font, x, y, char, color, NO_ROTATION)
 }
 
 // DrawCharRotated sets a single rune in the buffer of the display.
-func DrawCharRotated(display drivers.Displayer, font *Font, x int16, y int16, char rune, color color.RGBA, rotation Rotation) {
-	glyph := GetGlyph(font, char)
+func DrawCharRotated(display drivers.Displayer, font Fonter, x int16, y int16, char rune, color color.RGBA, rotation Rotation) {
+	glyph := font.GetGlyph(char)
 	drawGlyphRotated(display, x, y, glyph, color, rotation)
 }
 
@@ -81,24 +86,24 @@ func drawGlyphRotated(display drivers.Displayer, x int16, y int16, glyph Glyph, 
 }
 
 // WriteLine writes a string in the selected font in the buffer.
-func WriteLine(display drivers.Displayer, font *Font, x int16, y int16, str string, c color.RGBA) {
+func WriteLine(display drivers.Displayer, font Fonter, x int16, y int16, str string, c color.RGBA) {
 	WriteLineColorsRotated(display, font, x, y, str, []color.RGBA{c}, NO_ROTATION)
 }
 
 // WriteLineRotated writes a string in the selected font in the buffer.
-func WriteLineRotated(display drivers.Displayer, font *Font, x int16, y int16, str string, c color.RGBA, rotation Rotation) {
+func WriteLineRotated(display drivers.Displayer, font Fonter, x int16, y int16, str string, c color.RGBA, rotation Rotation) {
 	WriteLineColorsRotated(display, font, x, y, str, []color.RGBA{c}, rotation)
 }
 
 // WriteLineColors writes a string in the selected font in the buffer. Each char is in a different color
 // if not enough colors are defined, colors are cycled.
-func WriteLineColors(display drivers.Displayer, font *Font, x int16, y int16, str string, colors []color.RGBA) {
+func WriteLineColors(display drivers.Displayer, font Fonter, x int16, y int16, str string, colors []color.RGBA) {
 	WriteLineColorsRotated(display, font, x, y, str, colors, 0)
 }
 
 // WriteLineColorsRotated writes a string in the selected font in the buffer. Each char is in a different color
 // if not enough colors are defined, colors are cycled.
-func WriteLineColorsRotated(display drivers.Displayer, font *Font, x int16, y int16, str string, colors []color.RGBA, rotation Rotation) {
+func WriteLineColorsRotated(display drivers.Displayer, font Fonter, x int16, y int16, str string, colors []color.RGBA, rotation Rotation) {
 	text := []rune(str)
 	numColors := uint16(len(colors))
 	if numColors == 0 {
@@ -116,20 +121,20 @@ func WriteLineColorsRotated(display drivers.Displayer, font *Font, x int16, y in
 			/* CR or LF */
 			if rotation == NO_ROTATION {
 				x = ox
-				y += int16(font.YAdvance)
+				y += int16(font.GetYAdvance())
 			} else if rotation == ROTATION_90 {
-				x -= int16(font.YAdvance)
+				x -= int16(font.GetYAdvance())
 				y = oy
 			} else if rotation == ROTATION_180 {
 				x = ox
-				y -= int16(font.YAdvance)
+				y -= int16(font.GetYAdvance())
 			} else {
-				x += int16(font.YAdvance)
+				x += int16(font.GetYAdvance())
 				y = oy
 			}
 			continue
 		}
-		glyph := GetGlyph(font, text[i])
+		glyph := font.GetGlyph(text[i])
 		drawGlyphRotated(display, x, y, glyph, colors[c], rotation)
 		c++
 		if c >= numColors {
@@ -156,50 +161,54 @@ func WriteLineColorsRotated(display drivers.Displayer, font *Font, x int16, y in
 }
 
 // LineWidth returns the inner and outbox widths corresponding to font and str.
-func LineWidth(font *Font, str string) (innerWidth uint32, outboxWidth uint32) {
+func LineWidth(font Fonter, str string) (innerWidth uint32, outboxWidth uint32) {
 	text := []rune(str)
 	for i := range text {
-		glyph := GetGlyph(font, text[i])
+		glyph := font.GetGlyph(text[i])
 		outboxWidth += uint32(glyph.XAdvance)
 	}
 	innerWidth = outboxWidth
 	// first glyph
-	glyph := GetGlyph(font, text[0])
+	glyph := font.GetGlyph(text[0])
 	innerWidth -= uint32(glyph.XOffset)
 
 	// last glyph
-	glyph = GetGlyph(font, text[len(text)-1])
+	glyph = font.GetGlyph(text[len(text)-1])
 	innerWidth += -uint32(glyph.XAdvance) + uint32(glyph.XOffset) + uint32(glyph.Width)
 	return
 }
 
 // GetGlyph returns the glyph corresponding to the specified rune in the font.
-func GetGlyph(font *Font, r rune) Glyph {
+func (f *Font) GetGlyph(r rune) Glyph {
 	s := 0
-	e := len(font.Glyphs) - 1
+	e := len(f.Glyphs) - 1
 
 	for s <= e {
 		m := (s + e) / 2
 
-		if font.Glyphs[m].Rune < r {
+		if f.Glyphs[m].Rune < r {
 			s = m + 1
 		} else {
 			e = m - 1
 		}
 	}
 
-	if s == len(font.Glyphs) || font.Glyphs[s].Rune != r {
+	if s == len(f.Glyphs) || f.Glyphs[s].Rune != r {
 		g := Glyph{
 			Rune:     r,
 			Width:    0,
 			Height:   0,
-			XAdvance: font.Glyphs[0].XAdvance,
-			XOffset:  font.Glyphs[0].XOffset,
-			YOffset:  font.Glyphs[0].YOffset,
+			XAdvance: f.Glyphs[0].XAdvance,
+			XOffset:  f.Glyphs[0].XOffset,
+			YOffset:  f.Glyphs[0].YOffset,
 			Bitmaps:  []byte{0},
 		}
 		return g
 	}
 
-	return font.Glyphs[s]
+	return f.Glyphs[s]
+}
+
+func (f *Font) GetYAdvance() uint8 {
+	return f.YAdvance
 }
