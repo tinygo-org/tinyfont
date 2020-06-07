@@ -83,6 +83,9 @@ func WriteLineRotated(display drivers.Displayer, font *Font, x int16, y int16, t
 	w, h := display.Size()
 	l := len(text)
 	for i := 0; i < l; i++ {
+		if text[i] < font.First || text[i] > font.Last {
+			continue
+		}
 		glyph := font.Glyphs[text[i]-font.First]
 		//if x+int16(glyph.XAdvance) >= 0 {
 		DrawCharRotated(display, font, x, y, text[i], color, rotation)
