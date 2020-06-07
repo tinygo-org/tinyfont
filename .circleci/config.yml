@@ -14,4 +14,4 @@ jobs:
                 command: make fmt-check
             - run:
                 name: "Run build and smoke tests"
-                command: make smoke-test
+                command: make smoketest
