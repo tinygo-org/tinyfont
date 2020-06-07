@@ -1,6 +1,9 @@
 TinyFont
 =========
-TinyFont is a font/text package for [TinyGo](https://tinygo.org/) displays. It's heavily based on [Adafruit's GFX library](https://github.com/adafruit/Adafruit-GFX-Library).
+
+[![CircleCI](https://circleci.com/gh/tinygo-org/tinyfont/tree/dev.svg?style=svg)](https://circleci.com/gh/tinygo-org/tinyfont/tree/dev)
+
+TinyFont is a font/text package for [TinyGo](https://tinygo.org/) displays. It is heavily based on [Adafruit's GFX library](https://github.com/adafruit/Adafruit-GFX-Library).
 
 ![example](https://raw.githubusercontent.com/conejoninja/tinyfont/master/example.png)
 
