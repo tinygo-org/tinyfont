@@ -19,8 +19,11 @@ fmt-check:
 
 TARGET = examples_epd.hex \
 		 examples_hub75.hex \
-		 examples_pybadge.hex \
-		 examples_pyportal.hex
+		 examples_displays_pybadge.hex \
+		 examples_displays_pyportal.hex \
+		 examples_displays_wioterminal.hex \
+		 examples_unicode_font.hex \
+		 examples_unicode_font2.hex
 .PHONY: smoketest $(TARGET)
 smoketest: $(TARGET)
 	$(TINYGO) version
@@ -33,10 +36,22 @@ examples_hub75.hex:
 	$(TINYGO) build -size short -o $@ -target=pybadge             ./examples/hub75
 	@$(MD5SUM) $@
 
-examples_pybadge.hex:
-	$(TINYGO) build -size short -o $@ -target=pybadge             ./examples/pybadge
+examples_displays_pybadge.hex:
+	$(TINYGO) build -size short -o $@ -target=pybadge             ./examples/displays
 	@$(MD5SUM) $@
 
-examples_pyportal.hex:
-	$(TINYGO) build -size short -o $@ -target=pyportal            ./examples/pyportal
+examples_displays_pyportal.hex:
+	$(TINYGO) build -size short -o $@ -target=pyportal            ./examples/displays
+	@$(MD5SUM) $@
+
+examples_displays_wioterminal.hex:
+	$(TINYGO) build -size short -o $@ -target=wioterminal         ./examples/displays
+	@$(MD5SUM) $@
+
+examples_unicode_font.hex:
+	$(TINYGO) build -size short -o $@ -target=pyportal            ./examples/unicode_font
+	@$(MD5SUM) $@
+
+examples_unicode_font2.hex:
+	$(TINYGO) build -size short -o $@ -target=pyportal            ./examples/unicode_font2
 	@$(MD5SUM) $@
