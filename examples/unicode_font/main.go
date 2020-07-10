@@ -2,27 +2,14 @@ package main
 
 import (
 	"image/color"
-	"machine"
 
-	"tinygo.org/x/drivers/ili9341"
 	"tinygo.org/x/tinyfont"
+	"tinygo.org/x/tinyfont/examples/initdisplay"
 	"tinygo.org/x/tinyfont/notoemoji"
 )
 
 func main() {
-	display := ili9341.NewParallel(
-		machine.LCD_DATA0,
-		machine.TFT_WR,
-		machine.TFT_DC,
-		machine.TFT_CS,
-		machine.TFT_RESET,
-		machine.TFT_RD,
-	)
-	display.Configure(ili9341.Config{})
-	display.FillScreen(color.RGBA{255, 255, 255, 255})
-
-	machine.TFT_BACKLIGHT.Configure(machine.PinConfig{machine.PinOutput})
-	machine.TFT_BACKLIGHT.High()
+	display := initdisplay.InitDisplay()
 
 	str := "\x23\x30\x31\x32\x33\x34\x35\x36\x37\n" +
 		"\x38\x39\u00A9\u00AE\u203C\u2049\u20E3\u2122\u2139\n" +

@@ -22,8 +22,10 @@ TARGET = examples_epd.hex \
 		 examples_displays_pybadge.hex \
 		 examples_displays_pyportal.hex \
 		 examples_displays_wioterminal.hex \
-		 examples_unicode_font.hex \
-		 examples_unicode_font2.hex
+		 examples_unicode_font_pyportal.hex \
+		 examples_unicode_font_wioterminal.hex \
+		 examples_unicode_font2_pyportal.hex \
+		 examples_unicode_font2_wioterminal.hex
 .PHONY: smoketest $(TARGET)
 smoketest: $(TARGET)
 	$(TINYGO) version
@@ -48,10 +50,18 @@ examples_displays_wioterminal.hex:
 	$(TINYGO) build -size short -o $@ -target=wioterminal         ./examples/displays
 	@$(MD5SUM) $@
 
-examples_unicode_font.hex:
+examples_unicode_font_pyportal.hex:
 	$(TINYGO) build -size short -o $@ -target=pyportal            ./examples/unicode_font
 	@$(MD5SUM) $@
 
-examples_unicode_font2.hex:
+examples_unicode_font_wioterminal.hex:
+	$(TINYGO) build -size short -o $@ -target=wioterminal         ./examples/unicode_font
+	@$(MD5SUM) $@
+
+examples_unicode_font2_pyportal.hex:
 	$(TINYGO) build -size short -o $@ -target=pyportal            ./examples/unicode_font2
+	@$(MD5SUM) $@
+
+examples_unicode_font2_wioterminal.hex:
+	$(TINYGO) build -size short -o $@ -target=wioterminal         ./examples/unicode_font2
 	@$(MD5SUM) $@
