@@ -2,6 +2,7 @@ package main
 
 import (
 	"image/color"
+	"time"
 
 	"tinygo.org/x/tinyfont/examples/initdisplay"
 	"tinygo.org/x/tinyfont/freemono"
@@ -26,6 +27,9 @@ func main() {
 
 	tinyfont.WriteLineColors(display, &gophers.Regular58pt, 18, 90, "ABC", mycolors[9:])
 
+	for {
+		time.Sleep(time.Hour)
+	}
 }
 
 func getRainbowRGB(i uint8) color.RGBA {
