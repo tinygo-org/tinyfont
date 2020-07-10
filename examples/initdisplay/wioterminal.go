@@ -1,6 +1,6 @@
 // +build wioterminal
 
-package main
+package initdisplay
 
 import (
 	"image/color"
@@ -10,7 +10,8 @@ import (
 	"tinygo.org/x/drivers/ili9341"
 )
 
-func initDisplay() drivers.Displayer {
+// InitDisplay initializes the display of each board.
+func InitDisplay() drivers.Displayer {
 	machine.SPI3.Configure(machine.SPIConfig{
 		SCK:       machine.LCD_SCK_PIN,
 		MOSI:      machine.LCD_MOSI_PIN,

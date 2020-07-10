@@ -1,6 +1,6 @@
 // +build pyportal
 
-package main
+package initdisplay
 
 import (
 	"image/color"
@@ -10,7 +10,8 @@ import (
 	"tinygo.org/x/drivers/ili9341"
 )
 
-func initDisplay() drivers.Displayer {
+// InitDisplay initializes the display of each board.
+func InitDisplay() drivers.Displayer {
 	d := ili9341.NewParallel(
 		machine.LCD_DATA0,
 		machine.TFT_WR,

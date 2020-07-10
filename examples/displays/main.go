@@ -3,6 +3,7 @@ package main
 import (
 	"image/color"
 
+	"tinygo.org/x/tinyfont/examples/initdisplay"
 	"tinygo.org/x/tinyfont/freemono"
 	"tinygo.org/x/tinyfont/freesans"
 	"tinygo.org/x/tinyfont/freeserif"
@@ -12,7 +13,7 @@ import (
 )
 
 func main() {
-	display := initDisplay()
+	display := initdisplay.InitDisplay()
 
 	mycolors := make([]color.RGBA, 20)
 	for k := 0; k < 20; k++ {

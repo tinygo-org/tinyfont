@@ -2,27 +2,14 @@ package main
 
 import (
 	"image/color"
-	"machine"
 
-	"tinygo.org/x/drivers/ili9341"
 	"tinygo.org/x/tinyfont"
+	"tinygo.org/x/tinyfont/examples/initdisplay"
 	"tinygo.org/x/tinyfont/notosans"
 )
 
 func main() {
-	display := ili9341.NewParallel(
-		machine.LCD_DATA0,
-		machine.TFT_WR,
-		machine.TFT_DC,
-		machine.TFT_CS,
-		machine.TFT_RESET,
-		machine.TFT_RD,
-	)
-	display.Configure(ili9341.Config{})
-	display.FillScreen(color.RGBA{255, 255, 255, 255})
-
-	machine.TFT_BACKLIGHT.Configure(machine.PinConfig{machine.PinOutput})
-	machine.TFT_BACKLIGHT.High()
+	display := initdisplay.InitDisplay()
 
 	str := "https://tour.golang.org/welcome/2\n" +
 		"\n" +

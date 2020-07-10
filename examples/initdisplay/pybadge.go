@@ -1,6 +1,6 @@
 // +build pybadge
 
-package main
+package initdisplay
 
 import (
 	"image/color"
@@ -10,7 +10,8 @@ import (
 	"tinygo.org/x/drivers/st7735"
 )
 
-func initDisplay() drivers.Displayer {
+// InitDisplay initializes the display of each board.
+func InitDisplay() drivers.Displayer {
 	machine.SPI1.Configure(machine.SPIConfig{
 		SCK:       machine.SPI1_SCK_PIN,
 		MOSI:      machine.SPI1_MOSI_PIN,
