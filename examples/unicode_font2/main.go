@@ -2,6 +2,7 @@ package main
 
 import (
 	"image/color"
+	"time"
 
 	"tinygo.org/x/tinyfont"
 	"tinygo.org/x/tinyfont/examples/initdisplay"
@@ -34,4 +35,8 @@ func main() {
 		"Uzbek — Ўзбекча\n"
 
 	tinyfont.WriteLine(display, &notosans.Notosans12pt, 3, 0x16, str, color.RGBA{0, 0, 0, 255})
+
+	for {
+		time.Sleep(time.Hour)
+	}
 }

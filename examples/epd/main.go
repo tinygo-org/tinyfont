@@ -2,6 +2,7 @@ package main
 
 import (
 	"machine"
+	"time"
 
 	"image/color"
 
@@ -42,6 +43,10 @@ func main() {
 	display.Display()
 	display.WaitUntilIdle()
 	println("You could remove power now")
+
+	for {
+		time.Sleep(time.Hour)
+	}
 }
 
 func showRect(x int16, y int16, w int16, h int16, c color.RGBA) {
