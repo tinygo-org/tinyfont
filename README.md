@@ -5,7 +5,7 @@ TinyFont
 
 TinyFont is a font/text package for [TinyGo](https://tinygo.org/) displays. It is heavily based on [Adafruit's GFX library](https://github.com/adafruit/Adafruit-GFX-Library).
 
-![example](https://raw.githubusercontent.com/tinygo-org/tinyfont/master/tinyfont.png)
+![example](./tinyfont.png)
 
 
 This package is experimental and may change in the future. It has not been optimized for speed or memory..
