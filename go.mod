@@ -2,4 +2,4 @@ module tinygo.org/x/tinyfont
 
 go 1.15
 
-require tinygo.org/x/drivers v0.12.1-0.20200803135816-8163dec7c324
+require tinygo.org/x/drivers v0.14.0
