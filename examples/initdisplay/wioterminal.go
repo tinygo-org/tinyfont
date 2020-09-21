@@ -19,7 +19,7 @@ func InitDisplay() drivers.Displayer {
 		Frequency: 40000000,
 	})
 
-	d := ili9341.NewSpi(
+	d := ili9341.NewSPI(
 		machine.SPI3,
 		machine.LCD_DC,
 		machine.LCD_SS_PIN,
