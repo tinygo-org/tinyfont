@@ -158,6 +158,10 @@ func WriteLineColorsRotated(display drivers.Displayer, font *Font, x int16, y in
 // LineWidth returns the inner and outbox widths corresponding to font and str.
 func LineWidth(font *Font, str string) (innerWidth uint32, outboxWidth uint32) {
 	text := []rune(str)
+	if len(text) == 0 {
+		return
+	}
+
 	for i := range text {
 		glyph := GetGlyph(font, text[i])
 		outboxWidth += uint32(glyph.XAdvance)
