@@ -1,107 +1,331 @@
 package proggy
 
-import (
-	"tinygo.org/x/tinyfont"
-)
+var TinySZ8pt7b = sTinySZ8pt7b{}
 
-var TinySZ8pt7b = tinyfont.Font{
-	Glyphs: []tinyfont.Glyph{
-		/*   */ tinyfont.Glyph{Rune: 32, Width: 0x1, Height: 0x1, XAdvance: 0x6, XOffset: 0, YOffset: 0, Bitmaps: []uint8{0x0}},
-		/* ! */ tinyfont.Glyph{Rune: 33, Width: 0x1, Height: 0x7, XAdvance: 0x6, XOffset: 2, YOffset: -6, Bitmaps: []uint8{0xfa}},
-		/* " */ tinyfont.Glyph{Rune: 34, Width: 0x3, Height: 0x3, XAdvance: 0x6, XOffset: 1, YOffset: -7, Bitmaps: []uint8{0xb6, 0x80}},
-		/* # */ tinyfont.Glyph{Rune: 35, Width: 0x5, Height: 0x6, XAdvance: 0x6, XOffset: 0, YOffset: -5, Bitmaps: []uint8{0x57, 0xd4, 0xaf, 0xa8}},
-		/* $ */ tinyfont.Glyph{Rune: 36, Width: 0x5, Height: 0x7, XAdvance: 0x6, XOffset: 0, YOffset: -6, Bitmaps: []uint8{0x23, 0xe8, 0xe2, 0xf8, 0x80}},
-		/* % */ tinyfont.Glyph{Rune: 37, Width: 0x6, Height: 0x6, XAdvance: 0x6, XOffset: 0, YOffset: -5, Bitmaps: []uint8{0x46, 0xa5, 0xa, 0x56, 0x20}},
-		/* & */ tinyfont.Glyph{Rune: 38, Width: 0x6, Height: 0x7, XAdvance: 0x6, XOffset: 0, YOffset: -6, Bitmaps: []uint8{0x62, 0x49, 0x18, 0x96, 0x27, 0x40}},
-		/* ' */ tinyfont.Glyph{Rune: 39, Width: 0x1, Height: 0x3, XAdvance: 0x6, XOffset: 2, YOffset: -7, Bitmaps: []uint8{0xe0}},
-		/* ( */ tinyfont.Glyph{Rune: 40, Width: 0x3, Height: 0x9, XAdvance: 0x6, XOffset: 1, YOffset: -7, Bitmaps: []uint8{0x2a, 0x49, 0x22, 0x20}},
-		/* ) */ tinyfont.Glyph{Rune: 41, Width: 0x3, Height: 0x9, XAdvance: 0x6, XOffset: 1, YOffset: -7, Bitmaps: []uint8{0x88, 0x92, 0x4a, 0x80}},
-		/* * */ tinyfont.Glyph{Rune: 42, Width: 0x5, Height: 0x5, XAdvance: 0x6, XOffset: 0, YOffset: -5, Bitmaps: []uint8{0x25, 0x5d, 0x52, 0x0}},
-		/* + */ tinyfont.Glyph{Rune: 43, Width: 0x5, Height: 0x5, XAdvance: 0x6, XOffset: 0, YOffset: -5, Bitmaps: []uint8{0x21, 0x3e, 0x42, 0x0}},
-		/* , */ tinyfont.Glyph{Rune: 44, Width: 0x2, Height: 0x2, XAdvance: 0x6, XOffset: 1, YOffset: 0, Bitmaps: []uint8{0x60}},
-		/* - */ tinyfont.Glyph{Rune: 45, Width: 0x5, Height: 0x1, XAdvance: 0x6, XOffset: 0, YOffset: -3, Bitmaps: []uint8{0xf8}},
-		/* . */ tinyfont.Glyph{Rune: 46, Width: 0x1, Height: 0x1, XAdvance: 0x6, XOffset: 2, YOffset: 0, Bitmaps: []uint8{0x80}},
-		/* / */ tinyfont.Glyph{Rune: 47, Width: 0x5, Height: 0x9, XAdvance: 0x6, XOffset: 0, YOffset: -7, Bitmaps: []uint8{0x8, 0x44, 0x22, 0x11, 0x8, 0x80}},
-		/* 0 */ tinyfont.Glyph{Rune: 48, Width: 0x5, Height: 0x7, XAdvance: 0x6, XOffset: 0, YOffset: -6, Bitmaps: []uint8{0x74, 0x67, 0x5c, 0xc5, 0xc0}},
-		/* 1 */ tinyfont.Glyph{Rune: 49, Width: 0x3, Height: 0x7, XAdvance: 0x6, XOffset: 1, YOffset: -6, Bitmaps: []uint8{0x59, 0x24, 0xb8}},
-		/* 2 */ tinyfont.Glyph{Rune: 50, Width: 0x5, Height: 0x7, XAdvance: 0x6, XOffset: 0, YOffset: -6, Bitmaps: []uint8{0x74, 0x42, 0x64, 0x43, 0xe0}},
-		/* 3 */ tinyfont.Glyph{Rune: 51, Width: 0x5, Height: 0x7, XAdvance: 0x6, XOffset: 0, YOffset: -6, Bitmaps: []uint8{0x74, 0x42, 0x60, 0xc5, 0xc0}},
-		/* 4 */ tinyfont.Glyph{Rune: 52, Width: 0x5, Height: 0x7, XAdvance: 0x6, XOffset: 0, YOffset: -6, Bitmaps: []uint8{0x11, 0x95, 0x2f, 0x88, 0x40}},
-		/* 5 */ tinyfont.Glyph{Rune: 53, Width: 0x5, Height: 0x7, XAdvance: 0x6, XOffset: 0, YOffset: -6, Bitmaps: []uint8{0xfc, 0x21, 0xe0, 0xc5, 0xc0}},
-		/* 6 */ tinyfont.Glyph{Rune: 54, Width: 0x5, Height: 0x7, XAdvance: 0x6, XOffset: 0, YOffset: -6, Bitmaps: []uint8{0x32, 0x21, 0xe8, 0xc5, 0xc0}},
-		/* 7 */ tinyfont.Glyph{Rune: 55, Width: 0x5, Height: 0x7, XAdvance: 0x6, XOffset: 0, YOffset: -6, Bitmaps: []uint8{0xf8, 0x44, 0x22, 0x11, 0x0}},
-		/* 8 */ tinyfont.Glyph{Rune: 56, Width: 0x5, Height: 0x7, XAdvance: 0x6, XOffset: 0, YOffset: -6, Bitmaps: []uint8{0x74, 0x62, 0xe8, 0xc5, 0xc0}},
-		/* 9 */ tinyfont.Glyph{Rune: 57, Width: 0x5, Height: 0x7, XAdvance: 0x6, XOffset: 0, YOffset: -6, Bitmaps: []uint8{0x74, 0x62, 0xf0, 0x89, 0x80}},
-		/* : */ tinyfont.Glyph{Rune: 58, Width: 0x1, Height: 0x4, XAdvance: 0x6, XOffset: 2, YOffset: -4, Bitmaps: []uint8{0x90}},
-		/* ; */ tinyfont.Glyph{Rune: 59, Width: 0x2, Height: 0x5, XAdvance: 0x6, XOffset: 1, YOffset: -4, Bitmaps: []uint8{0x41, 0x80}},
-		/* < */ tinyfont.Glyph{Rune: 60, Width: 0x5, Height: 0x5, XAdvance: 0x6, XOffset: 0, YOffset: -5, Bitmaps: []uint8{0x9, 0xb0, 0x60, 0x80}},
-		/* = */ tinyfont.Glyph{Rune: 61, Width: 0x5, Height: 0x3, XAdvance: 0x6, XOffset: 0, YOffset: -4, Bitmaps: []uint8{0xf8, 0x3e}},
-		/* > */ tinyfont.Glyph{Rune: 62, Width: 0x5, Height: 0x5, XAdvance: 0x6, XOffset: 0, YOffset: -5, Bitmaps: []uint8{0x83, 0x6, 0xc8, 0x0}},
-		/* ? */ tinyfont.Glyph{Rune: 63, Width: 0x5, Height: 0x7, XAdvance: 0x6, XOffset: 0, YOffset: -6, Bitmaps: []uint8{0x74, 0x42, 0x22, 0x0, 0x80}},
-		/* @ */ tinyfont.Glyph{Rune: 64, Width: 0x6, Height: 0x7, XAdvance: 0x6, XOffset: 0, YOffset: -6, Bitmaps: []uint8{0x7a, 0x1b, 0x6d, 0xbe, 0x7, 0xc0}},
-		/* A */ tinyfont.Glyph{Rune: 65, Width: 0x5, Height: 0x7, XAdvance: 0x6, XOffset: 0, YOffset: -6, Bitmaps: []uint8{0x21, 0x14, 0xa7, 0x46, 0x20}},
-		/* B */ tinyfont.Glyph{Rune: 66, Width: 0x5, Height: 0x7, XAdvance: 0x6, XOffset: 0, YOffset: -6, Bitmaps: []uint8{0xf4, 0x63, 0xe8, 0xc7, 0xc0}},
-		/* C */ tinyfont.Glyph{Rune: 67, Width: 0x5, Height: 0x7, XAdvance: 0x6, XOffset: 0, YOffset: -6, Bitmaps: []uint8{0x74, 0x61, 0x8, 0x45, 0xc0}},
-		/* D */ tinyfont.Glyph{Rune: 68, Width: 0x5, Height: 0x7, XAdvance: 0x6, XOffset: 0, YOffset: -6, Bitmaps: []uint8{0xe4, 0xa3, 0x18, 0xcb, 0x80}},
-		/* E */ tinyfont.Glyph{Rune: 69, Width: 0x5, Height: 0x7, XAdvance: 0x6, XOffset: 0, YOffset: -6, Bitmaps: []uint8{0xfc, 0x21, 0xe8, 0x43, 0xe0}},
-		/* F */ tinyfont.Glyph{Rune: 70, Width: 0x5, Height: 0x7, XAdvance: 0x6, XOffset: 0, YOffset: -6, Bitmaps: []uint8{0xfc, 0x21, 0xe8, 0x42, 0x0}},
-		/* G */ tinyfont.Glyph{Rune: 71, Width: 0x5, Height: 0x7, XAdvance: 0x6, XOffset: 0, YOffset: -6, Bitmaps: []uint8{0x74, 0x61, 0x38, 0xc5, 0xe0}},
-		/* H */ tinyfont.Glyph{Rune: 72, Width: 0x5, Height: 0x7, XAdvance: 0x6, XOffset: 0, YOffset: -6, Bitmaps: []uint8{0x8c, 0x63, 0xf8, 0xc6, 0x20}},
-		/* I */ tinyfont.Glyph{Rune: 73, Width: 0x3, Height: 0x7, XAdvance: 0x6, XOffset: 1, YOffset: -6, Bitmaps: []uint8{0xe9, 0x24, 0xb8}},
-		/* J */ tinyfont.Glyph{Rune: 74, Width: 0x5, Height: 0x7, XAdvance: 0x6, XOffset: 0, YOffset: -6, Bitmaps: []uint8{0x38, 0x42, 0x10, 0x87, 0xc0}},
-		/* K */ tinyfont.Glyph{Rune: 75, Width: 0x5, Height: 0x7, XAdvance: 0x6, XOffset: 0, YOffset: -6, Bitmaps: []uint8{0x8c, 0xa9, 0x8a, 0x4a, 0x20}},
-		/* L */ tinyfont.Glyph{Rune: 76, Width: 0x5, Height: 0x7, XAdvance: 0x6, XOffset: 0, YOffset: -6, Bitmaps: []uint8{0x84, 0x21, 0x8, 0x43, 0xe0}},
-		/* M */ tinyfont.Glyph{Rune: 77, Width: 0x5, Height: 0x7, XAdvance: 0x6, XOffset: 0, YOffset: -6, Bitmaps: []uint8{0x8c, 0x77, 0xba, 0xd6, 0x20}},
-		/* N */ tinyfont.Glyph{Rune: 78, Width: 0x5, Height: 0x7, XAdvance: 0x6, XOffset: 0, YOffset: -6, Bitmaps: []uint8{0xce, 0x6b, 0x5a, 0xce, 0x60}},
-		/* O */ tinyfont.Glyph{Rune: 79, Width: 0x5, Height: 0x7, XAdvance: 0x6, XOffset: 0, YOffset: -6, Bitmaps: []uint8{0x74, 0x63, 0x18, 0xc5, 0xc0}},
-		/* P */ tinyfont.Glyph{Rune: 80, Width: 0x5, Height: 0x7, XAdvance: 0x6, XOffset: 0, YOffset: -6, Bitmaps: []uint8{0xf4, 0x63, 0xe8, 0x42, 0x0}},
-		/* Q */ tinyfont.Glyph{Rune: 81, Width: 0x5, Height: 0x7, XAdvance: 0x6, XOffset: 0, YOffset: -6, Bitmaps: []uint8{0x74, 0x63, 0x18, 0xcd, 0xe0}},
-		/* R */ tinyfont.Glyph{Rune: 82, Width: 0x5, Height: 0x7, XAdvance: 0x6, XOffset: 0, YOffset: -6, Bitmaps: []uint8{0xf4, 0x63, 0xe8, 0xc6, 0x20}},
-		/* S */ tinyfont.Glyph{Rune: 83, Width: 0x5, Height: 0x7, XAdvance: 0x6, XOffset: 0, YOffset: -6, Bitmaps: []uint8{0x74, 0x60, 0xe0, 0xc5, 0xc0}},
-		/* T */ tinyfont.Glyph{Rune: 84, Width: 0x5, Height: 0x7, XAdvance: 0x6, XOffset: 0, YOffset: -6, Bitmaps: []uint8{0xf9, 0x8, 0x42, 0x10, 0x80}},
-		/* U */ tinyfont.Glyph{Rune: 85, Width: 0x5, Height: 0x7, XAdvance: 0x6, XOffset: 0, YOffset: -6, Bitmaps: []uint8{0x8c, 0x63, 0x18, 0xc5, 0xc0}},
-		/* V */ tinyfont.Glyph{Rune: 86, Width: 0x5, Height: 0x7, XAdvance: 0x6, XOffset: 0, YOffset: -6, Bitmaps: []uint8{0x8c, 0x62, 0xa5, 0x10, 0x80}},
-		/* W */ tinyfont.Glyph{Rune: 87, Width: 0x5, Height: 0x7, XAdvance: 0x6, XOffset: 0, YOffset: -6, Bitmaps: []uint8{0x8d, 0x6b, 0x55, 0x29, 0x40}},
-		/* X */ tinyfont.Glyph{Rune: 88, Width: 0x5, Height: 0x7, XAdvance: 0x6, XOffset: 0, YOffset: -6, Bitmaps: []uint8{0x8c, 0x54, 0x45, 0x46, 0x20}},
-		/* Y */ tinyfont.Glyph{Rune: 89, Width: 0x5, Height: 0x7, XAdvance: 0x6, XOffset: 0, YOffset: -6, Bitmaps: []uint8{0x8c, 0x62, 0xe2, 0x10, 0x80}},
-		/* Z */ tinyfont.Glyph{Rune: 90, Width: 0x5, Height: 0x7, XAdvance: 0x6, XOffset: 0, YOffset: -6, Bitmaps: []uint8{0xf8, 0x44, 0x44, 0x43, 0xe0}},
-		/* [ */ tinyfont.Glyph{Rune: 91, Width: 0x3, Height: 0x9, XAdvance: 0x6, XOffset: 1, YOffset: -7, Bitmaps: []uint8{0xf2, 0x49, 0x24, 0xe0}},
-		/* \ */ tinyfont.Glyph{Rune: 92, Width: 0x5, Height: 0x9, XAdvance: 0x6, XOffset: 0, YOffset: -7, Bitmaps: []uint8{0x84, 0x10, 0x82, 0x10, 0x42, 0x8}},
-		/* ] */ tinyfont.Glyph{Rune: 93, Width: 0x3, Height: 0x9, XAdvance: 0x6, XOffset: 1, YOffset: -7, Bitmaps: []uint8{0xe4, 0x92, 0x49, 0xe0}},
-		/* ^ */ tinyfont.Glyph{Rune: 94, Width: 0x5, Height: 0x3, XAdvance: 0x6, XOffset: 0, YOffset: -6, Bitmaps: []uint8{0x22, 0xa2}},
-		/* _ */ tinyfont.Glyph{Rune: 95, Width: 0x6, Height: 0x1, XAdvance: 0x6, XOffset: 0, YOffset: 1, Bitmaps: []uint8{0xfc}},
-		/* ` */ tinyfont.Glyph{Rune: 96, Width: 0x2, Height: 0x2, XAdvance: 0x6, XOffset: 2, YOffset: -6, Bitmaps: []uint8{0x90}},
-		/* a */ tinyfont.Glyph{Rune: 97, Width: 0x5, Height: 0x5, XAdvance: 0x6, XOffset: 0, YOffset: -4, Bitmaps: []uint8{0x70, 0x5f, 0x17, 0x80}},
-		/* b */ tinyfont.Glyph{Rune: 98, Width: 0x5, Height: 0x8, XAdvance: 0x6, XOffset: 0, YOffset: -7, Bitmaps: []uint8{0x84, 0x21, 0xe8, 0xc6, 0x3e}},
-		/* c */ tinyfont.Glyph{Rune: 99, Width: 0x5, Height: 0x5, XAdvance: 0x6, XOffset: 0, YOffset: -4, Bitmaps: []uint8{0x7c, 0x21, 0x7, 0x80}},
-		/* d */ tinyfont.Glyph{Rune: 100, Width: 0x5, Height: 0x8, XAdvance: 0x6, XOffset: 0, YOffset: -7, Bitmaps: []uint8{0x8, 0x42, 0xf8, 0xc6, 0x2f}},
-		/* e */ tinyfont.Glyph{Rune: 101, Width: 0x5, Height: 0x5, XAdvance: 0x6, XOffset: 0, YOffset: -4, Bitmaps: []uint8{0x74, 0x7f, 0x7, 0x80}},
-		/* f */ tinyfont.Glyph{Rune: 102, Width: 0x5, Height: 0x8, XAdvance: 0x6, XOffset: 0, YOffset: -7, Bitmaps: []uint8{0x3a, 0x11, 0xe4, 0x21, 0x8}},
-		/* g */ tinyfont.Glyph{Rune: 103, Width: 0x5, Height: 0x7, XAdvance: 0x6, XOffset: 0, YOffset: -4, Bitmaps: []uint8{0x74, 0x63, 0x17, 0x85, 0xc0}},
-		/* h */ tinyfont.Glyph{Rune: 104, Width: 0x5, Height: 0x8, XAdvance: 0x6, XOffset: 0, YOffset: -7, Bitmaps: []uint8{0x84, 0x21, 0xe8, 0xc6, 0x31}},
-		/* i */ tinyfont.Glyph{Rune: 105, Width: 0x2, Height: 0x7, XAdvance: 0x6, XOffset: 1, YOffset: -6, Bitmaps: []uint8{0x4d, 0x54}},
-		/* j */ tinyfont.Glyph{Rune: 106, Width: 0x4, Height: 0x9, XAdvance: 0x6, XOffset: 0, YOffset: -6, Bitmaps: []uint8{0x10, 0x31, 0x11, 0x11, 0xe0}},
-		/* k */ tinyfont.Glyph{Rune: 107, Width: 0x4, Height: 0x8, XAdvance: 0x6, XOffset: 1, YOffset: -7, Bitmaps: []uint8{0x88, 0x89, 0xac, 0xa9}},
-		/* l */ tinyfont.Glyph{Rune: 108, Width: 0x2, Height: 0x8, XAdvance: 0x6, XOffset: 1, YOffset: -7, Bitmaps: []uint8{0xd5, 0x55}},
-		/* m */ tinyfont.Glyph{Rune: 109, Width: 0x5, Height: 0x5, XAdvance: 0x6, XOffset: 0, YOffset: -4, Bitmaps: []uint8{0xd5, 0x6b, 0x5a, 0x80}},
-		/* n */ tinyfont.Glyph{Rune: 110, Width: 0x5, Height: 0x5, XAdvance: 0x6, XOffset: 0, YOffset: -4, Bitmaps: []uint8{0xf4, 0x63, 0x18, 0x80}},
-		/* o */ tinyfont.Glyph{Rune: 111, Width: 0x5, Height: 0x5, XAdvance: 0x6, XOffset: 0, YOffset: -4, Bitmaps: []uint8{0x74, 0x63, 0x17, 0x0}},
-		/* p */ tinyfont.Glyph{Rune: 112, Width: 0x5, Height: 0x7, XAdvance: 0x6, XOffset: 0, YOffset: -4, Bitmaps: []uint8{0xf4, 0x63, 0x1f, 0x42, 0x0}},
-		/* q */ tinyfont.Glyph{Rune: 113, Width: 0x5, Height: 0x7, XAdvance: 0x6, XOffset: 0, YOffset: -4, Bitmaps: []uint8{0x7c, 0x63, 0x17, 0x84, 0x20}},
-		/* r */ tinyfont.Glyph{Rune: 114, Width: 0x5, Height: 0x5, XAdvance: 0x6, XOffset: 0, YOffset: -4, Bitmaps: []uint8{0xb6, 0x61, 0x8, 0x0}},
-		/* s */ tinyfont.Glyph{Rune: 115, Width: 0x5, Height: 0x5, XAdvance: 0x6, XOffset: 0, YOffset: -4, Bitmaps: []uint8{0x7c, 0x1c, 0x1f, 0x0}},
-		/* t */ tinyfont.Glyph{Rune: 116, Width: 0x4, Height: 0x7, XAdvance: 0x6, XOffset: 1, YOffset: -6, Bitmaps: []uint8{0x88, 0xe8, 0x88, 0x70}},
-		/* u */ tinyfont.Glyph{Rune: 117, Width: 0x5, Height: 0x5, XAdvance: 0x6, XOffset: 0, YOffset: -4, Bitmaps: []uint8{0x8c, 0x63, 0x17, 0x80}},
-		/* v */ tinyfont.Glyph{Rune: 118, Width: 0x5, Height: 0x5, XAdvance: 0x6, XOffset: 0, YOffset: -4, Bitmaps: []uint8{0x8c, 0x54, 0xa2, 0x0}},
-		/* w */ tinyfont.Glyph{Rune: 119, Width: 0x5, Height: 0x5, XAdvance: 0x6, XOffset: 0, YOffset: -4, Bitmaps: []uint8{0x8d, 0x6a, 0xa5, 0x0}},
-		/* x */ tinyfont.Glyph{Rune: 120, Width: 0x5, Height: 0x5, XAdvance: 0x6, XOffset: 0, YOffset: -4, Bitmaps: []uint8{0x8a, 0x88, 0xa8, 0x80}},
-		/* y */ tinyfont.Glyph{Rune: 121, Width: 0x5, Height: 0x7, XAdvance: 0x6, XOffset: 0, YOffset: -4, Bitmaps: []uint8{0x8c, 0x63, 0x17, 0x85, 0xc0}},
-		/* z */ tinyfont.Glyph{Rune: 122, Width: 0x5, Height: 0x5, XAdvance: 0x6, XOffset: 0, YOffset: -4, Bitmaps: []uint8{0xf8, 0x88, 0x8f, 0x80}},
-		/* { */ tinyfont.Glyph{Rune: 123, Width: 0x3, Height: 0x9, XAdvance: 0x6, XOffset: 1, YOffset: -7, Bitmaps: []uint8{0x29, 0x28, 0x92, 0x20}},
-		/* | */ tinyfont.Glyph{Rune: 124, Width: 0x1, Height: 0x9, XAdvance: 0x6, XOffset: 2, YOffset: -7, Bitmaps: []uint8{0xff, 0x80}},
-		/* } */ tinyfont.Glyph{Rune: 125, Width: 0x3, Height: 0x9, XAdvance: 0x6, XOffset: 1, YOffset: -7, Bitmaps: []uint8{0x89, 0x22, 0x92, 0x80}},
-		/* ~ */ tinyfont.Glyph{Rune: 126, Width: 0x6, Height: 0x2, XAdvance: 0x6, XOffset: 0, YOffset: -3, Bitmaps: []uint8{0x66, 0x60}},
-	},
+type sTinySZ8pt7b struct {
+}
 
-	YAdvance: 0xa,
+const cTinySZ8pt7b = "" +
+	/*   */ "\x00\x0A" + "\x00\x00\x00\x20" + "\x01\x01" + "\x06\x00" + "\x00" + "\x00" +
+	/* ! */ "\x00\x0A" + "\x00\x00\x00\x21" + "\x01\x07" + "\x06\x02" + "\xFA" + "\xFA" +
+	/* " */ "\x00\x0B" + "\x00\x00\x00\x22" + "\x03\x03" + "\x06\x01" + "\xF9" + "\xB6\x80" +
+	/* # */ "\x00\x0D" + "\x00\x00\x00\x23" + "\x05\x06" + "\x06\x00" + "\xFB" + "\x57\xD4\xAF\xA8" +
+	/* $ */ "\x00\x0E" + "\x00\x00\x00\x24" + "\x05\x07" + "\x06\x00" + "\xFA" + "\x23\xE8\xE2\xF8\x80" +
+	/* % */ "\x00\x0E" + "\x00\x00\x00\x25" + "\x06\x06" + "\x06\x00" + "\xFB" + "\x46\xA5\x0A\x56\x20" +
+	/* & */ "\x00\x0F" + "\x00\x00\x00\x26" + "\x06\x07" + "\x06\x00" + "\xFA" + "\x62\x49\x18\x96\x27\x40" +
+	/* ' */ "\x00\x0A" + "\x00\x00\x00\x27" + "\x01\x03" + "\x06\x02" + "\xF9" + "\xE0" +
+	/* ( */ "\x00\x0D" + "\x00\x00\x00\x28" + "\x03\x09" + "\x06\x01" + "\xF9" + "\x2A\x49\x22\x20" +
+	/* ) */ "\x00\x0D" + "\x00\x00\x00\x29" + "\x03\x09" + "\x06\x01" + "\xF9" + "\x88\x92\x4A\x80" +
+	/* * */ "\x00\x0D" + "\x00\x00\x00\x2A" + "\x05\x05" + "\x06\x00" + "\xFB" + "\x25\x5D\x52\x00" +
+	/* + */ "\x00\x0D" + "\x00\x00\x00\x2B" + "\x05\x05" + "\x06\x00" + "\xFB" + "\x21\x3E\x42\x00" +
+	/* , */ "\x00\x0A" + "\x00\x00\x00\x2C" + "\x02\x02" + "\x06\x01" + "\x00" + "\x60" +
+	/* - */ "\x00\x0A" + "\x00\x00\x00\x2D" + "\x05\x01" + "\x06\x00" + "\xFD" + "\xF8" +
+	/* . */ "\x00\x0A" + "\x00\x00\x00\x2E" + "\x01\x01" + "\x06\x02" + "\x00" + "\x80" +
+	/* / */ "\x00\x0F" + "\x00\x00\x00\x2F" + "\x05\x09" + "\x06\x00" + "\xF9" + "\x08\x44\x22\x11\x08\x80" +
+	/* 0 */ "\x00\x0E" + "\x00\x00\x00\x30" + "\x05\x07" + "\x06\x00" + "\xFA" + "\x74\x67\x5C\xC5\xC0" +
+	/* 1 */ "\x00\x0C" + "\x00\x00\x00\x31" + "\x03\x07" + "\x06\x01" + "\xFA" + "\x59\x24\xB8" +
+	/* 2 */ "\x00\x0E" + "\x00\x00\x00\x32" + "\x05\x07" + "\x06\x00" + "\xFA" + "\x74\x42\x64\x43\xE0" +
+	/* 3 */ "\x00\x0E" + "\x00\x00\x00\x33" + "\x05\x07" + "\x06\x00" + "\xFA" + "\x74\x42\x60\xC5\xC0" +
+	/* 4 */ "\x00\x0E" + "\x00\x00\x00\x34" + "\x05\x07" + "\x06\x00" + "\xFA" + "\x11\x95\x2F\x88\x40" +
+	/* 5 */ "\x00\x0E" + "\x00\x00\x00\x35" + "\x05\x07" + "\x06\x00" + "\xFA" + "\xFC\x21\xE0\xC5\xC0" +
+	/* 6 */ "\x00\x0E" + "\x00\x00\x00\x36" + "\x05\x07" + "\x06\x00" + "\xFA" + "\x32\x21\xE8\xC5\xC0" +
+	/* 7 */ "\x00\x0E" + "\x00\x00\x00\x37" + "\x05\x07" + "\x06\x00" + "\xFA" + "\xF8\x44\x22\x11\x00" +
+	/* 8 */ "\x00\x0E" + "\x00\x00\x00\x38" + "\x05\x07" + "\x06\x00" + "\xFA" + "\x74\x62\xE8\xC5\xC0" +
+	/* 9 */ "\x00\x0E" + "\x00\x00\x00\x39" + "\x05\x07" + "\x06\x00" + "\xFA" + "\x74\x62\xF0\x89\x80" +
+	/* : */ "\x00\x0A" + "\x00\x00\x00\x3A" + "\x01\x04" + "\x06\x02" + "\xFC" + "\x90" +
+	/* ; */ "\x00\x0B" + "\x00\x00\x00\x3B" + "\x02\x05" + "\x06\x01" + "\xFC" + "\x41\x80" +
+	/* < */ "\x00\x0D" + "\x00\x00\x00\x3C" + "\x05\x05" + "\x06\x00" + "\xFB" + "\x09\xB0\x60\x80" +
+	/* = */ "\x00\x0B" + "\x00\x00\x00\x3D" + "\x05\x03" + "\x06\x00" + "\xFC" + "\xF8\x3E" +
+	/* > */ "\x00\x0D" + "\x00\x00\x00\x3E" + "\x05\x05" + "\x06\x00" + "\xFB" + "\x83\x06\xC8\x00" +
+	/* ? */ "\x00\x0E" + "\x00\x00\x00\x3F" + "\x05\x07" + "\x06\x00" + "\xFA" + "\x74\x42\x22\x00\x80" +
+	/* @ */ "\x00\x0F" + "\x00\x00\x00\x40" + "\x06\x07" + "\x06\x00" + "\xFA" + "\x7A\x1B\x6D\xBE\x07\xC0" +
+	/* A */ "\x00\x0E" + "\x00\x00\x00\x41" + "\x05\x07" + "\x06\x00" + "\xFA" + "\x21\x14\xA7\x46\x20" +
+	/* B */ "\x00\x0E" + "\x00\x00\x00\x42" + "\x05\x07" + "\x06\x00" + "\xFA" + "\xF4\x63\xE8\xC7\xC0" +
+	/* C */ "\x00\x0E" + "\x00\x00\x00\x43" + "\x05\x07" + "\x06\x00" + "\xFA" + "\x74\x61\x08\x45\xC0" +
+	/* D */ "\x00\x0E" + "\x00\x00\x00\x44" + "\x05\x07" + "\x06\x00" + "\xFA" + "\xE4\xA3\x18\xCB\x80" +
+	/* E */ "\x00\x0E" + "\x00\x00\x00\x45" + "\x05\x07" + "\x06\x00" + "\xFA" + "\xFC\x21\xE8\x43\xE0" +
+	/* F */ "\x00\x0E" + "\x00\x00\x00\x46" + "\x05\x07" + "\x06\x00" + "\xFA" + "\xFC\x21\xE8\x42\x00" +
+	/* G */ "\x00\x0E" + "\x00\x00\x00\x47" + "\x05\x07" + "\x06\x00" + "\xFA" + "\x74\x61\x38\xC5\xE0" +
+	/* H */ "\x00\x0E" + "\x00\x00\x00\x48" + "\x05\x07" + "\x06\x00" + "\xFA" + "\x8C\x63\xF8\xC6\x20" +
+	/* I */ "\x00\x0C" + "\x00\x00\x00\x49" + "\x03\x07" + "\x06\x01" + "\xFA" + "\xE9\x24\xB8" +
+	/* J */ "\x00\x0E" + "\x00\x00\x00\x4A" + "\x05\x07" + "\x06\x00" + "\xFA" + "\x38\x42\x10\x87\xC0" +
+	/* K */ "\x00\x0E" + "\x00\x00\x00\x4B" + "\x05\x07" + "\x06\x00" + "\xFA" + "\x8C\xA9\x8A\x4A\x20" +
+	/* L */ "\x00\x0E" + "\x00\x00\x00\x4C" + "\x05\x07" + "\x06\x00" + "\xFA" + "\x84\x21\x08\x43\xE0" +
+	/* M */ "\x00\x0E" + "\x00\x00\x00\x4D" + "\x05\x07" + "\x06\x00" + "\xFA" + "\x8C\x77\xBA\xD6\x20" +
+	/* N */ "\x00\x0E" + "\x00\x00\x00\x4E" + "\x05\x07" + "\x06\x00" + "\xFA" + "\xCE\x6B\x5A\xCE\x60" +
+	/* O */ "\x00\x0E" + "\x00\x00\x00\x4F" + "\x05\x07" + "\x06\x00" + "\xFA" + "\x74\x63\x18\xC5\xC0" +
+	/* P */ "\x00\x0E" + "\x00\x00\x00\x50" + "\x05\x07" + "\x06\x00" + "\xFA" + "\xF4\x63\xE8\x42\x00" +
+	/* Q */ "\x00\x0E" + "\x00\x00\x00\x51" + "\x05\x07" + "\x06\x00" + "\xFA" + "\x74\x63\x18\xCD\xE0" +
+	/* R */ "\x00\x0E" + "\x00\x00\x00\x52" + "\x05\x07" + "\x06\x00" + "\xFA" + "\xF4\x63\xE8\xC6\x20" +
+	/* S */ "\x00\x0E" + "\x00\x00\x00\x53" + "\x05\x07" + "\x06\x00" + "\xFA" + "\x74\x60\xE0\xC5\xC0" +
+	/* T */ "\x00\x0E" + "\x00\x00\x00\x54" + "\x05\x07" + "\x06\x00" + "\xFA" + "\xF9\x08\x42\x10\x80" +
+	/* U */ "\x00\x0E" + "\x00\x00\x00\x55" + "\x05\x07" + "\x06\x00" + "\xFA" + "\x8C\x63\x18\xC5\xC0" +
+	/* V */ "\x00\x0E" + "\x00\x00\x00\x56" + "\x05\x07" + "\x06\x00" + "\xFA" + "\x8C\x62\xA5\x10\x80" +
+	/* W */ "\x00\x0E" + "\x00\x00\x00\x57" + "\x05\x07" + "\x06\x00" + "\xFA" + "\x8D\x6B\x55\x29\x40" +
+	/* X */ "\x00\x0E" + "\x00\x00\x00\x58" + "\x05\x07" + "\x06\x00" + "\xFA" + "\x8C\x54\x45\x46\x20" +
+	/* Y */ "\x00\x0E" + "\x00\x00\x00\x59" + "\x05\x07" + "\x06\x00" + "\xFA" + "\x8C\x62\xE2\x10\x80" +
+	/* Z */ "\x00\x0E" + "\x00\x00\x00\x5A" + "\x05\x07" + "\x06\x00" + "\xFA" + "\xF8\x44\x44\x43\xE0" +
+	/* [ */ "\x00\x0D" + "\x00\x00\x00\x5B" + "\x03\x09" + "\x06\x01" + "\xF9" + "\xF2\x49\x24\xE0" +
+	/* \ */ "\x00\x0F" + "\x00\x00\x00\x5C" + "\x05\x09" + "\x06\x00" + "\xF9" + "\x84\x10\x82\x10\x42\x08" +
+	/* ] */ "\x00\x0D" + "\x00\x00\x00\x5D" + "\x03\x09" + "\x06\x01" + "\xF9" + "\xE4\x92\x49\xE0" +
+	/* ^ */ "\x00\x0B" + "\x00\x00\x00\x5E" + "\x05\x03" + "\x06\x00" + "\xFA" + "\x22\xA2" +
+	/* _ */ "\x00\x0A" + "\x00\x00\x00\x5F" + "\x06\x01" + "\x06\x00" + "\x01" + "\xFC" +
+	/* ` */ "\x00\x0A" + "\x00\x00\x00\x60" + "\x02\x02" + "\x06\x02" + "\xFA" + "\x90" +
+	/* a */ "\x00\x0D" + "\x00\x00\x00\x61" + "\x05\x05" + "\x06\x00" + "\xFC" + "\x70\x5F\x17\x80" +
+	/* b */ "\x00\x0E" + "\x00\x00\x00\x62" + "\x05\x08" + "\x06\x00" + "\xF9" + "\x84\x21\xE8\xC6\x3E" +
+	/* c */ "\x00\x0D" + "\x00\x00\x00\x63" + "\x05\x05" + "\x06\x00" + "\xFC" + "\x7C\x21\x07\x80" +
+	/* d */ "\x00\x0E" + "\x00\x00\x00\x64" + "\x05\x08" + "\x06\x00" + "\xF9" + "\x08\x42\xF8\xC6\x2F" +
+	/* e */ "\x00\x0D" + "\x00\x00\x00\x65" + "\x05\x05" + "\x06\x00" + "\xFC" + "\x74\x7F\x07\x80" +
+	/* f */ "\x00\x0E" + "\x00\x00\x00\x66" + "\x05\x08" + "\x06\x00" + "\xF9" + "\x3A\x11\xE4\x21\x08" +
+	/* g */ "\x00\x0E" + "\x00\x00\x00\x67" + "\x05\x07" + "\x06\x00" + "\xFC" + "\x74\x63\x17\x85\xC0" +
+	/* h */ "\x00\x0E" + "\x00\x00\x00\x68" + "\x05\x08" + "\x06\x00" + "\xF9" + "\x84\x21\xE8\xC6\x31" +
+	/* i */ "\x00\x0B" + "\x00\x00\x00\x69" + "\x02\x07" + "\x06\x01" + "\xFA" + "\x4D\x54" +
+	/* j */ "\x00\x0E" + "\x00\x00\x00\x6A" + "\x04\x09" + "\x06\x00" + "\xFA" + "\x10\x31\x11\x11\xE0" +
+	/* k */ "\x00\x0D" + "\x00\x00\x00\x6B" + "\x04\x08" + "\x06\x01" + "\xF9" + "\x88\x89\xAC\xA9" +
+	/* l */ "\x00\x0B" + "\x00\x00\x00\x6C" + "\x02\x08" + "\x06\x01" + "\xF9" + "\xD5\x55" +
+	/* m */ "\x00\x0D" + "\x00\x00\x00\x6D" + "\x05\x05" + "\x06\x00" + "\xFC" + "\xD5\x6B\x5A\x80" +
+	/* n */ "\x00\x0D" + "\x00\x00\x00\x6E" + "\x05\x05" + "\x06\x00" + "\xFC" + "\xF4\x63\x18\x80" +
+	/* o */ "\x00\x0D" + "\x00\x00\x00\x6F" + "\x05\x05" + "\x06\x00" + "\xFC" + "\x74\x63\x17\x00" +
+	/* p */ "\x00\x0E" + "\x00\x00\x00\x70" + "\x05\x07" + "\x06\x00" + "\xFC" + "\xF4\x63\x1F\x42\x00" +
+	/* q */ "\x00\x0E" + "\x00\x00\x00\x71" + "\x05\x07" + "\x06\x00" + "\xFC" + "\x7C\x63\x17\x84\x20" +
+	/* r */ "\x00\x0D" + "\x00\x00\x00\x72" + "\x05\x05" + "\x06\x00" + "\xFC" + "\xB6\x61\x08\x00" +
+	/* s */ "\x00\x0D" + "\x00\x00\x00\x73" + "\x05\x05" + "\x06\x00" + "\xFC" + "\x7C\x1C\x1F\x00" +
+	/* t */ "\x00\x0D" + "\x00\x00\x00\x74" + "\x04\x07" + "\x06\x01" + "\xFA" + "\x88\xE8\x88\x70" +
+	/* u */ "\x00\x0D" + "\x00\x00\x00\x75" + "\x05\x05" + "\x06\x00" + "\xFC" + "\x8C\x63\x17\x80" +
+	/* v */ "\x00\x0D" + "\x00\x00\x00\x76" + "\x05\x05" + "\x06\x00" + "\xFC" + "\x8C\x54\xA2\x00" +
+	/* w */ "\x00\x0D" + "\x00\x00\x00\x77" + "\x05\x05" + "\x06\x00" + "\xFC" + "\x8D\x6A\xA5\x00" +
+	/* x */ "\x00\x0D" + "\x00\x00\x00\x78" + "\x05\x05" + "\x06\x00" + "\xFC" + "\x8A\x88\xA8\x80" +
+	/* y */ "\x00\x0E" + "\x00\x00\x00\x79" + "\x05\x07" + "\x06\x00" + "\xFC" + "\x8C\x63\x17\x85\xC0" +
+	/* z */ "\x00\x0D" + "\x00\x00\x00\x7A" + "\x05\x05" + "\x06\x00" + "\xFC" + "\xF8\x88\x8F\x80" +
+	/* { */ "\x00\x0D" + "\x00\x00\x00\x7B" + "\x03\x09" + "\x06\x01" + "\xF9" + "\x29\x28\x92\x20" +
+	/* | */ "\x00\x0B" + "\x00\x00\x00\x7C" + "\x01\x09" + "\x06\x02" + "\xF9" + "\xFF\x80" +
+	/* } */ "\x00\x0D" + "\x00\x00\x00\x7D" + "\x03\x09" + "\x06\x01" + "\xF9" + "\x89\x22\x92\x80" +
+	/* ~ */ "\x00\x0B" + "\x00\x00\x00\x7E" + "\x06\x02" + "\x06\x00" + "\xFD" + "\x66\x60" +
+	""
+
+func (f *sTinySZ8pt7b) GetGlyph(r rune) Glyph {
+	idx := -1
+
+	switch r {
+	case 0x0020:
+		idx = 0
+	case 0x0021:
+		idx = 12
+	case 0x0022:
+		idx = 24
+	case 0x0023:
+		idx = 37
+	case 0x0024:
+		idx = 52
+	case 0x0025:
+		idx = 68
+	case 0x0026:
+		idx = 84
+	case 0x0027:
+		idx = 101
+	case 0x0028:
+		idx = 113
+	case 0x0029:
+		idx = 128
+	case 0x002A:
+		idx = 143
+	case 0x002B:
+		idx = 158
+	case 0x002C:
+		idx = 173
+	case 0x002D:
+		idx = 185
+	case 0x002E:
+		idx = 197
+	case 0x002F:
+		idx = 209
+	case 0x0030:
+		idx = 226
+	case 0x0031:
+		idx = 242
+	case 0x0032:
+		idx = 256
+	case 0x0033:
+		idx = 272
+	case 0x0034:
+		idx = 288
+	case 0x0035:
+		idx = 304
+	case 0x0036:
+		idx = 320
+	case 0x0037:
+		idx = 336
+	case 0x0038:
+		idx = 352
+	case 0x0039:
+		idx = 368
+	case 0x003A:
+		idx = 384
+	case 0x003B:
+		idx = 396
+	case 0x003C:
+		idx = 409
+	case 0x003D:
+		idx = 424
+	case 0x003E:
+		idx = 437
+	case 0x003F:
+		idx = 452
+	case 0x0040:
+		idx = 468
+	case 0x0041:
+		idx = 485
+	case 0x0042:
+		idx = 501
+	case 0x0043:
+		idx = 517
+	case 0x0044:
+		idx = 533
+	case 0x0045:
+		idx = 549
+	case 0x0046:
+		idx = 565
+	case 0x0047:
+		idx = 581
+	case 0x0048:
+		idx = 597
+	case 0x0049:
+		idx = 613
+	case 0x004A:
+		idx = 627
+	case 0x004B:
+		idx = 643
+	case 0x004C:
+		idx = 659
+	case 0x004D:
+		idx = 675
+	case 0x004E:
+		idx = 691
+	case 0x004F:
+		idx = 707
+	case 0x0050:
+		idx = 723
+	case 0x0051:
+		idx = 739
+	case 0x0052:
+		idx = 755
+	case 0x0053:
+		idx = 771
+	case 0x0054:
+		idx = 787
+	case 0x0055:
+		idx = 803
+	case 0x0056:
+		idx = 819
+	case 0x0057:
+		idx = 835
+	case 0x0058:
+		idx = 851
+	case 0x0059:
+		idx = 867
+	case 0x005A:
+		idx = 883
+	case 0x005B:
+		idx = 899
+	case 0x005C:
+		idx = 914
+	case 0x005D:
+		idx = 931
+	case 0x005E:
+		idx = 946
+	case 0x005F:
+		idx = 959
+	case 0x0060:
+		idx = 971
+	case 0x0061:
+		idx = 983
+	case 0x0062:
+		idx = 998
+	case 0x0063:
+		idx = 1014
+	case 0x0064:
+		idx = 1029
+	case 0x0065:
+		idx = 1045
+	case 0x0066:
+		idx = 1060
+	case 0x0067:
+		idx = 1076
+	case 0x0068:
+		idx = 1092
+	case 0x0069:
+		idx = 1108
+	case 0x006A:
+		idx = 1121
+	case 0x006B:
+		idx = 1137
+	case 0x006C:
+		idx = 1152
+	case 0x006D:
+		idx = 1165
+	case 0x006E:
+		idx = 1180
+	case 0x006F:
+		idx = 1195
+	case 0x0070:
+		idx = 1210
+	case 0x0071:
+		idx = 1226
+	case 0x0072:
+		idx = 1242
+	case 0x0073:
+		idx = 1257
+	case 0x0074:
+		idx = 1272
+	case 0x0075:
+		idx = 1287
+	case 0x0076:
+		idx = 1302
+	case 0x0077:
+		idx = 1317
+	case 0x0078:
+		idx = 1332
+	case 0x0079:
+		idx = 1347
+	case 0x007A:
+		idx = 1363
+	case 0x007B:
+		idx = 1378
+	case 0x007C:
+		idx = 1393
+	case 0x007D:
+		idx = 1406
+	case 0x007E:
+		idx = 1421
+	}
+
+	if idx == -1 {
+		return Glyph{
+			Rune:     r,
+			Width:    0,
+			Height:   0,
+			XAdvance: uint8(cTinySZ8pt7b[6]),
+			XOffset:  int8(cTinySZ8pt7b[7]),
+			YOffset:  int8(cTinySZ8pt7b[8]),
+			Bitmaps:  []uint8{},
+		}
+	}
+
+	length := int((uint16(cTinySZ8pt7b[idx+0]) << 8) + uint16(cTinySZ8pt7b[idx+1]))
+	idx += 2
+	ret := Glyph{
+		Rune:     rune((uint32(cTinySZ8pt7b[idx+0]) << 24) + (uint32(cTinySZ8pt7b[idx+1]) << 16) + (uint32(cTinySZ8pt7b[idx+2]) << 8) + uint32(cTinySZ8pt7b[idx+3])),
+		Width:    uint8(cTinySZ8pt7b[idx+4]),
+		Height:   uint8(cTinySZ8pt7b[idx+5]),
+		XAdvance: uint8(cTinySZ8pt7b[idx+6]),
+		XOffset:  int8(cTinySZ8pt7b[idx+7]),
+		YOffset:  int8(cTinySZ8pt7b[idx+8]),
+		Bitmaps:  []uint8(cTinySZ8pt7b[idx+9 : idx+length]),
+	}
+
+	return ret
+}
+
+func (f *sTinySZ8pt7b) GetYAdvance() uint8 {
+	return 0x0A
 }
