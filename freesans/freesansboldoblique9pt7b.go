@@ -5,6 +5,7 @@ import (
 )
 
 var BoldOblique9pt7b = tinyfont.Font{
+	BBox: [4]int8{22, 21, -2, -16},
 	Glyphs: []tinyfont.Glyph{
 		/*   */ tinyfont.Glyph{Rune: 32, Width: 0x0, Height: 0x0, XAdvance: 0x5, XOffset: 0, YOffset: 1, Bitmaps: []uint8{}},
 		/* ! */ tinyfont.Glyph{Rune: 33, Width: 0x5, Height: 0xd, XAdvance: 0x6, XOffset: 2, YOffset: -12, Bitmaps: []uint8{0x21, 0x8e, 0x73, 0x18, 0xc6, 0x21, 0x19, 0xce, 0x0}},
