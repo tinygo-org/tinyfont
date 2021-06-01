@@ -157,8 +157,11 @@ func (f *fontgen) generate(w io.Writer, runes []rune, opt ...option) error {
 	fmt.Fprintln(tmp, `)`)
 	fmt.Fprintln(tmp)
 
+	bbox := calcBBox(ufont)
+
 	fontname := strings.ToUpper(f.fontname[0:1]) + f.fontname[1:]
 	fmt.Fprintf(tmp, "var %s = %T{\n", fontname, ufont)
+	fmt.Fprintf(tmp, "	BBox: [4]int8{%d, %d, %d, %d},\n", bbox[0], bbox[1], bbox[2], bbox[3])
 	fmt.Fprintf(tmp, "	Glyphs:%T{\n", ufont.Glyphs)
 	for i, g := range ufont.Glyphs {
 		c := fmt.Sprintf("%c", ufont.Glyphs[i].Rune)
@@ -226,6 +229,34 @@ func calcSize(f tinyfont.Font) int {
 	sz += int(unsafe.Sizeof(f.YAdvance))
 	return sz
 
+}
+
+func calcBBox(f tinyfont.Font) []int8 {
+	x1 := int8(127)
+	y1 := int8(127)
+	x2 := int8(-128)
+	y2 := int8(-128)
+
+	for _, g := range f.Glyphs {
+		if x1 > g.XOffset {
+			x1 = g.XOffset
+		}
+
+		if y1 > g.YOffset {
+			y1 = g.YOffset
+		}
+
+		if x2 < g.XOffset+int8(g.Width) {
+			x2 = g.XOffset + int8(g.Width)
+		}
+
+		if y2 < g.YOffset+int8(g.Height) {
+			y2 = g.YOffset + int8(g.Height)
+		}
+
+	}
+
+	return []int8{x2 - x1, y2 - y1, x1, y1}
 }
 
 func bdf2glyph(f bdf.Character, r rune) (tinyfont.Glyph, error) {

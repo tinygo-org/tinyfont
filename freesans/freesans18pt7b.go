@@ -5,6 +5,7 @@ import (
 )
 
 var Regular18pt7b = tinyfont.Font{
+	BBox: [4]int8{34, 35, -1, -26},
 	Glyphs: []tinyfont.Glyph{
 		/*   */ tinyfont.Glyph{Rune: 32, Width: 0x0, Height: 0x0, XAdvance: 0x9, XOffset: 0, YOffset: 1, Bitmaps: []uint8{}},
 		/* ! */ tinyfont.Glyph{Rune: 33, Width: 0x3, Height: 0x1a, XAdvance: 0xc, XOffset: 4, YOffset: -25, Bitmaps: []uint8{0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xe9, 0x20, 0x3f, 0xfc}},

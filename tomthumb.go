@@ -49,6 +49,7 @@
 package tinyfont
 
 var TomThumb = Font{
+	BBox: [4]int8{8, 6, 0, -5},
 	Glyphs: []Glyph{
 		/*   */ Glyph{Rune: 32, Width: 0x8, Height: 0x1, XAdvance: 0x2, XOffset: 0, YOffset: -5, Bitmaps: []uint8{0x0}},
 		/* ! */ Glyph{Rune: 33, Width: 0x8, Height: 0x5, XAdvance: 0x2, XOffset: 0, YOffset: -5, Bitmaps: []uint8{0x80, 0x80, 0x80, 0x0, 0x80}},
