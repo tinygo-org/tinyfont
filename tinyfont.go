@@ -29,6 +29,7 @@ type Glyph struct {
 }
 
 type Font struct {
+	BBox     [4]int8 // width, height, minX, minY
 	Glyphs   []Glyph
 	YAdvance uint8
 }

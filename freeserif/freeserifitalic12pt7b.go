@@ -5,6 +5,7 @@ import (
 )
 
 var Italic12pt7b = tinyfont.Font{
+	BBox: [4]int8{25, 23, -2, -17},
 	Glyphs: []tinyfont.Glyph{
 		/*   */ tinyfont.Glyph{Rune: 32, Width: 0x0, Height: 0x0, XAdvance: 0x6, XOffset: 0, YOffset: 1, Bitmaps: []uint8{}},
 		/* ! */ tinyfont.Glyph{Rune: 33, Width: 0x6, Height: 0x10, XAdvance: 0x8, XOffset: 1, YOffset: -15, Bitmaps: []uint8{0xc, 0x31, 0xc6, 0x18, 0x43, 0xc, 0x20, 0x84, 0x10, 0x3, 0xc, 0x30}},

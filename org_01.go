@@ -4,6 +4,7 @@
 package tinyfont
 
 var Org01 = Font{
+	BBox: [4]int8{5, 6, 0, -4},
 	Glyphs: []Glyph{
 		/*   */ Glyph{Rune: 32, Width: 0x0, Height: 0x0, XAdvance: 0x6, XOffset: 0, YOffset: 1, Bitmaps: []uint8{}},
 		/* ! */ Glyph{Rune: 33, Width: 0x1, Height: 0x5, XAdvance: 0x2, XOffset: 0, YOffset: -4, Bitmaps: []uint8{0xe8}},

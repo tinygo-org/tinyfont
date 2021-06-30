@@ -14,6 +14,7 @@
 package tinyfont
 
 var Tiny3x3a2pt7b = Font{
+	BBox: [4]int8{3, 4, 0, -2},
 	Glyphs: []Glyph{
 		/*   */ Glyph{Rune: 32, Width: 0x0, Height: 0x0, XAdvance: 0x4, XOffset: 0, YOffset: 1, Bitmaps: []uint8{}},
 		/* ! */ Glyph{Rune: 33, Width: 0x1, Height: 0x2, XAdvance: 0x3, XOffset: 1, YOffset: -2, Bitmaps: []uint8{0xc0}},
