@@ -20,7 +20,7 @@ The fonts compiled here were just converted or made compatible, and the original
 
 You can use tinyfontgen to generate a tinyfont from a bdf font.  
 
-https://github.com/tinygo-org/tinyfont/tree/rune/cmd/tinyfontgen
+https://github.com/tinygo-org/tinyfont/tree/release/cmd/tinyfontgen
 
 ## Incompatibility warning
 
