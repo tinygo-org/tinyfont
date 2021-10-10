@@ -43,20 +43,11 @@ func DrawChar(display drivers.Displayer, font *Font, x int16, y int16, char rune
 func DrawCharRotated(display drivers.Displayer, font *Font, x int16, y int16, char rune, color color.RGBA, rotation Rotation) {
 	glyph := GetGlyph(font, char)
 	display = NewRotatedLabel(display, rotation, x, y)
-	drawGlyphRotated(display, x, y, glyph, color, rotation)
+	drawGlyphRotated(display, 0, 0, glyph, color)
 }
 
 // drawGlyphRotated sets a single glyph in the buffer of the display.
-func drawGlyphRotated(display drivers.Displayer, x int16, y int16, glyph Glyph, color color.RGBA, rotation Rotation) {
-	if 0 == 0 {
-		// new version
-		drawGlyphRotated1(display, x, y, glyph, color, rotation)
-	} else {
-		drawGlyphRotated2(display, x, y, glyph, color, rotation)
-	}
-}
-
-func drawGlyphRotated1(display drivers.Displayer, x int16, y int16, glyph Glyph, color color.RGBA, rotation Rotation) {
+func drawGlyphRotated(display drivers.Displayer, x int16, y int16, glyph Glyph, color color.RGBA) {
 	bitmapOffset := 0
 	bitmap := byte(0)
 	if len(glyph.Bitmaps) > 0 {
@@ -69,41 +60,6 @@ func drawGlyphRotated1(display drivers.Displayer, x int16, y int16, glyph Glyph,
 
 			if (bitmap & 0x80) != 0x00 {
 				display.SetPixel(x+int16(glyph.XOffset)+i, y+int16(glyph.YOffset)+j, color)
-			}
-			bitmap <<= 1
-
-			bit++
-			if bit > 7 {
-				bitmapOffset++
-				if bitmapOffset < len(glyph.Bitmaps) {
-					bitmap = glyph.Bitmaps[bitmapOffset]
-				}
-				bit = 0
-			}
-		}
-	}
-}
-
-func drawGlyphRotated2(display drivers.Displayer, x int16, y int16, glyph Glyph, color color.RGBA, rotation Rotation) {
-	bitmapOffset := 0
-	bitmap := byte(0)
-	if len(glyph.Bitmaps) > 0 {
-		bitmap = glyph.Bitmaps[bitmapOffset]
-	}
-	bit := uint8(0)
-	for j := int16(0); j < int16(glyph.Height); j++ {
-		for i := int16(0); i < int16(glyph.Width); i++ {
-
-			if (bitmap & 0x80) != 0x00 {
-				if rotation == NO_ROTATION {
-					display.SetPixel(x+int16(glyph.XOffset)+i, y+int16(glyph.YOffset)+j, color)
-				} else if rotation == ROTATION_90 {
-					display.SetPixel(x-int16(glyph.YOffset)-j, y+int16(glyph.XOffset)+i, color)
-				} else if rotation == ROTATION_180 {
-					display.SetPixel(x-int16(glyph.XOffset)-i, y-int16(glyph.YOffset)-j, color)
-				} else {
-					display.SetPixel(x+int16(glyph.YOffset)+j, y-int16(glyph.XOffset)-i, color)
-				}
 			}
 			bitmap <<= 1
 
@@ -138,14 +94,6 @@ func WriteLineColors(display drivers.Displayer, font *Font, x int16, y int16, st
 // WriteLineColorsRotated writes a string in the selected font in the buffer. Each char is in a different color
 // if not enough colors are defined, colors are cycled.
 func WriteLineColorsRotated(display drivers.Displayer, font *Font, x int16, y int16, str string, colors []color.RGBA, rotation Rotation) {
-	if 0 == 0 {
-		WriteLineColorsRotated1(display, font, x, y, str, colors, rotation)
-	} else {
-		WriteLineColorsRotated2(display, font, x, y, str, colors, rotation)
-	}
-}
-
-func WriteLineColorsRotated1(display drivers.Displayer, font *Font, x int16, y int16, str string, colors []color.RGBA, rotation Rotation) {
 	text := []rune(str)
 	numColors := uint16(len(colors))
 	if numColors == 0 {
@@ -166,69 +114,12 @@ func WriteLineColorsRotated1(display drivers.Displayer, font *Font, x int16, y i
 			continue
 		}
 		glyph := GetGlyph(font, text[i])
-		drawGlyphRotated(display, nx, ny, glyph, colors[c], rotation)
+		drawGlyphRotated(display, nx, ny, glyph, colors[c])
 		c++
 		if c >= numColors {
 			c = 0
 		}
 		nx += int16(glyph.XAdvance)
-	}
-}
-
-func WriteLineColorsRotated2(display drivers.Displayer, font *Font, x int16, y int16, str string, colors []color.RGBA, rotation Rotation) {
-	text := []rune(str)
-	numColors := uint16(len(colors))
-	if numColors == 0 {
-		return
-	}
-	rotation = rotation % 4
-
-	c := uint16(0)
-	w, h := display.Size()
-	l := len(text)
-	ox := x
-	oy := y
-	for i := 0; i < l; i++ {
-		if text[i] == LineFeed || text[i] == CarriageReturn {
-			/* CR or LF */
-			if rotation == NO_ROTATION {
-				x = ox
-				y += int16(font.YAdvance)
-			} else if rotation == ROTATION_90 {
-				x -= int16(font.YAdvance)
-				y = oy
-			} else if rotation == ROTATION_180 {
-				x = ox
-				y -= int16(font.YAdvance)
-			} else {
-				x += int16(font.YAdvance)
-				y = oy
-			}
-			continue
-		}
-		glyph := GetGlyph(font, text[i])
-		drawGlyphRotated(display, x, y, glyph, colors[c], rotation)
-		c++
-		if c >= numColors {
-			c = 0
-		}
-		if rotation == NO_ROTATION {
-			x += int16(glyph.XAdvance)
-		} else if rotation == ROTATION_90 {
-			y += int16(glyph.XAdvance)
-		} else if rotation == ROTATION_180 {
-			x -= int16(glyph.XAdvance)
-		} else {
-			y -= int16(glyph.XAdvance)
-		}
-
-		// speed up?
-		if (rotation == NO_ROTATION && x > w) ||
-			(rotation == ROTATION_90 && x > h) ||
-			(rotation == ROTATION_180 && x < 0) ||
-			(rotation == ROTATION_270 && y < 0) {
-			break
-		}
 	}
 }
 
