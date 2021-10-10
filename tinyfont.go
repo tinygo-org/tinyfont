@@ -96,7 +96,7 @@ func DrawChar(display drivers.Displayer, font *Font, x int16, y int16, char rune
 
 // DrawCharRotated sets a single rune in the buffer of the display.
 func DrawCharRotated(display drivers.Displayer, font *Font, x int16, y int16, char rune, color color.RGBA, rotation Rotation) {
-	glyph := GetGlyph(font, char)
+	glyph := font.GetGlyph(char)
 	display = NewRotatedLabel(display, rotation, x, y)
 	glyph.Draw(display, 0, 0, color)
 }
@@ -139,7 +139,7 @@ func WriteLineColorsRotated(display drivers.Displayer, font *Font, x int16, y in
 			ny += int16(font.YAdvance)
 			continue
 		}
-		glyph := GetGlyph(font, text[i])
+		glyph := font.GetGlyph(text[i])
 		glyph.Draw(display, nx, ny, colors[c])
 		c++
 		if c >= numColors {
@@ -149,55 +149,60 @@ func WriteLineColorsRotated(display drivers.Displayer, font *Font, x int16, y in
 	}
 }
 
+type Fonter interface {
+	GetGlyph(r rune) Glypher
+	LineWidth(str string) (innerWidth uint32, outboxWidth uint32)
+}
+
 // LineWidth returns the inner and outbox widths corresponding to font and str.
-func LineWidth(font *Font, str string) (innerWidth uint32, outboxWidth uint32) {
+func (f *Font) LineWidth(str string) (innerWidth uint32, outboxWidth uint32) {
 	text := []rune(str)
 	if len(text) == 0 {
 		return
 	}
 
 	for i := range text {
-		glyph := GetGlyph(font, text[i])
+		glyph := f.GetGlyph(text[i])
 		outboxWidth += uint32(glyph.Info().XAdvance)
 	}
 	innerWidth = outboxWidth
 	// first glyph
-	glyph := GetGlyph(font, text[0])
+	glyph := f.GetGlyph(text[0])
 	innerWidth -= uint32(glyph.Info().XOffset)
 
 	// last glyph
-	glyph = GetGlyph(font, text[len(text)-1])
+	glyph = f.GetGlyph(text[len(text)-1])
 	innerWidth += -uint32(glyph.Info().XAdvance) + uint32(glyph.Info().XOffset) + uint32(glyph.Info().Width)
 	return
 }
 
 // GetGlyph returns the glyph corresponding to the specified rune in the font.
-func GetGlyph(font *Font, r rune) Glypher {
+func (f *Font) GetGlyph(r rune) Glypher {
 	s := 0
-	e := len(font.Glyphs) - 1
+	e := len(f.Glyphs) - 1
 
 	for s <= e {
 		m := (s + e) / 2
 
-		if font.Glyphs[m].Info().Rune < r {
+		if f.Glyphs[m].Info().Rune < r {
 			s = m + 1
 		} else {
 			e = m - 1
 		}
 	}
 
-	if s == len(font.Glyphs) || font.Glyphs[s].Info().Rune != r {
+	if s == len(f.Glyphs) || f.Glyphs[s].Info().Rune != r {
 		g := &Glyph{
 			Rune:     r,
 			Width:    0,
 			Height:   0,
-			XAdvance: font.Glyphs[0].Info().XAdvance,
-			XOffset:  font.Glyphs[0].Info().XOffset,
-			YOffset:  font.Glyphs[0].Info().YOffset,
+			XAdvance: f.Glyphs[0].Info().XAdvance,
+			XOffset:  f.Glyphs[0].Info().XOffset,
+			YOffset:  f.Glyphs[0].Info().YOffset,
 			Bitmaps:  []byte{0},
 		}
 		return g
 	}
 
-	return font.Glyphs[s]
+	return f.Glyphs[s]
 }
