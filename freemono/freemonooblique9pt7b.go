@@ -6,7 +6,7 @@ import (
 
 var Oblique9pt7b = tinyfont.Font{
 	BBox: [4]int8{13, 15, 0, -11},
-	Glyphs: []tinyfont.Glyph{
+	Glyphs: []tinyfont.Glypher{
 		/*   */ tinyfont.Glyph{Rune: 32, Width: 0x0, Height: 0x0, XAdvance: 0xb, XOffset: 0, YOffset: 1, Bitmaps: []uint8{}},
 		/* ! */ tinyfont.Glyph{Rune: 33, Width: 0x4, Height: 0xb, XAdvance: 0xb, XOffset: 4, YOffset: -10, Bitmaps: []uint8{0x11, 0x22, 0x24, 0x40, 0x0, 0xc0}},
 		/* " */ tinyfont.Glyph{Rune: 34, Width: 0x5, Height: 0x5, XAdvance: 0xb, XOffset: 4, YOffset: -10, Bitmaps: []uint8{0xde, 0xe5, 0x29, 0x0}},

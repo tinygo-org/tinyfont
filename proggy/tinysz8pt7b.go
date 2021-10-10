@@ -6,7 +6,7 @@ import (
 
 var TinySZ8pt7b = tinyfont.Font{
 	BBox: [4]int8{6, 10, 0, -7},
-	Glyphs: []tinyfont.Glyph{
+	Glyphs: []tinyfont.Glypher{
 		/*   */ tinyfont.Glyph{Rune: 32, Width: 0x1, Height: 0x1, XAdvance: 0x6, XOffset: 0, YOffset: 0, Bitmaps: []uint8{0x0}},
 		/* ! */ tinyfont.Glyph{Rune: 33, Width: 0x1, Height: 0x7, XAdvance: 0x6, XOffset: 2, YOffset: -6, Bitmaps: []uint8{0xfa}},
 		/* " */ tinyfont.Glyph{Rune: 34, Width: 0x3, Height: 0x3, XAdvance: 0x6, XOffset: 1, YOffset: -7, Bitmaps: []uint8{0xb6, 0x80}},

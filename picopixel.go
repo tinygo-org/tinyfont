@@ -5,7 +5,7 @@ package tinyfont
 
 var Picopixel = Font{
 	BBox: [4]int8{5, 6, 0, -4},
-	Glyphs: []Glyph{
+	Glyphs: []Glypher{
 		/*   */ Glyph{Rune: 32, Width: 0x0, Height: 0x0, XAdvance: 0x2, XOffset: 0, YOffset: 1, Bitmaps: []uint8{}},
 		/* ! */ Glyph{Rune: 33, Width: 0x1, Height: 0x5, XAdvance: 0x2, XOffset: 0, YOffset: -4, Bitmaps: []uint8{0xe8}},
 		/* " */ Glyph{Rune: 34, Width: 0x3, Height: 0x2, XAdvance: 0x4, XOffset: 0, YOffset: -4, Bitmaps: []uint8{0xb4}},

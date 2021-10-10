@@ -6,7 +6,7 @@ import (
 
 var Regular14pt = tinyfont.Font{
 	BBox: [4]int8{13, 12, -1, -11},
-	Glyphs: []tinyfont.Glyph{
+	Glyphs: []tinyfont.Glypher{
 		/*   */ tinyfont.Glyph{Rune: 32, Width: 0x1, Height: 0x1, XAdvance: 0x5, XOffset: 0, YOffset: 0, Bitmaps: []uint8{0x0}},
 		/* ! */ tinyfont.Glyph{Rune: 33, Width: 0x4, Height: 0xa, XAdvance: 0x6, XOffset: 0, YOffset: -10, Bitmaps: []uint8{0xf9, 0x99, 0x99, 0x99, 0x9f}},
 		/* " */ tinyfont.Glyph{Rune: 34, Width: 0x4, Height: 0xa, XAdvance: 0x6, XOffset: 0, YOffset: -10, Bitmaps: []uint8{0xf9, 0x99, 0x99, 0x99, 0x9f}},

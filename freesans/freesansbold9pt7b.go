@@ -6,7 +6,7 @@ import (
 
 var Bold9pt7b = tinyfont.Font{
 	BBox: [4]int8{17, 18, 0, -13},
-	Glyphs: []tinyfont.Glyph{
+	Glyphs: []tinyfont.Glypher{
 		/*   */ tinyfont.Glyph{Rune: 32, Width: 0x0, Height: 0x0, XAdvance: 0x5, XOffset: 0, YOffset: 1, Bitmaps: []uint8{}},
 		/* ! */ tinyfont.Glyph{Rune: 33, Width: 0x3, Height: 0xd, XAdvance: 0x6, XOffset: 2, YOffset: -12, Bitmaps: []uint8{0xff, 0xff, 0xfe, 0x48, 0x7e}},
 		/* " */ tinyfont.Glyph{Rune: 34, Width: 0x7, Height: 0x5, XAdvance: 0x9, XOffset: 1, YOffset: -12, Bitmaps: []uint8{0xef, 0xdf, 0xbf, 0x74, 0x40}},

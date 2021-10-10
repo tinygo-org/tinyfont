@@ -8,7 +8,7 @@ import (
 
 var NotoEmojiRegular20pt = tinyfont.Font{
 	BBox: [4]int8{26, 26, 0, -20},
-	Glyphs: []tinyfont.Glyph{
+	Glyphs: []tinyfont.Glypher{
 		/*  */ tinyfont.Glyph{Rune: 0x0, Width: 0x0, Height: 0x0, XAdvance: 0x1a, XOffset: 0, YOffset: 0, Bitmaps: []uint8{}},
 		/*  */ tinyfont.Glyph{Rune: 0xd, Width: 0x0, Height: 0x0, XAdvance: 0x1a, XOffset: 0, YOffset: 0, Bitmaps: []uint8{}},
 		/*   */ tinyfont.Glyph{Rune: 0x20, Width: 0x0, Height: 0x0, XAdvance: 0x1a, XOffset: 0, YOffset: 0, Bitmaps: []uint8{}},

@@ -8,7 +8,7 @@ import (
 
 var Notosans12pt = tinyfont.Font{
 	BBox: [4]int8{14, 15, -1, -12},
-	Glyphs: []tinyfont.Glyph{
+	Glyphs: []tinyfont.Glypher{
 		/*  */ tinyfont.Glyph{Rune: 0x1, Width: 0x0, Height: 0x0, XAdvance: 0x3, XOffset: 0, YOffset: 0, Bitmaps: []uint8{}},
 		/*  */ tinyfont.Glyph{Rune: 0x2, Width: 0x0, Height: 0x0, XAdvance: 0x3, XOffset: 0, YOffset: 0, Bitmaps: []uint8{}},
 		/*  */ tinyfont.Glyph{Rune: 0x3, Width: 0x0, Height: 0x0, XAdvance: 0x3, XOffset: 0, YOffset: 0, Bitmaps: []uint8{}},
