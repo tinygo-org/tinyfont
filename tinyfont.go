@@ -43,11 +43,11 @@ func DrawChar(display drivers.Displayer, font *Font, x int16, y int16, char rune
 func DrawCharRotated(display drivers.Displayer, font *Font, x int16, y int16, char rune, color color.RGBA, rotation Rotation) {
 	glyph := GetGlyph(font, char)
 	display = NewRotatedLabel(display, rotation, x, y)
-	drawGlyphRotated(display, 0, 0, glyph, color)
+	drawGlyph(display, 0, 0, glyph, color)
 }
 
-// drawGlyphRotated sets a single glyph in the buffer of the display.
-func drawGlyphRotated(display drivers.Displayer, x int16, y int16, glyph Glyph, color color.RGBA) {
+// drawGlyph sets a single glyph in the buffer of the display.
+func drawGlyph(display drivers.Displayer, x int16, y int16, glyph Glyph, color color.RGBA) {
 	bitmapOffset := 0
 	bitmap := byte(0)
 	if len(glyph.Bitmaps) > 0 {
@@ -114,7 +114,7 @@ func WriteLineColorsRotated(display drivers.Displayer, font *Font, x int16, y in
 			continue
 		}
 		glyph := GetGlyph(font, text[i])
-		drawGlyphRotated(display, nx, ny, glyph, colors[c])
+		drawGlyph(display, nx, ny, glyph, colors[c])
 		c++
 		if c >= numColors {
 			c = 0
