@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
-	"image"
-	"image/color"
+	"io"
 	"io/ioutil"
 	"log"
+	"os"
 
 	"golang.org/x/image/font/opentype"
 	"golang.org/x/image/font/sfnt"
@@ -44,8 +44,10 @@ func run() error {
 	}
 	indexes := []xx{}
 	max := rune(0x32000 * 2)
-	max = 0x10000
-	//max = 0xFF
+	//max = 0x10000
+	if len(os.Args) < 1 {
+		max = 0xFF
+	}
 	for r := rune(0); r < max; r++ {
 		idx, err := ft.GlyphIndex(sfntBuf, r)
 		if err != nil {
@@ -61,122 +63,48 @@ func run() error {
 		}
 	}
 
-	for _, mode := range []int{1, 0} {
-		maxw, maxh := 0, 0
-		offset := 0
-		if mode == 0 {
-			fmt.Printf("const cNotoSans12pt = \"\" +\n")
-		} else if mode == 1 {
-			fmt.Printf("var NotoSans12pt = Font{\n")
-			fmt.Printf("	Glyphs: []Glypher{\n")
-		}
-		for _, xxx := range indexes {
-			text := fmt.Sprintf("%c", xxx.Rune)
-			if false {
-				fmt.Printf("%d %s : ", xxx.Index, text)
-			}
-
-			dr, img, _, adv, ok := face.Glyph(fixed.Point26_6{}, xxx.Rune)
-			if !ok {
-				continue
-			}
-			w := adv.Ceil()
-			h := adv.Ceil()
-			if w > maxw {
-				maxw = w
-			}
-			if h > maxh {
-				maxh = h
-			}
-
-			var imgX image.Image
-			imgX = img
-
-			// font
-			fontBuf := []uint8{}
-			for y := imgX.Bounds().Min.Y; y < imgX.Bounds().Max.Y; y++ {
-				for x := imgX.Bounds().Min.X; x < imgX.Bounds().Max.X; x++ {
-					z := imgX.At(x, y)
-					r, g, b, a := z.RGBA()
-					if r != g || r != b {
-						fmt.Printf("rgb errror : %#v\n", z)
-						fmt.Scanln()
-					}
-					z = color.GrayModel.Convert(z)
-					if true {
-						r, _, _, _ = z.RGBA()
-						r &= 0xC000
-						if r == 0xC000 {
-							r = 0xFFFF
-						} else if r == 0x0000 {
-							r = 0x0000
-						} else if r == 0x8000 {
-							r = 0x8000
-						} else if r == 0x4000 {
-							r = 0x4000
-						} else {
-							z = color.RGBA{uint8(r >> 8), 0, 0, uint8(a)}
-							z = color.RGBA{0, 0, 0, uint8(a)}
-						}
-						fontBuf = append(fontBuf, byte((r&0xC000)>>14))
-						z = color.RGBA{uint8(r >> 8), uint8(r >> 8), uint8(r >> 8), uint8(a)}
-					}
-				}
-			}
-
-			for len(fontBuf)%4 != 0 {
-				fontBuf = append(fontBuf, 0)
-			}
-
-			if mode == 0 {
-				// 0     : length
-				// 1 - 4 : Rune
-				// 5     : Width
-				// 6     : Height
-				// 7     : XAdvance
-				// 8     : XOffset
-				// 9     : YOffset
-				// 10 -  : bmp
-				switch xxx.Rune {
-				case 0x00, 0x0D:
-					fmt.Printf("	/* '\\x%02X' */ ", xxx.Rune)
-				default:
-					fmt.Printf("	/* '%c' */ ", xxx.Rune)
-				}
-				fmt.Printf("\"\\x%02X\" + ", len(fontBuf)+9)
-				fmt.Printf("\"\\x%02X\\x%02X\\x%02X\\x%02X\" + ", byte(xxx.Rune>>24), byte(xxx.Rune>>16), byte(xxx.Rune>>8), byte(xxx.Rune))
-				//width := dr.Max.X - dr.Min.X
-				width := imgX.Bounds().Max.X - imgX.Bounds().Min.X
-				//height := dr.Max.Y - dr.Min.Y
-				height := imgX.Bounds().Max.Y - imgX.Bounds().Min.Y
-				fmt.Printf("\"\\x%02X\\x%02X\" + ", width, height)
-				fmt.Printf("\"\\x%02X\" + ", (adv.Ceil() + 0))
-				fmt.Printf("\"\\x%02X\\x%02X\" + ", int2byte(dr.Min.X), int2byte(dr.Min.Y))
-				fmt.Printf("\"")
-				for ii := 0; ii < len(fontBuf); ii += 4 {
-					fmt.Printf("\\x%02X", (fontBuf[ii]<<6)+(fontBuf[ii+1]<<4)+(fontBuf[ii+2]<<2)+fontBuf[ii+3])
-				}
-				fmt.Printf("\" +\n")
-			} else if mode == 1 {
-				if xxx.Rune <= 0x20 {
-					fmt.Printf("		NotosansGlyph{Index: 0x%04X, Rune: 0x%08X}, // \\x%02X\n", offset, xxx.Rune, xxx.Rune)
-				} else {
-					fmt.Printf("		NotosansGlyph{Index: 0x%04X, Rune: 0x%08X}, // %c\n", offset, xxx.Rune, xxx.Rune)
-				}
-				offset += len(fontBuf)/4 + 9 + 1
-			}
-
-		}
-		if mode == 0 {
-			fmt.Printf("	\"\"\n")
-		} else if mode == 1 {
-			fmt.Printf("	},\n")
-			fmt.Printf("	YAdvance: 12,\n")
-			fmt.Printf("}\n")
-		}
-
-		fmt.Printf("\n")
+	font := TinyfontX{
+		Name:   "NotoSans12pt",
+		Glyphs: make([]GlyphBuffer, len(indexes)),
 	}
+
+	offset := 0
+	fontBuffer := [256]uint8{}
+	for i, xxx := range indexes {
+		font.Glyphs[i].Index = uint32(offset)
+		font.Glyphs[i].Rune = xxx.Rune
+
+		dr, img, _, adv, ok := face.Glyph(fixed.Point26_6{}, xxx.Rune)
+		if !ok {
+			continue
+		}
+
+		// font
+		fontBuf := fontBuffer[:0]
+		for y := img.Bounds().Min.Y; y < img.Bounds().Max.Y; y++ {
+			for x := img.Bounds().Min.X; x < img.Bounds().Max.X; x++ {
+				z := img.At(x, y)
+				r, _, _, _ := z.RGBA()
+				fontBuf = append(fontBuf, byte((r&0xC000)>>14))
+			}
+		}
+
+		for len(fontBuf)%4 != 0 {
+			fontBuf = append(fontBuf, 0)
+		}
+
+		font.Glyphs[i].Width = uint8(img.Bounds().Max.X - img.Bounds().Min.X)
+		font.Glyphs[i].Height = uint8(img.Bounds().Max.Y - img.Bounds().Min.Y)
+		font.Glyphs[i].XAdvance = uint8(adv.Ceil())
+		font.Glyphs[i].XOffset = int8(dr.Min.X)
+		font.Glyphs[i].YOffset = int8(dr.Min.Y)
+		font.Glyphs[i].Buf = make([]byte, len(fontBuf))
+		copy(font.Glyphs[i].Buf, fontBuf)
+
+		offset += len(fontBuf)/4 + 9 + 1
+	}
+
+	font.SaveTo(os.Stdout)
 
 	return nil
 }
@@ -188,4 +116,85 @@ func int2byte(x int) byte {
 
 	ret := 0xFFFFFFFF + x
 	return byte(ret)
+}
+
+func int2byte2(x int8) byte {
+	if x > 0 {
+		return byte(x)
+	}
+
+	ret := 0xFFFFFFFF + int(x)
+	return byte(ret)
+}
+
+type TinyfontX struct {
+	Name   string
+	Glyphs []GlyphBuffer
+}
+
+func (f TinyfontX) SaveTo(w io.Writer) {
+	fmt.Fprintf(w, "package notosans\n")
+	fmt.Fprintf(w, "\n")
+	fmt.Fprintf(w, "import (\n")
+	fmt.Fprintf(w, "	\"tinygo.org/x/tinyfont\"\n")
+	fmt.Fprintf(w, ")\n")
+
+	fmt.Fprintf(w, "var %s = tinyfont.Font{\n", f.Name)
+	fmt.Fprintf(w, "	Glyphs: []tinyfont.Glypher{\n")
+
+	for _, g := range f.Glyphs {
+		g.Write2(w)
+	}
+	fmt.Fprintf(w, "	},\n")
+	fmt.Fprintf(w, "	YAdvance: 12,\n")
+	fmt.Fprintf(w, "}\n")
+	fmt.Fprintf(w, "\n")
+
+	fmt.Fprintf(w, "const c%s = \"\" +\n", f.Name)
+	for _, g := range f.Glyphs {
+		g.Write1(w)
+	}
+	fmt.Fprintf(w, "	\"\"\n")
+}
+
+func (f TinyfontX) SaveBinaryTo(w io.Writer) {
+}
+
+type GlyphBuffer struct {
+	Index    uint32
+	Rune     rune
+	Width    uint8
+	Height   uint8
+	XAdvance uint8
+	XOffset  int8
+	YOffset  int8
+	Buf      []byte
+}
+
+func (g *GlyphBuffer) Write1(w io.Writer) {
+	switch g.Rune {
+	case 0x00, 0x0D:
+		fmt.Fprintf(w, "	/* '\\x%02X' */ ", g.Rune)
+	default:
+		fmt.Fprintf(w, "	/* '%c' */ ", g.Rune)
+	}
+
+	fmt.Fprintf(w, "\"\\x%02X\" + ", len(g.Buf)+9)
+	fmt.Fprintf(w, "\"\\x%02X\\x%02X\\x%02X\\x%02X\" + ", byte(g.Rune>>24), byte(g.Rune>>16), byte(g.Rune>>8), byte(g.Rune))
+	fmt.Fprintf(w, "\"\\x%02X\\x%02X\" + ", g.Width, g.Height)
+	fmt.Fprintf(w, "\"\\x%02X\" + ", g.XAdvance)
+	fmt.Fprintf(w, "\"\\x%02X\\x%02X\" + ", int2byte2(g.XOffset), int2byte2(g.YOffset))
+	fmt.Fprintf(w, "\"")
+	for i := 0; i < len(g.Buf); i += 4 {
+		fmt.Fprintf(w, "\\x%02X", (g.Buf[i]<<6)+(g.Buf[i+1]<<4)+(g.Buf[i+2]<<2)+g.Buf[i+3])
+	}
+	fmt.Fprintf(w, "\" +\n")
+}
+
+func (g *GlyphBuffer) Write2(w io.Writer) {
+	if g.Rune <= 0x20 {
+		fmt.Fprintf(w, "		NotosansGlyph{Index: 0x%08X, Rune: 0x%08X}, // \\x%02X\n", g.Index, g.Rune, g.Rune)
+	} else {
+		fmt.Fprintf(w, "		NotosansGlyph{Index: 0x%08X, Rune: 0x%08X}, // %c\n", g.Index, g.Rune, g.Rune)
+	}
 }
