@@ -1,33 +1,20 @@
 package notosans
 
 import (
-	"fmt"
 	"image/color"
 
 	"tinygo.org/x/drivers"
 	"tinygo.org/x/tinyfont"
 )
 
-type NotosansGlyph struct {
-	Index uint32
-	Rune  rune
+type NotoSans12ptGlyph struct {
+	Offset uint32
+	Rune   rune
 }
 
-func (g NotosansGlyph) Draw(display drivers.Displayer, x int16, y int16, c1 color.RGBA) {
+func (g NotoSans12ptGlyph) Draw(display drivers.Displayer, x int16, y int16, c1 color.RGBA) {
 	info := g.Info()
-	bmp := cNotoSans12pt[g.Index+10:]
-	b := cNotoSans12pt[g.Index:]
-
-	fmt.Printf("ok\n")
-	fmt.Printf("%#v\n", info)
-	fmt.Printf("%04X %08X\n", g.Index, uint32(b[0]))
-	fmt.Printf("%02X %02X %02X %02X ", b[0], b[1], b[2], b[3])
-	fmt.Printf("%02X %02X %02X %02X\n", b[4], b[5], b[6], b[7])
-	fmt.Printf("%02X %02X %02X\n", info.Rune, info.Width, info.Height)
-	for i := 0; i < int(b[0])+1; i++ {
-		fmt.Printf("%02X ", b[i])
-	}
-	fmt.Printf("\n")
+	bmp := cNotoSans12pt[g.Offset+9:]
 
 	for j := int16(0); j < int16(info.Height); j++ {
 		for i := int16(0); i < int16(info.Width); i++ {
@@ -72,14 +59,14 @@ func (g NotosansGlyph) Draw(display drivers.Displayer, x int16, y int16, c1 colo
 	}
 }
 
-func (g NotosansGlyph) Info() *tinyfont.GlyphInfo {
-	buf := cNotoSans12pt[g.Index:]
+func (g NotoSans12ptGlyph) Info() *tinyfont.GlyphInfo {
+	buf := cNotoSans12pt[g.Offset:]
 	return &tinyfont.GlyphInfo{
 		Rune:     g.Rune,
-		Width:    buf[5],
-		Height:   buf[6],
-		XAdvance: buf[7],
-		XOffset:  int8(buf[8]),
-		YOffset:  int8(buf[9]),
+		Width:    buf[4],
+		Height:   buf[5],
+		XAdvance: buf[6],
+		XOffset:  int8(buf[7]),
+		YOffset:  int8(buf[8]),
 	}
 }

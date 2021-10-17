@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -12,7 +13,59 @@ import (
 	"golang.org/x/image/math/fixed"
 )
 
+var (
+	fs       = flag.NewFlagSet(os.Args[0], flag.ExitOnError)
+	pkgname  = fs.String("package", "main", "package name")
+	fontname = fs.String("fontname", "TinyFont", "font name")
+	str      = fs.String("string", "", "strings for font")
+	output   = fs.String("output", "", "output path")
+	ascii    = fs.Bool("ascii", true, "include all glyphs in the font")
+	all      = fs.Bool("all", false, "include all ascii glyphs (codepoint <= 255) in the font")
+	verbose  = fs.Bool("verbose", false, "run verbosely")
+	yadvance = fs.Int("yadvance", 0, "new line distance")
+	size     = fs.Int("size", 12, "font size")
+	dpi      = fs.Int("dpi", 72, "font dpi")
+	fonts    []string
+)
+
+type strslice struct {
+	s []string
+}
+
+func (s *strslice) String() string {
+	return fmt.Sprintf("%v", s.s)
+}
+
+func (s *strslice) Set(v string) error {
+	s.s = append(s.s, v)
+	return nil
+}
+
+func usage() {
+	fmt.Fprintf(os.Stderr, "usage: tinyfontgen [flags] [path ...]\n")
+	fs.PrintDefaults()
+}
+
 func main() {
+	var strfiles strslice
+
+	fs.Var(&strfiles, "string-file", "strings file for font (can be set multiple times)")
+
+	fs.Usage = usage
+	fs.Parse(os.Args[1:])
+	for 0 < fs.NArg() {
+		fonts = append(fonts, fs.Arg(0))
+		fs.Parse(fs.Args()[1:])
+	}
+
+	if len(fonts) != 1 {
+		log.Fatal("len(fonts) != 1")
+	}
+
+	if *yadvance == 0 {
+		*yadvance = *size
+	}
+
 	err := run()
 	if err != nil {
 		log.Fatal(err)
@@ -20,7 +73,7 @@ func main() {
 }
 
 func run() error {
-	bb, err := ioutil.ReadFile("./_font/NotoSansJP-Regular.otf")
+	bb, err := ioutil.ReadFile(fonts[0])
 	//bb, err := ioutil.ReadFile("./_font/NotoSansMono-Regular.ttf")
 	if err != nil {
 		return err
@@ -32,7 +85,7 @@ func run() error {
 	}
 	//fmt.Printf("%#v\n", ft)
 
-	face, err := opentype.NewFace(ft, &opentype.FaceOptions{Size: 12, DPI: 72})
+	face, err := opentype.NewFace(ft, &opentype.FaceOptions{Size: float64(*size), DPI: float64(*dpi)})
 	if err != nil {
 		return err
 	}
@@ -45,7 +98,7 @@ func run() error {
 	indexes := []xx{}
 	max := rune(0x32000 * 2)
 	//max = 0x10000
-	if len(os.Args) < 1 {
+	if !*all {
 		max = 0xFF
 	}
 	for r := rune(0); r < max; r++ {
@@ -71,7 +124,7 @@ func run() error {
 	offset := 0
 	fontBuffer := [256]uint8{}
 	for i, xxx := range indexes {
-		font.Glyphs[i].Index = uint32(offset)
+		font.Glyphs[i].Offset = uint32(offset)
 		font.Glyphs[i].Rune = xxx.Rune
 
 		dr, img, _, adv, ok := face.Glyph(fixed.Point26_6{}, xxx.Rune)
@@ -101,7 +154,7 @@ func run() error {
 		font.Glyphs[i].Buf = make([]byte, len(fontBuf))
 		copy(font.Glyphs[i].Buf, fontBuf)
 
-		offset += len(fontBuf)/4 + 9 + 1
+		offset += len(fontBuf)/4 + 9
 	}
 
 	font.SaveTo(os.Stdout)
@@ -138,6 +191,7 @@ func (f TinyfontX) SaveTo(w io.Writer) {
 	fmt.Fprintf(w, "import (\n")
 	fmt.Fprintf(w, "	\"tinygo.org/x/tinyfont\"\n")
 	fmt.Fprintf(w, ")\n")
+	fmt.Fprintf(w, "\n")
 
 	fmt.Fprintf(w, "var %s = tinyfont.Font{\n", f.Name)
 	fmt.Fprintf(w, "	Glyphs: []tinyfont.Glypher{\n")
@@ -146,7 +200,7 @@ func (f TinyfontX) SaveTo(w io.Writer) {
 		g.Write2(w)
 	}
 	fmt.Fprintf(w, "	},\n")
-	fmt.Fprintf(w, "	YAdvance: 12,\n")
+	fmt.Fprintf(w, "	YAdvance: %d,\n", *yadvance)
 	fmt.Fprintf(w, "}\n")
 	fmt.Fprintf(w, "\n")
 
@@ -161,7 +215,7 @@ func (f TinyfontX) SaveBinaryTo(w io.Writer) {
 }
 
 type GlyphBuffer struct {
-	Index    uint32
+	Offset   uint32
 	Rune     rune
 	Width    uint8
 	Height   uint8
@@ -173,13 +227,14 @@ type GlyphBuffer struct {
 
 func (g *GlyphBuffer) Write1(w io.Writer) {
 	switch g.Rune {
-	case 0x00, 0x0D:
+	case 0x00, 0x0D, 0xFEFF:
 		fmt.Fprintf(w, "	/* '\\x%02X' */ ", g.Rune)
 	default:
 		fmt.Fprintf(w, "	/* '%c' */ ", g.Rune)
 	}
 
-	fmt.Fprintf(w, "\"\\x%02X\" + ", len(g.Buf)+9)
+	//fmt.Fprintf(w, "\"\\x%02X\" + ", len(g.Buf)+9)
+	//fmt.Fprintf(w, "\"\\x%02X\" + ", 0)
 	fmt.Fprintf(w, "\"\\x%02X\\x%02X\\x%02X\\x%02X\" + ", byte(g.Rune>>24), byte(g.Rune>>16), byte(g.Rune>>8), byte(g.Rune))
 	fmt.Fprintf(w, "\"\\x%02X\\x%02X\" + ", g.Width, g.Height)
 	fmt.Fprintf(w, "\"\\x%02X\" + ", g.XAdvance)
@@ -192,9 +247,9 @@ func (g *GlyphBuffer) Write1(w io.Writer) {
 }
 
 func (g *GlyphBuffer) Write2(w io.Writer) {
-	if g.Rune <= 0x20 {
-		fmt.Fprintf(w, "		NotosansGlyph{Index: 0x%08X, Rune: 0x%08X}, // \\x%02X\n", g.Index, g.Rune, g.Rune)
+	if g.Rune <= 0x20 || g.Rune == 0xFEFF {
+		fmt.Fprintf(w, "		NotoSans12ptGlyph{Offset: 0x%08X, Rune: 0x%08X}, // \\x%02X\n", g.Offset, g.Rune, g.Rune)
 	} else {
-		fmt.Fprintf(w, "		NotosansGlyph{Index: 0x%08X, Rune: 0x%08X}, // %c\n", g.Index, g.Rune, g.Rune)
+		fmt.Fprintf(w, "		NotoSans12ptGlyph{Offset: 0x%08X, Rune: 0x%08X}, // %c\n", g.Offset, g.Rune, g.Rune)
 	}
 }
