@@ -9,6 +9,7 @@ import (
 	"tinygo.org/x/tinyfont/freesans"
 	"tinygo.org/x/tinyfont/freeserif"
 	"tinygo.org/x/tinyfont/gophers"
+	notosans "tinygo.org/x/tinyfont/ttf-notosans"
 
 	"tinygo.org/x/tinyfont"
 )
@@ -21,9 +22,9 @@ func main() {
 		mycolors[k] = getRainbowRGB(uint8(k * 14))
 	}
 
-	//tinyfont.WriteLineColorsRotated(display, &tinyfont.NotoSans12pt, 0, 200, "!AB", mycolors, tinyfont.NO_ROTATION)
-	tinyfont.WriteLineColorsRotated(display, &tinyfont.NotoSans12pt, 5, 200, "こんにちは hello 世界", mycolors, tinyfont.NO_ROTATION)
-	tinyfont.WriteLineColorsRotated(display, &tinyfont.NotoSans12pt, 5, 220, "日本語英語English", mycolors, tinyfont.NO_ROTATION)
+	//tinyfont.WriteLineColorsRotated(display, &notosans.NotoSans12pt, 0, 200, "!AB", mycolors, tinyfont.NO_ROTATION)
+	tinyfont.WriteLineColorsRotated(display, &notosans.NotoSans12pt, 5, 200, "こんにちは hello 世界", mycolors, tinyfont.NO_ROTATION)
+	tinyfont.WriteLineColorsRotated(display, &notosans.NotoSans12pt, 5, 220, "日本語英語English", mycolors, tinyfont.NO_ROTATION)
 
 	//tinyfont.WriteLineColorsRotated(display, &tinyfont.Twemoji12pt, 240, 200, "🀄🃏🅰", mycolors, tinyfont.NO_ROTATION)
 	//tinyfont.WriteLineColorsRotated(display, &tinyfont.Twemoji12pt, 240, 200, "🀄🃏🅰", mycolors, tinyfont.ROTATION_90)
