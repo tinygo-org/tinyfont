@@ -154,7 +154,7 @@ func run() error {
 		font.Glyphs[i].Buf = make([]byte, len(fontBuf))
 		copy(font.Glyphs[i].Buf, fontBuf)
 
-		offset += len(fontBuf)/4 + 9
+		offset += len(fontBuf)/4 + 5
 	}
 
 	font.SaveTo(os.Stdout)
@@ -193,20 +193,29 @@ func (f TinyfontX) SaveTo(w io.Writer) {
 	fmt.Fprintf(w, ")\n")
 	fmt.Fprintf(w, "\n")
 
-	fmt.Fprintf(w, "var %s = tinyfont.Font{\n", f.Name)
+	//fmt.Fprintf(w, "var %s = tinyfont.Font{\n", f.Name)
+	fmt.Fprintf(w, "var %s = Font{\n", f.Name)
 	fmt.Fprintf(w, "	Glyphs: []tinyfont.Glypher{\n")
 
-	for _, g := range f.Glyphs {
-		g.Write2(w)
-	}
+	//for _, g := range f.Glyphs {
+	//	g.Write2(w)
+	//}
 	fmt.Fprintf(w, "	},\n")
 	fmt.Fprintf(w, "	YAdvance: %d,\n", *yadvance)
 	fmt.Fprintf(w, "}\n")
 	fmt.Fprintf(w, "\n")
 
+	fmt.Fprintf(w, "// \"[Width][Height]\" + \"[XAdvance]\" + \"[XOffset][YOffset]\" + \"[BITMAP_DATA]\"\n")
 	fmt.Fprintf(w, "const c%s = \"\" +\n", f.Name)
 	for _, g := range f.Glyphs {
 		g.Write1(w)
+	}
+	fmt.Fprintf(w, "	\"\"\n")
+	fmt.Fprintf(w, "\n")
+
+	fmt.Fprintf(w, "const m%s = \"\" +\n", f.Name)
+	for _, g := range f.Glyphs {
+		g.Write3(w)
 	}
 	fmt.Fprintf(w, "	\"\"\n")
 }
@@ -235,7 +244,7 @@ func (g *GlyphBuffer) Write1(w io.Writer) {
 
 	//fmt.Fprintf(w, "\"\\x%02X\" + ", len(g.Buf)+9)
 	//fmt.Fprintf(w, "\"\\x%02X\" + ", 0)
-	fmt.Fprintf(w, "\"\\x%02X\\x%02X\\x%02X\\x%02X\" + ", byte(g.Rune>>24), byte(g.Rune>>16), byte(g.Rune>>8), byte(g.Rune))
+	//fmt.Fprintf(w, "\"\\x%02X\\x%02X\\x%02X\\x%02X\" + ", byte(g.Rune>>24), byte(g.Rune>>16), byte(g.Rune>>8), byte(g.Rune))
 	fmt.Fprintf(w, "\"\\x%02X\\x%02X\" + ", g.Width, g.Height)
 	fmt.Fprintf(w, "\"\\x%02X\" + ", g.XAdvance)
 	fmt.Fprintf(w, "\"\\x%02X\\x%02X\" + ", int2byte2(g.XOffset), int2byte2(g.YOffset))
@@ -252,4 +261,24 @@ func (g *GlyphBuffer) Write2(w io.Writer) {
 	} else {
 		fmt.Fprintf(w, "		NotoSans12ptGlyph{Offset: 0x%08X, Rune: 0x%08X}, // %c\n", g.Offset, g.Rune, g.Rune)
 	}
+}
+
+func (g *GlyphBuffer) Write3(w io.Writer) {
+	switch g.Rune {
+	case 0x00, 0x0D, 0xFEFF:
+		fmt.Fprintf(w, "	/* '\\x%02X' */ ", g.Rune)
+	default:
+		fmt.Fprintf(w, "	/* '%c' */ ", g.Rune)
+	}
+
+	fmt.Fprintf(w, "\"\\x%02X\\x%02X\\x%02X\\x%02X\" + \"\\x%02X\\x%02X\\x%02X\\x%02X\" +\n",
+		byte(g.Rune>>24),
+		byte(g.Rune>>16),
+		byte(g.Rune>>8),
+		byte(g.Rune>>0),
+		byte(g.Offset>>24),
+		byte(g.Offset>>16),
+		byte(g.Offset>>8),
+		byte(g.Offset>>0),
+	)
 }
