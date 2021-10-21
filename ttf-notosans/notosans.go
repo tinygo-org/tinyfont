@@ -14,7 +14,8 @@ type NotoSans12ptGlyph struct {
 
 func (g NotoSans12ptGlyph) Draw(display drivers.Displayer, x int16, y int16, c1 color.RGBA) {
 	info := g.Info()
-	bmp := cNotoSans12pt[g.Offset+5:]
+	buf := g.Bytes()
+	bmp := buf[5:]
 
 	for j := int16(0); j < int16(info.Height); j++ {
 		for i := int16(0); i < int16(info.Width); i++ {
@@ -60,7 +61,7 @@ func (g NotoSans12ptGlyph) Draw(display drivers.Displayer, x int16, y int16, c1 
 }
 
 func (g NotoSans12ptGlyph) Info() *tinyfont.GlyphInfo {
-	buf := cNotoSans12pt[g.Offset:]
+	buf := g.Bytes()
 	return &tinyfont.GlyphInfo{
 		Rune:     g.Rune,
 		Width:    buf[0],

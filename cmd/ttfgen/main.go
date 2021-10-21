@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/binary"
 	"flag"
 	"fmt"
 	"io"
@@ -159,6 +160,15 @@ func run() error {
 
 	font.SaveTo(os.Stdout)
 
+	{
+		w, err := os.Create(`./ttf-notosans/notosans.bin`)
+		if err != nil {
+			return err
+		}
+		defer w.Close()
+		font.SaveBinaryTo(w)
+	}
+
 	return nil
 }
 
@@ -193,25 +203,21 @@ func (f TinyfontX) SaveTo(w io.Writer) {
 	fmt.Fprintf(w, ")\n")
 	fmt.Fprintf(w, "\n")
 
-	//fmt.Fprintf(w, "var %s = tinyfont.Font{\n", f.Name)
 	fmt.Fprintf(w, "var %s = Font{\n", f.Name)
 	fmt.Fprintf(w, "	Glyphs: []tinyfont.Glypher{\n")
 
-	//for _, g := range f.Glyphs {
-	//	g.Write2(w)
-	//}
 	fmt.Fprintf(w, "	},\n")
 	fmt.Fprintf(w, "	YAdvance: %d,\n", *yadvance)
 	fmt.Fprintf(w, "}\n")
 	fmt.Fprintf(w, "\n")
 
-	fmt.Fprintf(w, "// \"[Width][Height]\" + \"[XAdvance]\" + \"[XOffset][YOffset]\" + \"[BITMAP_DATA]\"\n")
-	fmt.Fprintf(w, "const c%s = \"\" +\n", f.Name)
-	for _, g := range f.Glyphs {
-		g.Write1(w)
-	}
-	fmt.Fprintf(w, "	\"\"\n")
-	fmt.Fprintf(w, "\n")
+	//fmt.Fprintf(w, "// \"[Width][Height]\" + \"[XAdvance]\" + \"[XOffset][YOffset]\" + \"[BITMAP_DATA]\"\n")
+	//fmt.Fprintf(w, "const c%s = \"\" +\n", f.Name)
+	//for _, g := range f.Glyphs {
+	//	g.Write1(w)
+	//}
+	//fmt.Fprintf(w, "	\"\"\n")
+	//fmt.Fprintf(w, "\n")
 
 	fmt.Fprintf(w, "const m%s = \"\" +\n", f.Name)
 	for _, g := range f.Glyphs {
@@ -221,6 +227,9 @@ func (f TinyfontX) SaveTo(w io.Writer) {
 }
 
 func (f TinyfontX) SaveBinaryTo(w io.Writer) {
+	for _, g := range f.Glyphs {
+		g.Write1bin(w)
+	}
 }
 
 type GlyphBuffer struct {
@@ -255,28 +264,43 @@ func (g *GlyphBuffer) Write1(w io.Writer) {
 	fmt.Fprintf(w, "\" +\n")
 }
 
-func (g *GlyphBuffer) Write2(w io.Writer) {
-	if g.Rune <= 0x20 || g.Rune == 0xFEFF {
-		fmt.Fprintf(w, "		NotoSans12ptGlyph{Offset: 0x%08X, Rune: 0x%08X}, // \\x%02X\n", g.Offset, g.Rune, g.Rune)
-	} else {
-		fmt.Fprintf(w, "		NotoSans12ptGlyph{Offset: 0x%08X, Rune: 0x%08X}, // %c\n", g.Offset, g.Rune, g.Rune)
+func (g *GlyphBuffer) Write1bin(w io.Writer) {
+	binary.Write(w, binary.BigEndian, g.Width)
+	binary.Write(w, binary.BigEndian, g.Height)
+	binary.Write(w, binary.BigEndian, g.XAdvance)
+	binary.Write(w, binary.BigEndian, int2byte2(g.XOffset))
+	binary.Write(w, binary.BigEndian, int2byte2(g.YOffset))
+	for i := 0; i < len(g.Buf); i += 4 {
+		w.Write([]byte{(g.Buf[i] << 6) + (g.Buf[i+1] << 4) + (g.Buf[i+2] << 2) + g.Buf[i+3]})
 	}
+	//w.Write(g.Buf)
+	//binary.Write(w, binary.BigEndian, g.Buf)
 }
+
+//func (g *GlyphBuffer) Write2(w io.Writer) {
+//	if g.Rune <= 0x20 || g.Rune == 0xFEFF {
+//		fmt.Fprintf(w, "		NotoSans12ptGlyph{Offset: 0x%08X, Rune: 0x%08X}, // \\x%02X\n", g.Offset, g.Rune, g.Rune)
+//	} else {
+//		fmt.Fprintf(w, "		NotoSans12ptGlyph{Offset: 0x%08X, Rune: 0x%08X}, // %c\n", g.Offset, g.Rune, g.Rune)
+//	}
+//}
 
 func (g *GlyphBuffer) Write3(w io.Writer) {
 	switch g.Rune {
 	case 0x00, 0x0D, 0xFEFF:
-		fmt.Fprintf(w, "	/* '\\x%02X' */ ", g.Rune)
+		fmt.Fprintf(w, "	/* '\\x%06X' */ ", g.Rune)
 	default:
 		fmt.Fprintf(w, "	/* '%c' */ ", g.Rune)
 	}
 
-	fmt.Fprintf(w, "\"\\x%02X\\x%02X\\x%02X\\x%02X\" + \"\\x%02X\\x%02X\\x%02X\\x%02X\" +\n",
-		byte(g.Rune>>24),
+	if g.Offset > 0x00FFFFFF || g.Rune > 0x00FFFFFF {
+		panic("overflow")
+	}
+
+	fmt.Fprintf(w, "\"\\x%02X\\x%02X\\x%02X\" + \"\\x%02X\\x%02X\\x%02X\" +\n",
 		byte(g.Rune>>16),
 		byte(g.Rune>>8),
 		byte(g.Rune>>0),
-		byte(g.Offset>>24),
 		byte(g.Offset>>16),
 		byte(g.Offset>>8),
 		byte(g.Offset>>0),

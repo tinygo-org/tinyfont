@@ -160,3 +160,8 @@ func (f *Font) GetGlyph(r rune) Glypher {
 
 	return f.Glyphs[s]
 }
+
+// LineWidth returns the inner and outbox widths corresponding to font and str.
+func LineWidth(f Fonter, str string) (innerWidth uint32, outboxWidth uint32) {
+	return f.LineWidth(str)
+}
