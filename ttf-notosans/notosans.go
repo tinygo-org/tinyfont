@@ -35,6 +35,7 @@ func (g NotoSans12ptGlyph) Draw(display drivers.Displayer, x int16, y int16, c1 
 			}
 
 			c := (bmp[idx/4] >> shiftNum) & 0x03
+			c2 := color.RGBA{}
 
 			//fmt.Printf("+%d+%d+%x ", idx, shiftNum, c)
 			//fmt.Printf("%x ", c)
@@ -43,19 +44,39 @@ func (g NotoSans12ptGlyph) Draw(display drivers.Displayer, x int16, y int16, c1 
 			//}
 			switch c {
 			case 0:
-				c = 0xFF
+				c2 = color.RGBA{
+					R: 0xFF,
+					G: 0xFF,
+					B: 0xFF,
+					A: 0xFF,
+				}
 			case 1:
-				c = 0xA0
+				c2 = color.RGBA{
+					R: c1.R + (0xFF-c1.R)/8*7,
+					G: c1.G + (0xFF-c1.G)/8*7,
+					B: c1.B + (0xFF-c1.B)/8*7,
+					A: c1.A,
+				}
 			case 2:
-				c = 0x60
+				c2 = color.RGBA{
+					R: c1.R + (0xFF-c1.R)/4,
+					G: c1.G + (0xFF-c1.G)/4,
+					B: c1.B + (0xFF-c1.B)/4,
+					A: c1.A,
+				}
 			case 3:
-				c = 0x00
+				c2 = color.RGBA{
+					R: c1.R,
+					G: c1.G,
+					B: c1.B,
+					A: c1.A,
+				}
 			default:
 				panic("err")
 			}
 			//c = 0xFF - c
 
-			display.SetPixel(x+int16(info.XOffset)+i, y+int16(info.YOffset)+j, color.RGBA{c, c, c, 0xFF})
+			display.SetPixel(x+int16(info.XOffset)+i, y+int16(info.YOffset)+j, c2)
 		}
 	}
 }
