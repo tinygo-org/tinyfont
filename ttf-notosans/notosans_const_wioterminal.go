@@ -17,6 +17,10 @@ func FlashDevice(d *flash.Device) {
 }
 
 func (g NotoSans12ptGlyph) Bytes() []byte {
+	if dev == nil {
+		panic("dev == nil")
+	}
+
 	buf := fontBuf[:2]
 	for {
 		_, err := dev.ReadAt(buf, int64(g.Offset))

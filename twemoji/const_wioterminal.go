@@ -18,6 +18,10 @@ func FlashDevice(d *flash.Device) {
 }
 
 func (g Twemoji12ptGlyph) Bytes() []byte {
+	if dev == nil {
+		panic("dev == nil")
+	}
+
 	buf := fontBuf[:12*12*2]
 	for {
 		_, err := dev.ReadAt(buf, int64(g.Offset)+int64(offset))
