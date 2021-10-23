@@ -1,8 +1,6 @@
 package nososans
 
 import (
-	"fmt"
-
 	"tinygo.org/x/tinyfont"
 	notosans "tinygo.org/x/tinyfont/ttf-notosans"
 	"tinygo.org/x/tinyfont/twemoji"
@@ -16,13 +14,12 @@ type Font struct {
 
 var NotoSans12pt = Font{
 	Glyphs:   []tinyfont.Glypher{},
-	YAdvance: 12,
+	YAdvance: 14,
 }
 
 func (f Font) GetGlyph(r rune) tinyfont.Glypher {
 	g := twemoji.Twemoji12pt.GetGlyph(r)
 	if g != nil {
-		fmt.Printf("%c", r)
 		return g
 	}
 
@@ -40,5 +37,22 @@ func (f Font) GetYAdvance() uint8 {
 }
 
 func (f Font) LineWidth(str string) (innerWidth uint32, outboxWidth uint32) {
-	return 0, 0
+	text := []rune(str)
+	if len(text) == 0 {
+		return
+	}
+
+	for i := range text {
+		glyph := f.GetGlyph(text[i])
+		outboxWidth += uint32(glyph.Info().XAdvance)
+	}
+	innerWidth = outboxWidth
+	// first glyph
+	glyph := f.GetGlyph(text[0])
+	innerWidth -= uint32(glyph.Info().XOffset)
+
+	// last glyph
+	glyph = f.GetGlyph(text[len(text)-1])
+	innerWidth += -uint32(glyph.Info().XAdvance) + uint32(glyph.Info().XOffset) + uint32(glyph.Info().Width)
+	return
 }
