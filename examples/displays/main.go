@@ -10,6 +10,7 @@ import (
 	"tinygo.org/x/tinyfont/freeserif"
 	"tinygo.org/x/tinyfont/gophers"
 	notosans "tinygo.org/x/tinyfont/ttf-notosans"
+	"tinygo.org/x/tinyfont/twemoji"
 
 	"tinygo.org/x/tinyfont"
 )
@@ -26,10 +27,10 @@ func main() {
 	tinyfont.WriteLineColorsRotated(display, &notosans.NotoSans12pt, 5, 200, "こんにちは hello 世界", mycolors, tinyfont.NO_ROTATION)
 	tinyfont.WriteLineColorsRotated(display, &notosans.NotoSans12pt, 5, 220, "日本語英語English", mycolors, tinyfont.NO_ROTATION)
 
-	//tinyfont.WriteLineColorsRotated(display, &tinyfont.Twemoji12pt, 240, 200, "🀄🃏🅰", mycolors, tinyfont.NO_ROTATION)
-	//tinyfont.WriteLineColorsRotated(display, &tinyfont.Twemoji12pt, 240, 200, "🀄🃏🅰", mycolors, tinyfont.ROTATION_90)
-	//tinyfont.WriteLineColorsRotated(display, &tinyfont.Twemoji12pt, 240, 200, "🀄🃏🅰", mycolors, tinyfont.ROTATION_180)
-	//tinyfont.WriteLineColorsRotated(display, &tinyfont.Twemoji12pt, 240, 200, "🀄🃏🅰", mycolors, tinyfont.ROTATION_270)
+	tinyfont.WriteLineColorsRotated(display, &twemoji.Twemoji12pt, 200, 200, "🀄🃏🅰", mycolors, tinyfont.NO_ROTATION)
+	tinyfont.WriteLineColorsRotated(display, &twemoji.Twemoji12pt, 200, 200, "🀄🃏🅰", mycolors, tinyfont.ROTATION_90)
+	tinyfont.WriteLineColorsRotated(display, &twemoji.Twemoji12pt, 200, 200, "🀄🃏🅰", mycolors, tinyfont.ROTATION_180)
+	tinyfont.WriteLineColorsRotated(display, &twemoji.Twemoji12pt, 200, 200, "🀄🃏🅰", mycolors, tinyfont.ROTATION_270)
 
 	//tinyfont.WriteLineColorsRotated(display, &freesans.Bold18pt7b, 160, 120, "HELLO", mycolors, tinyfont.NO_ROTATION)
 	//tinyfont.WriteLineColorsRotated(display, &freesans.Bold18pt7b, 160, 120, "HELLO", mycolors, tinyfont.ROTATION_90)
