@@ -4,18 +4,11 @@
 package notosans
 
 import (
-	"io/ioutil"
+	_ "embed"
 )
 
+//go:embed notosans.bin
 var cNotoSans12pt []byte
-
-func init() {
-	var err error
-	cNotoSans12pt, err = ioutil.ReadFile("./ttf-notosans/notosans.bin")
-	if err != nil {
-		panic(err)
-	}
-}
 
 func (g NotoSans12ptGlyph) Bytes() []byte {
 	buf := cNotoSans12pt[g.Offset : g.Offset+2]

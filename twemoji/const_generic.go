@@ -3,17 +3,12 @@
 
 package twemoji
 
-import "io/ioutil"
+import (
+	_ "embed"
+)
 
+//go:embed twemoji.bin
 var cTinyFont []byte
-
-func init() {
-	var err error
-	cTinyFont, err = ioutil.ReadFile("./twemoji/twemoji.bin")
-	if err != nil {
-		panic(err)
-	}
-}
 
 func (g Twemoji12ptGlyph) Bytes() []byte {
 	buf := []byte(cTinyFont[g.Offset : g.Offset+12*12*2])
