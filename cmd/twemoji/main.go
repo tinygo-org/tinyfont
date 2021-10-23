@@ -30,8 +30,8 @@ type st struct {
 }
 
 func run(dir string) error {
-	os.MkdirAll(filepath.Dir("_out/const.go"), 0775)
-	w, err := os.Create("_out/const.go")
+	os.MkdirAll(filepath.Dir("twemoji/const.go"), 0775)
+	w, err := os.Create("twemoji/const.go")
 	if err != nil {
 		return err
 	}
@@ -105,17 +105,29 @@ func run(dir string) error {
 	fmt.Fprintf(w, "	\"\"\n")
 	fmt.Fprintf(w, "\n")
 
-	fmt.Fprintf(w, "const cTinyFont = \"\" +\n")
-	for _, k := range keys {
-		v := dict[k]
-
-		fmt.Fprintf(w, "	/* %08X %c */ \"", v.Rune, v.Rune)
-		for _, b := range v.Bytes {
-			fmt.Fprintf(w, "\\x%02X", b)
+	{
+		w, err := os.Create("./twemoji/twemoji.bin")
+		if err != nil {
+			return err
 		}
-		fmt.Fprintf(w, "\" +\n")
+		defer w.Close()
+
+		for _, k := range keys {
+			v := dict[k]
+			w.Write(v.Bytes)
+		}
 	}
-	fmt.Fprintf(w, "	\"\"\n")
+	//fmt.Fprintf(w, "const cTinyFont = \"\" +\n")
+	//for _, k := range keys {
+	//	v := dict[k]
+
+	//	fmt.Fprintf(w, "	/* %08X %c */ \"", v.Rune, v.Rune)
+	//	for _, b := range v.Bytes {
+	//		fmt.Fprintf(w, "\\x%02X", b)
+	//	}
+	//	fmt.Fprintf(w, "\" +\n")
+	//}
+	//fmt.Fprintf(w, "	\"\"\n")
 
 	return nil
 }
