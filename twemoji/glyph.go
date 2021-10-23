@@ -40,7 +40,7 @@ func (g Twemoji12ptGlyph) Info() *tinyfont.GlyphInfo {
 		Height:   12,
 		XAdvance: 12,
 		XOffset:  0,
-		YOffset:  -12,
+		YOffset:  -11,
 	}
 }
 

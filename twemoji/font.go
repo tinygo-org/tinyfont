@@ -26,14 +26,12 @@ func (f Font) GetGlyph(r rune) tinyfont.Glypher {
 	}
 
 	if s == len(mTinyFont)/6 {
-		s = 0
-		offset := uint32(mTinyFont[s*6+3])<<16 + uint32(mTinyFont[s*6+4])<<8 + uint32(mTinyFont[s*6+5])
-
-		g := &Twemoji12ptGlyph{
-			Rune:   r,
-			Offset: offset,
+		return nil
+	} else {
+		rr := rune(mTinyFont[s*6])<<16 + rune(mTinyFont[s*6+1])<<8 + rune(mTinyFont[s*6+2])
+		if rr != r {
+			return nil
 		}
-		return g
 	}
 
 	offset := uint32(mTinyFont[s*6+3])<<16 + uint32(mTinyFont[s*6+4])<<8 + uint32(mTinyFont[s*6+5])

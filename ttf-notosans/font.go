@@ -26,14 +26,7 @@ func (f Font) GetGlyph(r rune) tinyfont.Glypher {
 	}
 
 	if s == len(mNotoSans12pt)/6 {
-		s = 0
-		offset := uint32(mNotoSans12pt[s*6+3])<<16 + uint32(mNotoSans12pt[s*6+4])<<8 + uint32(mNotoSans12pt[s*6+5])
-
-		g := &NotoSans12ptGlyph{
-			Rune:   r,
-			Offset: offset,
-		}
-		return g
+		return nil
 	}
 
 	offset := uint32(mNotoSans12pt[s*6+3])<<16 + uint32(mNotoSans12pt[s*6+4])<<8 + uint32(mNotoSans12pt[s*6+5])

@@ -4,8 +4,6 @@
 package notosans
 
 import (
-	"machine"
-
 	"tinygo.org/x/drivers/flash"
 )
 
@@ -14,18 +12,8 @@ var (
 	fontBuf [1024]byte
 )
 
-func init() {
-	dev = flash.NewQSPI(
-		machine.QSPI_CS,
-		machine.QSPI_SCK,
-		machine.QSPI_DATA0,
-		machine.QSPI_DATA1,
-		machine.QSPI_DATA2,
-		machine.QSPI_DATA3,
-	)
-	dev.Configure(&flash.DeviceConfig{
-		Identifier: flash.DefaultDeviceIdentifier,
-	})
+func FlashDevice(d *flash.Device) {
+	dev = d
 }
 
 func (g NotoSans12ptGlyph) Bytes() []byte {
