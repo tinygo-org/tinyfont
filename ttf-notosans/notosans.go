@@ -52,16 +52,16 @@ func (g NotoSans12ptGlyph) Draw(display drivers.Displayer, x int16, y int16, c1 
 				}
 			case 1:
 				c2 = color.RGBA{
-					R: c1.R + (0xFF-c1.R)/8*7,
-					G: c1.G + (0xFF-c1.G)/8*7,
-					B: c1.B + (0xFF-c1.B)/8*7,
+					R: c1.R + (0xFF-c1.R)/8*6,
+					G: c1.G + (0xFF-c1.G)/8*6,
+					B: c1.B + (0xFF-c1.B)/8*6,
 					A: c1.A,
 				}
 			case 2:
 				c2 = color.RGBA{
-					R: c1.R + (0xFF-c1.R)/4,
-					G: c1.G + (0xFF-c1.G)/4,
-					B: c1.B + (0xFF-c1.B)/4,
+					R: c1.R + (0xFF-c1.R)/2,
+					G: c1.G + (0xFF-c1.G)/2,
+					B: c1.B + (0xFF-c1.B)/2,
 					A: c1.A,
 				}
 			case 3:
