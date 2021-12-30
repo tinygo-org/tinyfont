@@ -18,81 +18,59 @@ const (
 
 type Rotation uint8
 
-type Glyph struct {
+// GlyphInfo is a structure that holds information about glyphs.
+type GlyphInfo struct {
 	Rune     rune
 	Width    uint8
 	Height   uint8
 	XAdvance uint8
 	XOffset  int8
 	YOffset  int8
-	Bitmaps  []byte
 }
 
-type Font struct {
-	BBox     [4]int8 // width, height, minX, minY
-	Glyphs   []Glyph
-	YAdvance uint8
+// Fonter is an interface that represents a set of glyphs.
+type Fonter interface {
+	GetGlyph(r rune) Glypher
+	GetYAdvance() uint8
+}
+
+// Glypher is glyph itself, and it knows how to draw itself.
+type Glypher interface {
+	Draw(display drivers.Displayer, x int16, y int16, color color.RGBA)
+	Info() *GlyphInfo
 }
 
 // DrawChar sets a single rune in the buffer of the display.
-func DrawChar(display drivers.Displayer, font *Font, x int16, y int16, char rune, color color.RGBA) {
+func DrawChar(display drivers.Displayer, font Fonter, x int16, y int16, char rune, color color.RGBA) {
 	DrawCharRotated(display, font, x, y, char, color, NO_ROTATION)
 }
 
 // DrawCharRotated sets a single rune in the buffer of the display.
-func DrawCharRotated(display drivers.Displayer, font *Font, x int16, y int16, char rune, color color.RGBA, rotation Rotation) {
-	glyph := GetGlyph(font, char)
+func DrawCharRotated(display drivers.Displayer, font Fonter, x int16, y int16, char rune, color color.RGBA, rotation Rotation) {
+	glyph := font.GetGlyph(char)
 	rd := NewRotatedDisplay(display, rotation, x, y)
-	drawGlyph(rd, 0, 0, glyph, color)
-}
-
-// drawGlyph sets a single glyph in the buffer of the display.
-func drawGlyph(display drivers.Displayer, x int16, y int16, glyph Glyph, color color.RGBA) {
-	bitmapOffset := 0
-	bitmap := byte(0)
-	if len(glyph.Bitmaps) > 0 {
-		bitmap = glyph.Bitmaps[bitmapOffset]
-	}
-	bit := uint8(0)
-	for j := int16(0); j < int16(glyph.Height); j++ {
-		for i := int16(0); i < int16(glyph.Width); i++ {
-
-			if (bitmap & 0x80) != 0x00 {
-				display.SetPixel(x+int16(glyph.XOffset)+i, y+int16(glyph.YOffset)+j, color)
-			}
-			bitmap <<= 1
-
-			bit++
-			if bit > 7 {
-				bitmapOffset++
-				if bitmapOffset < len(glyph.Bitmaps) {
-					bitmap = glyph.Bitmaps[bitmapOffset]
-				}
-				bit = 0
-			}
-		}
-	}
+	glyph.Draw(rd, 0, 0, color)
 }
 
 // WriteLine writes a string in the selected font in the buffer.
-func WriteLine(display drivers.Displayer, font *Font, x int16, y int16, str string, c color.RGBA) {
+func WriteLine(display drivers.Displayer, font Fonter, x int16, y int16, str string, c color.RGBA) {
 	WriteLineColorsRotated(display, font, x, y, str, []color.RGBA{c}, NO_ROTATION)
 }
 
 // WriteLineRotated writes a string in the selected font in the buffer.
-func WriteLineRotated(display drivers.Displayer, font *Font, x int16, y int16, str string, c color.RGBA, rotation Rotation) {
+func WriteLineRotated(display drivers.Displayer, font Fonter, x int16, y int16, str string, c color.RGBA, rotation Rotation) {
 	WriteLineColorsRotated(display, font, x, y, str, []color.RGBA{c}, rotation)
 }
 
 // WriteLineColors writes a string in the selected font in the buffer. Each char is in a different color
 // if not enough colors are defined, colors are cycled.
-func WriteLineColors(display drivers.Displayer, font *Font, x int16, y int16, str string, colors []color.RGBA) {
+func WriteLineColors(display drivers.Displayer, font Fonter, x int16, y int16, str string, colors []color.RGBA) {
 	WriteLineColorsRotated(display, font, x, y, str, colors, 0)
 }
 
 // WriteLineColorsRotated writes a string in the selected font in the buffer. Each char is in a different color
 // if not enough colors are defined, colors are cycled.
-func WriteLineColorsRotated(display drivers.Displayer, font *Font, x int16, y int16, str string, colors []color.RGBA, rotation Rotation) {
+func WriteLineColorsRotated(display drivers.Displayer, font Fonter, x int16, y int16, str string, colors []color.RGBA, rotation Rotation) {
 	text := []rune(str)
 	numColors := uint16(len(colors))
 	if numColors == 0 {
@@ -109,68 +87,42 @@ func WriteLineColorsRotated(display drivers.Displayer, font *Font, x int16, y in
 		if text[i] == LineFeed || text[i] == CarriageReturn {
 			/* CR or LF */
 			nx = 0
-			ny += int16(font.YAdvance)
+			ny += int16(font.GetYAdvance())
 			continue
 		}
-		glyph := GetGlyph(font, text[i])
-		drawGlyph(rd, nx, ny, glyph, colors[c])
+		glyph := font.GetGlyph(text[i])
+		glyph.Draw(rd, nx, ny, colors[c])
 		c++
 		if c >= numColors {
 			c = 0
 		}
-		nx += int16(glyph.XAdvance)
+		nx += int16(glyph.Info().XAdvance)
 	}
 }
 
 // LineWidth returns the inner and outbox widths corresponding to font and str.
-func LineWidth(font *Font, str string) (innerWidth uint32, outboxWidth uint32) {
+func LineWidth(f Fonter, str string) (innerWidth uint32, outboxWidth uint32) {
 	text := []rune(str)
 	if len(text) == 0 {
 		return
 	}
 
 	for i := range text {
-		glyph := GetGlyph(font, text[i])
-		outboxWidth += uint32(glyph.XAdvance)
+		glyph := f.GetGlyph(text[i])
+		outboxWidth += uint32(glyph.Info().XAdvance)
 	}
 	innerWidth = outboxWidth
 	// first glyph
-	glyph := GetGlyph(font, text[0])
-	innerWidth -= uint32(glyph.XOffset)
+	glyph := f.GetGlyph(text[0])
+	innerWidth -= uint32(glyph.Info().XOffset)
 
 	// last glyph
-	glyph = GetGlyph(font, text[len(text)-1])
-	innerWidth += -uint32(glyph.XAdvance) + uint32(glyph.XOffset) + uint32(glyph.Width)
+	glyph = f.GetGlyph(text[len(text)-1])
+	innerWidth += -uint32(glyph.Info().XAdvance) + uint32(glyph.Info().XOffset) + uint32(glyph.Info().Width)
 	return
 }
 
 // GetGlyph returns the glyph corresponding to the specified rune in the font.
-func GetGlyph(font *Font, r rune) Glyph {
-	s := 0
-	e := len(font.Glyphs) - 1
-
-	for s <= e {
-		m := (s + e) / 2
-
-		if font.Glyphs[m].Rune < r {
-			s = m + 1
-		} else {
-			e = m - 1
-		}
-	}
-
-	if s == len(font.Glyphs) || font.Glyphs[s].Rune != r {
-		g := Glyph{
-			Rune:     r,
-			Width:    0,
-			Height:   0,
-			XAdvance: font.Glyphs[0].XAdvance,
-			XOffset:  font.Glyphs[0].XOffset,
-			YOffset:  font.Glyphs[0].YOffset,
-			Bitmaps:  []byte{0},
-		}
-		return g
-	}
-
-	return font.Glyphs[s]
+func GetGlyph(f Fonter, r rune) Glypher {
+	return f.GetGlyph(r)
 }
