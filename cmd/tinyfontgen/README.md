@@ -97,7 +97,7 @@ Approx. 127 bytes
 
 ## Installation
 
-    go get tinygo.org/x/tinyfont/cmd/tinyfontgen
+    go install tinygo.org/x/tinyfont/cmd/tinyfontgen@latest
 
 ## License
 

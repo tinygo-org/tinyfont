@@ -5,7 +5,8 @@ TinyFont
 
 TinyFont is a font/text package for [TinyGo](https://tinygo.org/) displays. It is heavily based on [Adafruit's GFX library](https://github.com/adafruit/Adafruit-GFX-Library).
 
-![example](./tinyfont.png)
+![example](./images/tinyfont.png)
+![example](./images/rubikmoonrocks.png)
 
 
 This package is experimental and may change in the future. It has not been optimized for speed or memory..
@@ -18,9 +19,10 @@ The fonts compiled here were just converted or made compatible, and the original
 
 ## Generate your own font
 
-You can use tinyfontgen to generate a tinyfont from a bdf font.  
+You can use tinyfontgen to generate a tinyfont from a bdf/ttf font.  
 
-https://github.com/tinygo-org/tinyfont/tree/release/cmd/tinyfontgen
+https://github.com/tinygo-org/tinyfont/tree/release/cmd/tinyfontgen  
+https://github.com/tinygo-org/tinyfont/tree/release/cmd/tinyfontgen-ttf  
 
 ## Incompatibility warning
 
