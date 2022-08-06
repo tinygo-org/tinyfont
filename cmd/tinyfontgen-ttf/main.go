@@ -239,7 +239,11 @@ func (f Font) SaveTo(w io.Writer) {
 	for _, x := range f.Glyphs {
 		fmt.Fprintf(w, `	"\x%02X\x%02X\x%02X" + `, byte(x.Rune>>16), byte(x.Rune>>8), byte(x.Rune))
 		fmt.Fprintf(w, `"\x%02X\x%02X\x%02X" + `, byte(offset>>16), byte(offset>>8), byte(offset))
-		fmt.Fprintf(w, `// %c`, x.Rune)
+		if x.Rune > 0 {
+			fmt.Fprintf(w, `// %c`, x.Rune)
+		} else {
+			fmt.Fprintf(w, `//`)
+		}
 		fmt.Fprintf(w, "\n")
 
 		// width + height + xadvance + xoffset + yoffset + len([]bitmaps)
