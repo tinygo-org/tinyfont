@@ -53,8 +53,8 @@ func (glyph Glyph) Draw(display drivers.Displayer, x int16, y int16, color color
 }
 
 // Info returns glyph information.
-func (glyph Glyph) Info() *GlyphInfo {
-	return &GlyphInfo{
+func (glyph Glyph) Info() GlyphInfo {
+	return GlyphInfo{
 		Rune:     glyph.Rune,
 		Width:    glyph.Width,
 		Height:   glyph.Height,
@@ -69,8 +69,10 @@ func (f *Font) GetYAdvance() uint8 {
 	return f.YAdvance
 }
 
+var emptyBitmap [1]byte
+
 // GetGlyph returns the glyph corresponding to the specified rune in the font.
-func (font *Font) GetGlyph(r rune) Glypher {
+func (font *Font) GetGlyph(r rune) Glyph {
 	s := 0
 	e := len(font.Glyphs) - 1
 
@@ -92,7 +94,7 @@ func (font *Font) GetGlyph(r rune) Glypher {
 			XAdvance: font.Glyphs[0].Info().XAdvance,
 			XOffset:  font.Glyphs[0].Info().XOffset,
 			YOffset:  font.Glyphs[0].Info().YOffset,
-			Bitmaps:  []byte{0},
+			Bitmaps:  emptyBitmap[:],
 		}
 		return g
 	}

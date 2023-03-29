@@ -65,8 +65,8 @@ func (glyph Glyph) Draw(display drivers.Displayer, x int16, y int16, c color.RGB
 }
 
 // Info returns glyph information.
-func (glyph Glyph) Info() *tinyfont.GlyphInfo {
-	return &tinyfont.GlyphInfo{
+func (glyph Glyph) Info() tinyfont.GlyphInfo {
+	return tinyfont.GlyphInfo{
 		Rune:     glyph.Rune,
 		Width:    glyph.Width,
 		Height:   glyph.Height,

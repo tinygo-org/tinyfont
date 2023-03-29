@@ -30,14 +30,14 @@ type GlyphInfo struct {
 
 // Fonter is an interface that represents a set of glyphs.
 type Fonter interface {
-	GetGlyph(r rune) Glypher
+	GetGlyph(r rune) Glyph
 	GetYAdvance() uint8
 }
 
 // Glypher is glyph itself, and it knows how to draw itself.
 type Glypher interface {
 	Draw(display drivers.Displayer, x int16, y int16, color color.RGBA)
-	Info() *GlyphInfo
+	Info() GlyphInfo
 }
 
 // DrawChar sets a single rune in the buffer of the display.
@@ -123,6 +123,6 @@ func LineWidth(f Fonter, str string) (innerWidth uint32, outboxWidth uint32) {
 }
 
 // GetGlyph returns the glyph corresponding to the specified rune in the font.
-func GetGlyph(f Fonter, r rune) Glypher {
+func GetGlyph(f Fonter, r rune) Glyph {
 	return f.GetGlyph(r)
 }

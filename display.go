@@ -13,8 +13,8 @@ type RotatedDisplay struct {
 	Y        int16
 }
 
-func NewRotatedDisplay(display drivers.Displayer, rotation Rotation, x, y int16) *RotatedDisplay {
-	return &RotatedDisplay{
+func NewRotatedDisplay(display drivers.Displayer, rotation Rotation, x, y int16) RotatedDisplay {
+	return RotatedDisplay{
 		display:  display,
 		Rotation: rotation,
 		X:        x,
@@ -22,7 +22,7 @@ func NewRotatedDisplay(display drivers.Displayer, rotation Rotation, x, y int16)
 	}
 }
 
-func (d *RotatedDisplay) Size() (int16, int16) {
+func (d RotatedDisplay) Size() (int16, int16) {
 	x, y := d.display.Size()
 	if d.Rotation == NO_ROTATION {
 		return x, y
@@ -35,7 +35,7 @@ func (d *RotatedDisplay) Size() (int16, int16) {
 	}
 }
 
-func (d *RotatedDisplay) SetPixel(x, y int16, c color.RGBA) {
+func (d RotatedDisplay) SetPixel(x, y int16, c color.RGBA) {
 	if d.Rotation == NO_ROTATION {
 		d.display.SetPixel(d.X+x, d.Y+y, c)
 	} else if d.Rotation == ROTATION_90 {
@@ -47,6 +47,6 @@ func (d *RotatedDisplay) SetPixel(x, y int16, c color.RGBA) {
 	}
 }
 
-func (d *RotatedDisplay) Display() error {
+func (d RotatedDisplay) Display() error {
 	return d.display.Display()
 }
