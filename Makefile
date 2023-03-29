@@ -6,7 +6,7 @@ TINYGO ?= tinygo
 
 .PHONY: all clean fmt fmt-check
 
-all:
+all: fmt fmt-check smoke-test
 
 clean:
 	@mkdir -p build
