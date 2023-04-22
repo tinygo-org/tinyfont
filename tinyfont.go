@@ -65,13 +65,12 @@ func WriteLineRotated(display drivers.Displayer, font Fonter, x int16, y int16, 
 // WriteLineColors writes a string in the selected font in the buffer. Each char is in a different color
 // if not enough colors are defined, colors are cycled.
 func WriteLineColors(display drivers.Displayer, font Fonter, x int16, y int16, str string, colors []color.RGBA) {
-	WriteLineColorsRotated(display, font, x, y, str, colors, 0)
+	WriteLineColorsRotated(display, font, x, y, str, colors, NO_ROTATION)
 }
 
 // WriteLineColorsRotated writes a string in the selected font in the buffer. Each char is in a different color
 // if not enough colors are defined, colors are cycled.
 func WriteLineColorsRotated(display drivers.Displayer, font Fonter, x int16, y int16, str string, colors []color.RGBA, rotation Rotation) {
-	text := []rune(str)
 	numColors := uint16(len(colors))
 	if numColors == 0 {
 		return
@@ -80,17 +79,16 @@ func WriteLineColorsRotated(display drivers.Displayer, font Fonter, x int16, y i
 	rd := NewRotatedDisplay(display, rotation, x, y)
 
 	c := uint16(0)
-	l := len(text)
 	nx := int16(0)
 	ny := int16(0)
-	for i := 0; i < l; i++ {
-		if text[i] == LineFeed || text[i] == CarriageReturn {
+	for _, text := range str {
+		if text == LineFeed || text == CarriageReturn {
 			/* CR or LF */
 			nx = 0
 			ny += int16(font.GetYAdvance())
 			continue
 		}
-		glyph := font.GetGlyph(text[i])
+		glyph := font.GetGlyph(text)
 		glyph.Draw(rd, nx, ny, colors[c])
 		c++
 		if c >= numColors {
@@ -102,22 +100,21 @@ func WriteLineColorsRotated(display drivers.Displayer, font Fonter, x int16, y i
 
 // LineWidth returns the inner and outbox widths corresponding to font and str.
 func LineWidth(f Fonter, str string) (innerWidth uint32, outboxWidth uint32) {
-	text := []rune(str)
-	if len(text) == 0 {
+	if len(str) == 0 {
 		return
 	}
 
-	for i := range text {
-		glyph := f.GetGlyph(text[i])
+	for _, text := range str {
+		glyph := f.GetGlyph(text)
 		outboxWidth += uint32(glyph.Info().XAdvance)
 	}
 	innerWidth = outboxWidth
 	// first glyph
-	glyph := f.GetGlyph(text[0])
+	glyph := f.GetGlyph(rune(str[0]))
 	innerWidth -= uint32(glyph.Info().XOffset)
 
 	// last glyph
-	glyph = f.GetGlyph(text[len(text)-1])
+	glyph = f.GetGlyph(rune(str[len(str)-1]))
 	innerWidth += -uint32(glyph.Info().XAdvance) + uint32(glyph.Info().XOffset) + uint32(glyph.Info().Width)
 	return
 }
