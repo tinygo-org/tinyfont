@@ -1,3 +1,26 @@
+0.4.0
+---
+
+- **all** 
+    - avoid unneeded heap allocations, especially since embedded display value is interface anyhow
+- **build**
+    - improve Makefile to match other projects
+    - switch to ghcr.io for docker container
+    - switch to github actions
+- **docs**
+    - switch badge to GH actions
+    - update README.md
+- **make**
+    - update so all task works as expected
+- **modules**
+    - update to latest tinygo drivers
+- **tinyfontgen**
+    - remove NULL character
+    - Added support for generating fonts from ttf (#37)
+- **misc**
+    - add .gitignore
+
+
 0.3.0
 ---
 
