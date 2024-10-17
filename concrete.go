@@ -19,9 +19,10 @@ type Glyph struct {
 
 // Font is a struct that implements Fonter interface.
 type Font struct {
-	BBox     [4]int8 // width, height, minX, minY
-	Glyphs   []Glyph
-	YAdvance uint8
+	BBox       [4]int8 // width, height, minX, minY
+	Glyphs     []Glyph
+	YAdvance   uint8
+	EmptyGlyph Glyph
 }
 
 // Draw sets a single glyph in the buffer of the display.
@@ -72,7 +73,7 @@ func (f *Font) GetYAdvance() uint8 {
 var emptyBitmap [1]byte
 
 // GetGlyph returns the glyph corresponding to the specified rune in the font.
-func (font *Font) GetGlyph(r rune) Glyph {
+func (font *Font) GetGlyph(r rune) Glypher {
 	s := 0
 	e := len(font.Glyphs) - 1
 
@@ -87,17 +88,14 @@ func (font *Font) GetGlyph(r rune) Glyph {
 	}
 
 	if s == len(font.Glyphs) || font.Glyphs[s].Info().Rune != r {
-		g := Glyph{
-			Rune:     r,
-			Width:    0,
-			Height:   0,
-			XAdvance: font.Glyphs[0].Info().XAdvance,
-			XOffset:  font.Glyphs[0].Info().XOffset,
-			YOffset:  font.Glyphs[0].Info().YOffset,
-			Bitmaps:  emptyBitmap[:],
-		}
-		return g
+		font.EmptyGlyph.Width = 0
+		font.EmptyGlyph.Height = 0
+		font.EmptyGlyph.XAdvance = font.Glyphs[0].Info().XAdvance
+		font.EmptyGlyph.XOffset = font.Glyphs[0].Info().XOffset
+		font.EmptyGlyph.YOffset = font.Glyphs[0].Info().YOffset
+		font.EmptyGlyph.Bitmaps = emptyBitmap[:]
+		return &(font.EmptyGlyph)
 	}
 
-	return font.Glyphs[s]
+	return &(font.Glyphs[s])
 }
