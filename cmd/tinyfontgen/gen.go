@@ -97,7 +97,8 @@ func (f *fontgen) generate(w io.Writer, runes []rune, opt ...option) error {
 
 		code2rune := func(c int) (rune, error) { return rune(c), nil }
 		charset := strings.ToLower(font.CharsetRegistry)
-		if strings.HasPrefix(charset, "jisx") {
+		if charset == "jisx0201.1976" {
+		} else if strings.HasPrefix(charset, "jisx") {
 			code2rune = jisx0208.Rune
 		}
 
