@@ -20,6 +20,7 @@ fmt-check:
 
 TARGET = build/examples_epd.hex \
 		 build/examples_hub75.hex \
+		 build/examples_displays_gopher-badge.hex \
 		 build/examples_displays_pybadge.hex \
 		 build/examples_displays_pyportal.hex \
 		 build/examples_displays_wioterminal.hex \
@@ -36,6 +37,10 @@ build/examples_epd.hex:
 
 build/examples_hub75.hex:
 	$(TINYGO) build -size short -o $@ -target=pybadge ./examples/hub75
+	@$(MD5SUM) $@
+
+build/examples_displays_gopher-badge.hex:
+	$(TINYGO) build -size short -o $@ -target=gopher-badge ./examples/displays
 	@$(MD5SUM) $@
 
 build/examples_displays_pybadge.hex:
