@@ -159,7 +159,7 @@ func (f *fontgen) generate(w io.Writer, runes []rune, opt ...option) error {
 
 	fontname := strings.ToUpper(f.fontname[0:1]) + f.fontname[1:]
 
-	fmt.Fprintf(tmp, "var X%s = const1bit.Font{\n", fontname)
+	fmt.Fprintf(tmp, "var %s = const1bit.Font{\n", fontname)
 	fmt.Fprintf(tmp, "	OffsetMap: m%s,\n", fontname)
 	fmt.Fprintf(tmp, "	Data:      d%s,\n", fontname)
 	fmt.Fprintf(tmp, "	YAdvance:  %d,\n", ufont.YAdvance)
