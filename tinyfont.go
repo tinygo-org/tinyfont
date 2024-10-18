@@ -120,6 +120,6 @@ func LineWidth(f Fonter, str string) (innerWidth uint32, outboxWidth uint32) {
 }
 
 // GetGlyph returns the glyph corresponding to the specified rune in the font.
-func GetGlyph(f Fonter, r rune) Glyph {
-	return f.GetGlyph(r).(Glyph)
+func GetGlyph(f Fonter, r rune) Glypher {
+	return f.GetGlyph(r)
 }
