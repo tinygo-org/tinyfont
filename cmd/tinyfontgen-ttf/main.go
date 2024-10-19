@@ -10,6 +10,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"golang.org/x/image/font"
 	"golang.org/x/image/font/opentype"
 	"golang.org/x/image/font/sfnt"
 	"golang.org/x/image/math/fixed"
@@ -85,46 +86,51 @@ func main() {
 		}
 	}
 
-	err := run(*sz, *dpi, fonts[0])
+	err := run(*sz, *dpi, fonts)
 	if err != nil {
 		log.Fatal(err)
 	}
 }
 
-func run(size, dpi int, fontfile string) error {
-	bb, err := ioutil.ReadFile(fontfile)
-	if err != nil {
-		return err
-	}
-
-	ft, err := opentype.Parse(bb)
-	if err != nil {
-		return err
-	}
-
-	face, err := opentype.NewFace(ft, &opentype.FaceOptions{Size: float64(size), DPI: float64(dpi)})
-	if err != nil {
-		return err
-	}
-
-	sfntBuf := &sfnt.Buffer{}
+func run(size, dpi int, fonts []string) error {
 	type xx struct {
 		Rune  rune
 		Index uint16
+		Face  font.Face
 	}
 	indexes := []xx{}
 
-	const runeMax = 0x3FFFF
-	for r := rune(0); r < runeMax; r++ {
-		idx, err := ft.GlyphIndex(sfntBuf, r)
+	for _, fontfile := range fonts {
+		bb, err := ioutil.ReadFile(fontfile)
 		if err != nil {
 			return err
 		}
-		if idx != 0 && (*all || runesMap[r]) {
-			indexes = append(indexes, xx{
-				Rune:  r,
-				Index: uint16(idx),
-			})
+
+		ft, err := opentype.Parse(bb)
+		if err != nil {
+			return err
+		}
+
+		face, err := opentype.NewFace(ft, &opentype.FaceOptions{Size: float64(size), DPI: float64(dpi)})
+		if err != nil {
+			return err
+		}
+
+		sfntBuf := &sfnt.Buffer{}
+
+		const runeMax = 0x3FFFF
+		for r := rune(0); r < runeMax; r++ {
+			idx, err := ft.GlyphIndex(sfntBuf, r)
+			if err != nil {
+				return err
+			}
+			if idx != 0 && (*all || runesMap[r]) {
+				indexes = append(indexes, xx{
+					Rune:  r,
+					Index: uint16(idx),
+					Face:  face,
+				})
+			}
 		}
 	}
 
@@ -133,7 +139,7 @@ func run(size, dpi int, fontfile string) error {
 		Glyphs: make([]Glyph, len(indexes)),
 	}
 	for i, xxx := range indexes {
-		dr, img, _, adv, ok := face.Glyph(fixed.Point26_6{}, xxx.Rune)
+		dr, img, _, adv, ok := xxx.Face.Glyph(fixed.Point26_6{}, xxx.Rune)
 		if !ok {
 			continue
 		}
@@ -215,7 +221,7 @@ func (f Font) SaveTo(w io.Writer) {
 	fontname := *fontname
 	yadv := *yadvance
 
-	fmt.Fprintf(w, "// ttfgen %s\n", strings.Join(os.Args[1:], " "))
+	fmt.Fprintf(w, "// tinyfnotgen-ttf %s\n", strings.Join(os.Args[1:], " "))
 	fmt.Fprintf(w, "\n")
 
 	fmt.Fprintf(w, "package %s\n", pkg)

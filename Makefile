@@ -27,7 +27,8 @@ TARGET = build/examples_epd.hex \
 		 build/examples_unicode_font_pyportal.hex \
 		 build/examples_unicode_font_wioterminal.hex \
 		 build/examples_unicode_font2_pyportal.hex \
-		 build/examples_unicode_font2_wioterminal.hex
+		 build/examples_unicode_font2_wioterminal.hex \
+		 build/examples_unicode_font3_const2bit_pyportal.hex
 .PHONY: smoke-test $(TARGET)
 smoke-test: clean $(TARGET)
 
@@ -69,4 +70,8 @@ build/examples_unicode_font2_pyportal.hex:
 
 build/examples_unicode_font2_wioterminal.hex:
 	$(TINYGO) build -size short -o $@ -target=wioterminal ./examples/unicode_font2
+	@$(MD5SUM) $@
+
+build/examples_unicode_font3_const2bit_pyportal.hex:
+	$(TINYGO) build -size short -o $@ -target=pyportal ./examples/unicode_font3_const2bit
 	@$(MD5SUM) $@
