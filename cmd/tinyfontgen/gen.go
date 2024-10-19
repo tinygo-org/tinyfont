@@ -153,35 +153,51 @@ func (f *fontgen) generate(w io.Writer, runes []rune, opt ...option) error {
 	fmt.Fprintln(tmp, `package `+f.pkgname)
 	fmt.Fprintln(tmp)
 	fmt.Fprintln(tmp, `import (`)
-	fmt.Fprintln(tmp, `	"tinygo.org/x/tinyfont"`)
+	fmt.Fprintln(tmp, `	"tinygo.org/x/tinyfont/const1bit"`)
 	fmt.Fprintln(tmp, `)`)
 	fmt.Fprintln(tmp)
 
-	bbox := calcBBox(ufont)
-
 	fontname := strings.ToUpper(f.fontname[0:1]) + f.fontname[1:]
-	fmt.Fprintf(tmp, "var %s = %T{\n", fontname, ufont)
-	fmt.Fprintf(tmp, "	BBox: [4]int8{%d, %d, %d, %d},\n", bbox[0], bbox[1], bbox[2], bbox[3])
-	fmt.Fprintf(tmp, "	Glyphs:%T{\n", ufont.Glyphs)
-	for i, g := range ufont.Glyphs {
-		c := fmt.Sprintf("%c", ufont.Glyphs[i].Rune)
-		if ufont.Glyphs[i].Rune == 0 {
-			c = ""
-		}
-		gstr := fmt.Sprintf("%#v", g)
-		gstr = re.ReplaceAllStringFunc(gstr, func(s string) string {
-			r := 0
-			fmt.Sscanf(s, `Rune:%d`, &r)
-			return fmt.Sprintf(`Rune:%#x`, r)
-		})
-		//gstr = re.ReplaceAllStringFunc(gstr, strings.ToUpper)
-		fmt.Fprintf(tmp, "		/* %s */ %s,\n", c, gstr)
-	}
-	fmt.Fprintf(tmp, "	},\n")
-	fmt.Fprintln(tmp)
 
-	fmt.Fprintf(tmp, "	YAdvance:%#v,\n", ufont.YAdvance)
+	fmt.Fprintf(tmp, "var %s = const1bit.Font{\n", fontname)
+	fmt.Fprintf(tmp, "	OffsetMap: m%s,\n", fontname)
+	fmt.Fprintf(tmp, "	Data:      d%s,\n", fontname)
+	fmt.Fprintf(tmp, "	YAdvance:  %d,\n", ufont.YAdvance)
+	fmt.Fprintf(tmp, "	Name:      %q,\n", fontname)
 	fmt.Fprintf(tmp, "}\n")
+	fmt.Fprintf(tmp, "\n")
+
+	offset := 0
+	fmt.Fprintf(tmp, "// rune (3byte) + offset (3byte)\n")
+	fmt.Fprintf(tmp, "const m%s = \"\" +\n", fontname)
+	for _, x := range ufont.Glyphs {
+		fmt.Fprintf(tmp, `	"\x%02X\x%02X\x%02X" + `, byte(x.Rune>>16), byte(x.Rune>>8), byte(x.Rune))
+		fmt.Fprintf(tmp, `"\x%02X\x%02X\x%02X" + `, byte(offset>>16), byte(offset>>8), byte(offset))
+		if x.Rune > 0 {
+			fmt.Fprintf(tmp, `// %c`, x.Rune)
+		} else {
+			fmt.Fprintf(tmp, `//`)
+		}
+		fmt.Fprintf(tmp, "\n")
+
+		// width + height + xadvance + xoffset + yoffset + len([]bitmaps)
+		offset += 1 + 1 + 1 + 1 + 1 + len(x.Bitmaps)
+	}
+	fmt.Fprintf(tmp, "	\"\"\n")
+	fmt.Fprintf(tmp, "\n")
+
+	fmt.Fprintf(tmp, "// width + height + xadvance + xoffset + yoffset + []bitmaps\n")
+	fmt.Fprintf(tmp, "const d%s = \"\" +\n", fontname)
+	for _, x := range ufont.Glyphs {
+		fmt.Fprintf(tmp, `	"\x%02X\x%02X\x%02X\x%02X\x%02X" + `, x.Width, x.Height, x.XAdvance, byte(x.XOffset), byte(x.YOffset))
+		fmt.Fprintf(tmp, `"`)
+		for _, y := range x.Bitmaps {
+			fmt.Fprintf(tmp, `\x%02X`, y)
+		}
+		fmt.Fprintf(tmp, `" +`)
+		fmt.Fprintf(tmp, "\n")
+	}
+	fmt.Fprintf(tmp, "	\"\"\n")
 
 	if opts.verbose {
 		fmt.Printf("Approx. %d bytes\n", calcSize(ufont))
