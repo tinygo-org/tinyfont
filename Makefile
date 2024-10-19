@@ -24,6 +24,7 @@ TARGET = build/examples_epd.hex \
 		 build/examples_displays_pybadge.hex \
 		 build/examples_displays_pyportal.hex \
 		 build/examples_displays_wioterminal.hex \
+		 build/examples_const1bit_pyportal.hex \
 		 build/examples_unicode_font_pyportal.hex \
 		 build/examples_unicode_font_wioterminal.hex \
 		 build/examples_unicode_font2_pyportal.hex \
@@ -53,6 +54,10 @@ build/examples_displays_pyportal.hex:
 
 build/examples_displays_wioterminal.hex:
 	$(TINYGO) build -size short -o $@ -target=wioterminal ./examples/displays
+	@$(MD5SUM) $@
+
+build/examples_const1bit_pyportal.hex:
+	$(TINYGO) build -size short -o $@ -target=pyportal ./examples/const1bit
 	@$(MD5SUM) $@
 
 build/examples_unicode_font_pyportal.hex:
