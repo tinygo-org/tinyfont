@@ -28,6 +28,7 @@ type Font struct {
 	OffsetMap string
 	Data      string
 	Name      string
+	glyph     Glyph
 }
 
 // Draw sets a single glyph in the buffer of the display.
@@ -82,6 +83,8 @@ func (f *Font) GetYAdvance() uint8 {
 }
 
 // GetGlyph returns the glyph corresponding to the specified rune in the font.
+// Since there is only one glyph used for the return value in this package,
+// concurrent access is not allowed. Normally, there is no issue when using it from tinyfont.
 func (font *Font) GetGlyph(r rune) tinyfont.Glypher {
 	s := 0
 	e := len(font.OffsetMap)/6 - 1
@@ -107,14 +110,12 @@ func (font *Font) GetGlyph(r rune) tinyfont.Glypher {
 		sz = uint32(font.OffsetMap[s*6+9])<<16 + uint32(font.OffsetMap[s*6+10])<<8 + uint32(font.OffsetMap[s*6+11]) - offset
 	}
 
-	g := Glyph{
-		Rune:     r,
-		Width:    font.Data[offset+0],
-		Height:   font.Data[offset+1],
-		XAdvance: font.Data[offset+2],
-		XOffset:  int8(font.Data[offset+3]),
-		YOffset:  int8(font.Data[offset+4]),
-		Bitmaps:  []byte(font.Data[offset+5 : offset+5+sz]),
-	}
-	return g
+	font.glyph.Rune = r
+	font.glyph.Width = font.Data[offset+0]
+	font.glyph.Height = font.Data[offset+1]
+	font.glyph.XAdvance = font.Data[offset+2]
+	font.glyph.XOffset = int8(font.Data[offset+3])
+	font.glyph.YOffset = int8(font.Data[offset+4])
+	font.glyph.Bitmaps = []byte(font.Data[offset+5 : offset+5+sz])
+	return &(font.glyph)
 }
