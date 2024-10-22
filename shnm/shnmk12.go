@@ -1,6 +1,6 @@
-// tinyfontgen.exe --all --fontname shnmk12 --package shnmk12 --output ./shnmk12/shnmk12.go --verbose ./_fonts/shnm6x12r.bdf ./_fonts/shnmk12.bdf --yadvance 13
+// tinyfontgen.exe --all --fontname shnmk12 --package shnm --output ./shnm/shnmk12.go --verbose ./_fonts/shnm6x12r.bdf ./_fonts/shnmk12.bdf --yadvance 13
 
-package shnmk12
+package shnm
 
 import (
 	"tinygo.org/x/tinyfont/const1bit"
