@@ -6,7 +6,7 @@ import (
 
 	"tinygo.org/x/tinyfont"
 	"tinygo.org/x/tinyfont/examples/initdisplay"
-	"tinygo.org/x/tinyfont/shnmk12"
+	"tinygo.org/x/tinyfont/shnm"
 )
 
 func main() {
@@ -17,7 +17,7 @@ func main() {
 		"祇園精舎の鐘の声、諸行無常の響きあり。\n沙羅双樹の花の色、盛者必衰の理をあらは\nす。おごれる人も久しからず、ただ春の夜\nの夢のごとし。\n\n" +
 		"[徒然草] (Essays in Idleness)\n" +
 		"つれづれなるままに、日ぐらし硯にむかひ\nて、心にうつりゆくよしなしごとを、そこ\nはかとなく書きつくれば、あやしうこそも\nのぐるほしけれ。"
-	tinyfont.WriteLine(display, &shnmk12.Shnmk12, 3, 0x16, str, color.RGBA{0, 0, 0, 255})
+	tinyfont.WriteLine(display, &shnm.Shnmk12, 3, 0x16, str, color.RGBA{0, 0, 0, 255})
 
 	for {
 		time.Sleep(time.Hour)
