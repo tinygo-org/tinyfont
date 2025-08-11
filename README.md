@@ -34,6 +34,11 @@ This package contains incompatible changes from [previous versions](https://gith
   * If you are creating your own fonts, you need to modify them.
   * You may find [this script](https://github.com/sago35/tinyfont/tree/fontconv/cmd/tinyfontconv) helpful for font conversion.
 
+
 ## License
 
-[This project is licensed](./LICENSE) under the BSD 3-clause license, just like the [Go project](https://golang.org/LICENSE) itself.
+* Program code: Licensed under the BSD 3-Clause License, same as the Go project.
+* Fonts: Each font is licensed under its own terms. Some allow commercial use, others (e.g., CC BY-NC, GPL) have restrictions.
+
+Please check the license file in each font's directory before use, especially for commercial projects.
+
