@@ -100,6 +100,8 @@ func run(size, dpi int, fonts []string) error {
 		Filename string
 	}
 	indexes := []xx{}
+	seen := map[rune]string{} 
+
 
 	for _, fontfile := range fonts {
 		bb, err := ioutil.ReadFile(fontfile)
@@ -126,10 +128,17 @@ func run(size, dpi int, fonts []string) error {
 				return err
 			}
 			if idx != 0 && (*all || runesMap[r]) {
+				if first, ok := seen[r]; ok {
+					fmt.Fprintf(os.Stderr,
+					"warning: rune U+%04X (%c) already registered from %s, skipping from %s\n",
+					r, r, filepath.Base(first), filepath.Base(fontfile))
+					continue
+				}
+				seen[r] = fontfile
 				indexes = append(indexes, xx{
-					Rune:  r,
-					Index: uint16(idx),
-					Face:  face,
+					Rune:     r,
+					Index:    uint16(idx),
+					Face:     face,
 					Filename: fontfile,
 				})
 			}
