@@ -77,28 +77,34 @@ func (f *Font) GetYAdvance() uint8 {
 }
 
 // GetGlyph returns the glyph corresponding to the specified rune in the font.
+// If the rune does not exist in the font, the glyph at index 0 will be returned as a fallback.
 // Since there is only one glyph used for the return value in this package,
 // concurrent access is not allowed. Normally, there is no issue when using it from tinyfont.
 func (font *Font) GetGlyph(r rune) tinyfont.Glypher {
 	s := 0
 	e := len(font.OffsetMap)/6 - 1
+	found := false
 
 	for s <= e {
 		m := (s + e) / 2
-
 		r2 := rune(font.OffsetMap[m*6])<<16 + rune(font.OffsetMap[m*6+1])<<8 + rune(font.OffsetMap[m*6+2])
-		if r2 < r {
+		if r2 == r {
+			s = m
+			found = true
+			break
+		} else if r2 < r {
 			s = m + 1
 		} else {
 			e = m - 1
 		}
 	}
 
-	if s > len(font.OffsetMap)/6-1 {
+	if !found {
 		s = 0
 	}
 
 	offset := uint32(font.OffsetMap[s*6+3])<<16 + uint32(font.OffsetMap[s*6+4])<<8 + uint32(font.OffsetMap[s*6+5])
+
 	sz := uint32(len(font.Data[offset+5:]))
 	if s*6+6 < len(font.OffsetMap) {
 		sz = uint32(font.OffsetMap[s*6+9])<<16 + uint32(font.OffsetMap[s*6+10])<<8 + uint32(font.OffsetMap[s*6+11]) - offset
@@ -111,5 +117,5 @@ func (font *Font) GetGlyph(r rune) tinyfont.Glypher {
 	font.glyph.XOffset = int8(font.Data[offset+3])
 	font.glyph.YOffset = int8(font.Data[offset+4])
 	font.glyph.Bitmaps = []byte(font.Data[offset+5 : offset+5+sz])
-	return &(font.glyph)
+	return &font.glyph
 }
