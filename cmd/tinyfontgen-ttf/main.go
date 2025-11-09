@@ -8,6 +8,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"sort"
 	"strings"
 
 	"golang.org/x/image/font"
@@ -94,11 +95,13 @@ func main() {
 
 func run(size, dpi int, fonts []string) error {
 	type xx struct {
-		Rune  rune
-		Index uint16
-		Face  font.Face
+		Rune     rune
+		Index    uint16
+		Face     font.Face
+		Filename string
 	}
 	indexes := []xx{}
+	seen := map[rune]string{}
 
 	for _, fontfile := range fonts {
 		bb, err := ioutil.ReadFile(fontfile)
@@ -125,15 +128,25 @@ func run(size, dpi int, fonts []string) error {
 				return err
 			}
 			if idx != 0 && (*all || runesMap[r]) {
+				if first, ok := seen[r]; ok {
+					fmt.Fprintf(os.Stderr,
+						"warning: rune U+%04X (%c) already registered from %s, skipping from %s\n",
+						r, r, filepath.Base(first), filepath.Base(fontfile))
+					continue
+				}
+				seen[r] = fontfile
 				indexes = append(indexes, xx{
-					Rune:  r,
-					Index: uint16(idx),
-					Face:  face,
+					Rune:     r,
+					Index:    uint16(idx),
+					Face:     face,
+					Filename: fontfile,
 				})
 			}
 		}
 	}
-
+	sort.Slice(indexes, func(i, j int) bool {
+		return indexes[i].Rune < indexes[j].Rune
+	})
 	fontBuffer := [256]uint8{}
 	font := Font{
 		Glyphs: make([]Glyph, len(indexes)),
@@ -166,6 +179,7 @@ func run(size, dpi int, fonts []string) error {
 		}
 
 		font.Glyphs[i].Rune = xxx.Rune
+		font.Glyphs[i].Filename = filepath.Base(xxx.Filename)
 		font.Glyphs[i].Width = uint8(img.Bounds().Max.X - img.Bounds().Min.X)
 		font.Glyphs[i].Height = uint8(img.Bounds().Max.Y - img.Bounds().Min.Y)
 		font.Glyphs[i].XAdvance = uint8(adv.Ceil())
@@ -207,6 +221,7 @@ type Glyph struct {
 	XOffset  int8
 	YOffset  int8
 	Bitmaps  []byte
+	Filename string
 }
 
 // Font is a struct that implements Fonter interface.
@@ -246,7 +261,7 @@ func (f Font) SaveTo(w io.Writer) {
 		fmt.Fprintf(w, `	"\x%02X\x%02X\x%02X" + `, byte(x.Rune>>16), byte(x.Rune>>8), byte(x.Rune))
 		fmt.Fprintf(w, `"\x%02X\x%02X\x%02X" + `, byte(offset>>16), byte(offset>>8), byte(offset))
 		if x.Rune > 0 {
-			fmt.Fprintf(w, `// %c`, x.Rune)
+			fmt.Fprintf(w, `// %c %s`, x.Rune, x.Filename)
 		} else {
 			fmt.Fprintf(w, `//`)
 		}
