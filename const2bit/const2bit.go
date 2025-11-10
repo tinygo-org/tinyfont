@@ -110,7 +110,6 @@ func (font *Font) GetGlyph(r rune) tinyfont.Glypher {
 	}
 
 	offset := uint32(font.OffsetMap[s*6+3])<<16 + uint32(font.OffsetMap[s*6+4])<<8 + uint32(font.OffsetMap[s*6+5])
-
 	sz := uint32(len(font.Data[offset+5:]))
 	if s*6+6 < len(font.OffsetMap) {
 		sz = uint32(font.OffsetMap[s*6+9])<<16 + uint32(font.OffsetMap[s*6+10])<<8 + uint32(font.OffsetMap[s*6+11]) - offset
@@ -123,5 +122,5 @@ func (font *Font) GetGlyph(r rune) tinyfont.Glypher {
 	font.glyph.XOffset = int8(font.Data[offset+3])
 	font.glyph.YOffset = int8(font.Data[offset+4])
 	font.glyph.Bitmaps = []byte(font.Data[offset+5 : offset+5+sz])
-	return &font.glyph
+	return &(font.glyph)
 }
