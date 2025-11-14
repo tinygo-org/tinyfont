@@ -77,24 +77,29 @@ func (f *Font) GetYAdvance() uint8 {
 }
 
 // GetGlyph returns the glyph corresponding to the specified rune in the font.
+// If the rune does not exist in the font, the glyph at index 0 will be returned as a fallback.
 // Since there is only one glyph used for the return value in this package,
 // concurrent access is not allowed. Normally, there is no issue when using it from tinyfont.
 func (font *Font) GetGlyph(r rune) tinyfont.Glypher {
 	s := 0
 	e := len(font.OffsetMap)/6 - 1
+	found := false
 
 	for s <= e {
 		m := (s + e) / 2
-
 		r2 := rune(font.OffsetMap[m*6])<<16 + rune(font.OffsetMap[m*6+1])<<8 + rune(font.OffsetMap[m*6+2])
-		if r2 < r {
+		if r2 == r {
+			s = m
+			found = true
+			break
+		} else if r2 < r {
 			s = m + 1
 		} else {
 			e = m - 1
 		}
 	}
 
-	if s > len(font.OffsetMap)/6-1 {
+	if !found {
 		s = 0
 	}
 
