@@ -1,3 +1,23 @@
+0.7.0
+---
+- **all**
+    - fix: GetGlyph falls back to index 0 when rune is not found
+- **build**
+    - use TinyGo latest release for CI builds
+- **docs**
+    - add font licensing information to README
+- **tinyfontgen-ttf**
+    - bugfix for generating multiple fonts
+- **fontpreview**
+    - add font preview generator and README samples
+
+
+0.6.0
+---
+- **modules**
+    - update to drivers 0.31.0
+
+
 0.5.0
 ---
 - **all**

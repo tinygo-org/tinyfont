@@ -4,4 +4,4 @@ package tinyfont
 // for support purposes.
 //
 // Update this value before release of new version of software.
-const Version = "0.6.0"
+const Version = "0.7.0"
