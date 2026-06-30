@@ -3,12 +3,12 @@
 Package quanpixel8 provides an 8x8 fixed-cell bitmap font derived from
 QuanPixel for use with tinyfont.
 
-The font is exposed as QP8.
+The font is exposed as QuanPixel8.
 
 ```
 import "tinygo.org/x/tinyfont/quanpixel8"
 
-tinyfont.WriteLine(display, quanpixel8.QP8, 0, 0, "起動", white)
+tinyfont.WriteLine(display, quanpixel8.QuanPixel8, 0, 0, "文字", white)
 ```
 
 ## About the font
@@ -21,22 +21,13 @@ Project page:
 https://diaowinner.itch.io/galmuri-extended
 ```
 
-This package contains bitmap data converted from QuanPixel HEX data. Each glyph
-is stored as 8 bytes of 1-bit bitmap data.
+The font data was generated from QuanPixel BDF data using tinyfontgen.
 
 ## Character coverage
 
 The generated font was checked against several CJK legacy character sets by
-comparing Unicode code points from the QuanPixel HEX source with Unicode code
-points decoded from each character set.
-
-The counted coverage is codec-based. Only characters decoded to single Unicode
-code points by the Python standard codec are included in the comparison.
-
-Therefore, the numbers in the table below should be read as lower bounds for
-verified coverage against the checked character sets. They are not a claim that
-every character in every underlying standard has been exhaustively enumerated
-outside the codec-decoded ranges described below.
+comparing Unicode code points extracted from the generated QuanPixel8 font data
+with Unicode code point sets decoded from each character set.
 
 | Language / region                   | Character set / subset          |        Covered | Missing |
 | ----------------------------------- | ------------------------------- | -------------: | ------: |
@@ -44,7 +35,7 @@ outside the codec-decoded ranges described below.
 | Japanese                            | JIS X 0208 level 2 kanji        |  3,390 / 3,390 |       0 |
 | Japanese                            | JIS X 0208 non-kanji characters |      503 / 524 |      21 |
 | Japanese                            | JIS X 0208 total                |  6,858 / 6,879 |      21 |
-| Japanese                            | JIS X 0213 level 3 kanji        |    694 / 1,259 |     565 |
+| Japanese                            | JIS X 0213 level 3 kanji        |    628 / 1,128 |     500 |
 | Japanese                            | JIS X 0213 level 4 kanji        |    802 / 2,436 |   1,634 |
 | Simplified Chinese / Mainland China | GB 2312 level 1 hanzi           |  3,755 / 3,755 |       0 |
 | Simplified Chinese / Mainland China | GB 2312 level 2 hanzi           |  3,008 / 3,008 |       0 |
@@ -53,7 +44,7 @@ outside the codec-decoded ranges described below.
 | Traditional Chinese / Taiwan        | Big5 symbols                    |      396 / 406 |      10 |
 | Traditional Chinese / Taiwan        | Big5 level 1 hanzi              |  5,401 / 5,401 |       0 |
 | Traditional Chinese / Taiwan        | Big5 level 2 hanzi              |  2,444 / 7,652 |   5,208 |
-| Traditional Chinese / Taiwan        | Big5 other decoded characters   |      247 / 247 |       0 |
+| Traditional Chinese / Taiwan        | Big5 other decoded characters   |      249 / 249 |       0 |
 | Traditional Chinese / Taiwan        | Big5 total                      | 8,488 / 13,706 |   5,218 |
 | Korean                              | KS X 1001 Hangul                |  2,350 / 2,350 |       0 |
 | Korean                              | KS X 1001 Hanja                 |  4,418 / 4,888 |     470 |
@@ -84,14 +75,14 @@ The font does not fully cover the following checked sets or subsets:
 * KS X 1001 as a whole
 * Unicode Hangul Syllables
 
-Missing-character lists are included in MISSING. The MISSING file lists the
-specific non-zero subsets used by the coverage check. Total rows in the table
+Missing-character lists are included in MISSING.MD. The MISSING.MD file lists
+the specific non-zero subsets used by the coverage check. Total rows in the table
 above may be represented by their component subset lists to avoid duplicating
 the same missing characters.
 
 ## Coverage check basis
 
-The checker used Python standard codecs and the following ranges:
+The coverage checker used Python standard codecs and the following ranges:
 
 | Character set            | Basis                                                                                                                                           |
 | ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -102,10 +93,10 @@ The checker used Python standard codecs and the following ranges:
 | KS X 1001                | `euc_kr`; rows 16-40 as Hangul, rows 42-93 as Hanja; all other decoded code points as other characters                                          |
 | Unicode Hangul Syllables | U+AC00 through U+D7A3                                                                                                                           |
 
-For Big5, the total row includes all unique Unicode code points decoded by
-Python's `big5` codec in the checked Big5 range. The named rows split out the
-symbols, level 1 hanzi, and level 2 hanzi ranges. Remaining decoded code points
-are counted as "other decoded characters".
+For Big5, the total row includes all unique Unicode code points decoded in the
+checked Big5 range. The named rows split out the symbols, level 1 hanzi, and
+level 2 hanzi ranges. Remaining decoded code points are counted as "other
+decoded characters".
 
 The range choices above are based on the following public references:
 
@@ -127,20 +118,15 @@ The range choices above are based on the following public references:
 * Unicode Hangul Syllables:
   https://www.unicode.org/charts/PDF/UAC00.pdf
 
-Checked with:
-
-* Python: 3.14.3 (tags/v3.14.3:323c59a, Feb  3 2026, 16:04:56) [MSC v.1944 64 bit (AMD64)]
-* Unicode database used by Python `unicodedata`: 16.0.0
-
 ## License
 
 The tinyfont project is licensed under the BSD 3-Clause License.
 
-The Go implementation code added in this package, such as font.go, follows the
-tinyfont project license.
+The Go implementation code added in this package follows the tinyfont project
+license.
 
-The bitmap font data in data.go is derived from QuanPixel. That font data is
-licensed under the SIL Open Font License 1.1. See LICENSE_OFL.txt.
+The bitmap font data included in this package is derived from QuanPixel. That
+font data is licensed under the SIL Open Font License 1.1. See LICENSE_OFL.txt.
 
 ## Attribution
 
