@@ -61,6 +61,12 @@ The classic Proggy programming font, a pixel-perfect monospaced bitmap font well
 
 The Shinonome (東雲) bitmap font family, a Japanese BDF bitmap font supporting Latin and JIS character sets. Available at 12pt. Licensed under a permissive open license from The Electronic Font Open Laboratory.
 
+### quanpixel8
+
+![quanpixel8 sample](./images/quanpixel8.jpg)
+
+The QuanPixel 8px bitmap font by Poxiao Fonts. It is generated with tinyfontgen and provides broad CJK coverage for compact multilingual displays, including Japanese, Simplified Chinese, Traditional Chinese, and Korean text. Available at 8pt. Licensed under the SIL Open Font License 1.1.
+
 ### org_01
 
 ![org_01 sample](./images/org_01.png)
