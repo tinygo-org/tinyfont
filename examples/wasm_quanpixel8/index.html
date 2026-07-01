@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>tinyfont quanpixel8 glyph table</title>
+  <style>
+    body {
+      margin: 16px;
+      background: #222;
+      color: #ddd;
+      font-family: sans-serif;
+    }
+    .info {
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+    .viewport {
+      width: 100%;
+      height: 85vh;
+      overflow: auto;
+      border: 1px solid #555;
+      background: black;
+    }
+    canvas {
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+      background: black;
+    }
+  </style>
+</head>
+<body>
+  <h3>tinyfont quanpixel8 glyph table</h3>
+  <div class="info">
+    <span id="count">glyphs: loading...</span>
+    <span id="size">canvas: loading...</span>
+    <div id="note"></div>
+  </div>
+  <div class="viewport" id="viewport"></div>
+  <script src="wasm_exec.js"></script>
+  <script>
+    async function main() {
+      const go = new Go();
+      const response = await fetch("main.wasm");
+      const bytes = await response.arrayBuffer();
+      const result = await WebAssembly.instantiate(bytes, go.importObject);
+      go.run(result.instance);
+    }
+    main();
+  </script>
+</body>
+</html>
